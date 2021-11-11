@@ -1,4 +1,4 @@
-module github.com/NpoolPlatform/go-service-app-template
+module github.com/NpoolPlatform/sphinx-coininfo
 
 go 1.16
 

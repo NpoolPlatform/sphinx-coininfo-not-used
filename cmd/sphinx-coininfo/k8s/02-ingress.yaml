@@ -1,20 +1,20 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: service-example-npool-top-ingress
+  name: sphinx-coininfo-npool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-example
-    k8s.kuboard.cn/workload: service-example
+    k8s.kuboard.cn/displayName: sphinx-coininfo
+    k8s.kuboard.cn/workload: sphinx-coininfo
     kubernetes.io/ingress.class: "traefik-internet"
 spec:
   rules:
   - host: api.npool.top
     http:
       paths:
-      - path: /service-example
+      - path: /sphinx-coininfo
         backend:
-          serviceName: service-example
+          serviceName: sphinx-coininfo
           servicePort: http
 
 ---
@@ -22,18 +22,18 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: service-example-xpool-top-ingress
+  name: sphinx-coininfo-xpool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-example
-    k8s.kuboard.cn/workload: service-example
+    k8s.kuboard.cn/displayName: sphinx-coininfo
+    k8s.kuboard.cn/workload: sphinx-coininfo
     kubernetes.io/ingress.class: "traefik-internet"
 spec:
   rules:
   - host: api.xpool.top
     http:
       paths:
-      - path: /service-example
+      - path: /sphinx-coininfo
         backend:
-          serviceName: service-example
+          serviceName: sphinx-coininfo
           servicePort: http

@@ -1,0 +1,6 @@
+commonLabels:
+  # app: sphinx-coininfo
+
+resources:
+- 01-sphinx-coininfo.yaml
+- 02-ingress.yaml

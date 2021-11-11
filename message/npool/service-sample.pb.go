@@ -2,17 +2,18 @@
 // versions:
 // 	protoc-gen-go v1.27.1
 // 	protoc        v3.18.1
-// source: npool/service-sample.proto
+// source: npool/sphinx-coininfo.proto
 
 package npool
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -34,7 +35,7 @@ type VersionResponse struct {
 func (x *VersionResponse) Reset() {
 	*x = VersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_npool_service_sample_proto_msgTypes[0]
+		mi := &file_npool_sphinx_coininfo_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -47,7 +48,7 @@ func (x *VersionResponse) String() string {
 func (*VersionResponse) ProtoMessage() {}
 
 func (x *VersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_npool_service_sample_proto_msgTypes[0]
+	mi := &file_npool_sphinx_coininfo_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,7 +61,7 @@ func (x *VersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VersionResponse.ProtoReflect.Descriptor instead.
 func (*VersionResponse) Descriptor() ([]byte, []int) {
-	return file_npool_service_sample_proto_rawDescGZIP(), []int{0}
+	return file_npool_sphinx_coininfo_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *VersionResponse) GetInfo() string {
@@ -70,9 +71,9 @@ func (x *VersionResponse) GetInfo() string {
 	return ""
 }
 
-var File_npool_service_sample_proto protoreflect.FileDescriptor
+var File_npool_sphinx_coininfo_proto protoreflect.FileDescriptor
 
-var file_npool_service_sample_proto_rawDesc = []byte{
+var file_npool_sphinx_coininfo_proto_rawDesc = []byte{
 	0x0a, 0x1a, 0x6e, 0x70, 0x6f, 0x6f, 0x6c, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2d,
 	0x73, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x11, 0x73, 0x65,
 	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x73, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x1a,
@@ -97,25 +98,28 @@ var file_npool_service_sample_proto_rawDesc = []byte{
 }
 
 var (
-	file_npool_service_sample_proto_rawDescOnce sync.Once
-	file_npool_service_sample_proto_rawDescData = file_npool_service_sample_proto_rawDesc
+	file_npool_sphinx_coininfo_proto_rawDescOnce sync.Once
+	file_npool_sphinx_coininfo_proto_rawDescData = file_npool_sphinx_coininfo_proto_rawDesc
 )
 
-func file_npool_service_sample_proto_rawDescGZIP() []byte {
-	file_npool_service_sample_proto_rawDescOnce.Do(func() {
-		file_npool_service_sample_proto_rawDescData = protoimpl.X.CompressGZIP(file_npool_service_sample_proto_rawDescData)
+func file_npool_sphinx_coininfo_proto_rawDescGZIP() []byte {
+	file_npool_sphinx_coininfo_proto_rawDescOnce.Do(func() {
+		file_npool_sphinx_coininfo_proto_rawDescData = protoimpl.X.CompressGZIP(file_npool_sphinx_coininfo_proto_rawDescData)
 	})
-	return file_npool_service_sample_proto_rawDescData
+	return file_npool_sphinx_coininfo_proto_rawDescData
 }
 
-var file_npool_service_sample_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_npool_service_sample_proto_goTypes = []interface{}{
-	(*VersionResponse)(nil), // 0: service.sample.v1.VersionResponse
-	(*emptypb.Empty)(nil),   // 1: google.protobuf.Empty
-}
-var file_npool_service_sample_proto_depIdxs = []int32{
-	1, // 0: service.sample.v1.ServiceExample.Version:input_type -> google.protobuf.Empty
-	0, // 1: service.sample.v1.ServiceExample.Version:output_type -> service.sample.v1.VersionResponse
+var (
+	file_npool_sphinx_coininfo_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+	file_npool_sphinx_coininfo_proto_goTypes  = []interface{}{
+		(*VersionResponse)(nil), // 0: sphinx.coininfo.v1.VersionResponse
+		(*emptypb.Empty)(nil),   // 1: google.protobuf.Empty
+	}
+)
+
+var file_npool_sphinx_coininfo_proto_depIdxs = []int32{
+	1, // 0: sphinx.coininfo.v1.SphinxCoininfo.Version:input_type -> google.protobuf.Empty
+	0, // 1: sphinx.coininfo.v1.SphinxCoininfo.Version:output_type -> sphinx.coininfo.v1.VersionResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -123,13 +127,13 @@ var file_npool_service_sample_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_npool_service_sample_proto_init() }
-func file_npool_service_sample_proto_init() {
-	if File_npool_service_sample_proto != nil {
+func init() { file_npool_sphinx_coininfo_proto_init() }
+func file_npool_sphinx_coininfo_proto_init() {
+	if File_npool_sphinx_coininfo_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_npool_service_sample_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_npool_sphinx_coininfo_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*VersionResponse); i {
 			case 0:
 				return &v.state
@@ -146,18 +150,18 @@ func file_npool_service_sample_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_npool_service_sample_proto_rawDesc,
+			RawDescriptor: file_npool_sphinx_coininfo_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_npool_service_sample_proto_goTypes,
-		DependencyIndexes: file_npool_service_sample_proto_depIdxs,
-		MessageInfos:      file_npool_service_sample_proto_msgTypes,
+		GoTypes:           file_npool_sphinx_coininfo_proto_goTypes,
+		DependencyIndexes: file_npool_sphinx_coininfo_proto_depIdxs,
+		MessageInfos:      file_npool_sphinx_coininfo_proto_msgTypes,
 	}.Build()
-	File_npool_service_sample_proto = out.File
-	file_npool_service_sample_proto_rawDesc = nil
-	file_npool_service_sample_proto_goTypes = nil
-	file_npool_service_sample_proto_depIdxs = nil
+	File_npool_sphinx_coininfo_proto = out.File
+	file_npool_sphinx_coininfo_proto_rawDesc = nil
+	file_npool_sphinx_coininfo_proto_goTypes = nil
+	file_npool_sphinx_coininfo_proto_depIdxs = nil
 }

@@ -3,23 +3,23 @@
 
 ## Table of Contents
 
-- [npool/service-sample.proto](#npool/service-sample.proto)
-    - [VersionResponse](#service.sample.v1.VersionResponse)
+- [npool/sphinx-coininfo.proto](#npool/sphinx-coininfo.proto)
+    - [VersionResponse](#sphinx.coininfo.v1.VersionResponse)
   
-    - [ServiceExample](#service.sample.v1.ServiceExample)
+    - [SphinxCoininfo](#sphinx.coininfo.v1.SphinxCoininfo)
   
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="npool/service-sample.proto"></a>
+<a name="npool/sphinx-coininfo.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## npool/service-sample.proto
+## npool/sphinx-coininfo.proto
 
 
 
-<a name="service.sample.v1.VersionResponse"></a>
+<a name="sphinx.coininfo.v1.VersionResponse"></a>
 
 ### VersionResponse
 request body and response
@@ -40,14 +40,14 @@ request body and response
  
 
 
-<a name="service.sample.v1.ServiceExample"></a>
+<a name="sphinx.coininfo.v1.SphinxCoininfo"></a>
 
-### ServiceExample
+### SphinxCoininfo
 Service Name
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#service.sample.v1.VersionResponse) | Method Version |
+| Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#sphinx.coininfo.v1.VersionResponse) | Method Version |
 
  
 
