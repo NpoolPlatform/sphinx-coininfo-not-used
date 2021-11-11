@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package sphinx.coininfo.v1;
+
+option go_package = "github.com/NpoolPlatform/sphinx-coininfo/message/npool";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+// CoinInfo服务
+service SphinxCoininfo {
+	// Method Version
+	rpc Version (google.protobuf.Empty) returns (VersionResponse){
+		option (google.api.http) = {
+			post: "/version"
+			body: "*"
+		};
+	}
+	// 注册新币种
+	rpc RegisterCoin (RegisterCoinRequest) returns (RegisterCoinResponse){
+		option (google.api.http) = {
+			post: "/coin/register"
+			body: "*"
+		};
+	}
+	// 获取币种信息
+	rpc GetCoinInfos (google.protobuf.Empty) returns (GetCoinInfosResponse){
+		option (google.api.http) = {
+			get: "/coin/infos"
+		};
+	}
+}
+
+// request body and response
+message VersionResponse {
+	string Info = 100;
+}
+
+// 注册币种信息
+message RegisterCoinRequest {
+	bool need_signinfo = 1; // 是否需要预签名信息
+	string name = 2; // 币种名称：Filecoin
+	string unit = 3; // 单位：FIL
+}
+
+// 注册成功通知
+message RegisterCoinResponse {
+	string info = 1; // "success"
+}
+
+// 数据库内CoinInfo
+message CoinInfoRow {
+	int32 id = 1;
+	bool need_signinfo = 2; // 是否需要预签名信息
+	string name = 3; // 币种名称：Filecoin
+	string unit = 4; // 单位：FIL
+}
+
+// 所有币种信息
+message GetCoinInfosResponse {
+	repeated CoinInfoRow infos = 1; // array
+}

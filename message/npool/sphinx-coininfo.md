@@ -4,6 +4,10 @@
 ## Table of Contents
 
 - [npool/sphinx-coininfo.proto](#npool/sphinx-coininfo.proto)
+    - [CoinInfoRow](#sphinx.coininfo.v1.CoinInfoRow)
+    - [GetCoinInfosResponse](#sphinx.coininfo.v1.GetCoinInfosResponse)
+    - [RegisterCoinRequest](#sphinx.coininfo.v1.RegisterCoinRequest)
+    - [RegisterCoinResponse](#sphinx.coininfo.v1.RegisterCoinResponse)
     - [VersionResponse](#sphinx.coininfo.v1.VersionResponse)
   
     - [SphinxCoininfo](#sphinx.coininfo.v1.SphinxCoininfo)
@@ -16,6 +20,71 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## npool/sphinx-coininfo.proto
+
+
+
+<a name="sphinx.coininfo.v1.CoinInfoRow"></a>
+
+### CoinInfoRow
+数据库内CoinInfo
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [int32](#int32) |  |  |
+| need_signinfo | [bool](#bool) |  | 是否需要预签名信息 |
+| name | [string](#string) |  | 币种名称：Filecoin |
+| unit | [string](#string) |  | 单位：FIL |
+
+
+
+
+
+
+<a name="sphinx.coininfo.v1.GetCoinInfosResponse"></a>
+
+### GetCoinInfosResponse
+所有币种信息
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| infos | [CoinInfoRow](#sphinx.coininfo.v1.CoinInfoRow) | repeated | array |
+
+
+
+
+
+
+<a name="sphinx.coininfo.v1.RegisterCoinRequest"></a>
+
+### RegisterCoinRequest
+注册币种信息
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| need_signinfo | [bool](#bool) |  | 是否需要预签名信息 |
+| name | [string](#string) |  | 币种名称：Filecoin |
+| unit | [string](#string) |  | 单位：FIL |
+
+
+
+
+
+
+<a name="sphinx.coininfo.v1.RegisterCoinResponse"></a>
+
+### RegisterCoinResponse
+注册成功通知
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| info | [string](#string) |  | &#34;success&#34; |
+
+
+
 
 
 
@@ -43,11 +112,13 @@ request body and response
 <a name="sphinx.coininfo.v1.SphinxCoininfo"></a>
 
 ### SphinxCoininfo
-Service Name
+CoinInfo服务
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#sphinx.coininfo.v1.VersionResponse) | Method Version |
+| RegisterCoin | [RegisterCoinRequest](#sphinx.coininfo.v1.RegisterCoinRequest) | [RegisterCoinResponse](#sphinx.coininfo.v1.RegisterCoinResponse) | 注册新币种 |
+| GetCoinInfos | [.google.protobuf.Empty](#google.protobuf.Empty) | [GetCoinInfosResponse](#sphinx.coininfo.v1.GetCoinInfosResponse) | 获取币种信息 |
 
  
 
