@@ -1,15 +1,10 @@
 package main
 
 import (
-	"time"
-
-	"github.com/NpoolPlatform/sphinx-coininfo/api"
-	db "github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
-	msg "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/message"
-	msgsrv "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/server"
-
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	"github.com/NpoolPlatform/sphinx-coininfo/api"
+	db "github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
@@ -54,21 +49,4 @@ func rpcRegister(server grpc.ServiceRegistrar) error {
 
 func rpcGatewayRegister(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
 	return api.RegisterGateway(mux, endpoint, opts)
-}
-
-func msgSender() {
-	id := 0
-	for {
-		logger.Sugar().Infof("send example")
-		err := msgsrv.PublishExample(&msg.Example{
-			ID:      id,
-			Example: "hello world",
-		})
-		if err != nil {
-			logger.Sugar().Errorf("fail to send example: %v", err)
-			return
-		}
-		id++
-		time.Sleep(3 * time.Second)
-	}
 }

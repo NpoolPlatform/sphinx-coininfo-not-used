@@ -52,6 +52,10 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 		Where(
 			coininfo.Name(in.Name),
 		).First(ctx)
+	if err != nil {
+		err = xerrors.Errorf("internal server error: %v", err)
+		return
+	}
 	if entResp != nil {
 		// already have record
 		if in.Unit == entResp.Unit {
