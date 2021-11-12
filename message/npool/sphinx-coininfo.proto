@@ -12,21 +12,21 @@ service SphinxCoininfo {
 	// Method Version
 	rpc Version (google.protobuf.Empty) returns (VersionResponse){
 		option (google.api.http) = {
-			post: "/version"
+			post: "/v0/version"
 			body: "*"
 		};
 	}
 	// 注册新币种
 	rpc RegisterCoin (RegisterCoinRequest) returns (RegisterCoinResponse){
 		option (google.api.http) = {
-			post: "/coin/register"
+			post: "/v0/coin/register"
 			body: "*"
 		};
 	}
 	// 获取币种信息
 	rpc GetCoinInfos (GetCoinInfosRequest) returns (GetCoinInfosResponse){
 		option (google.api.http) = {
-			get: "/coin/infos"
+			get: "/v0/coin/infos"
 		};
 	}
 }

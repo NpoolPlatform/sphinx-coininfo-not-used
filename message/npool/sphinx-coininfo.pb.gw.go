@@ -130,7 +130,7 @@ func RegisterSphinxCoininfoHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/Version", runtime.WithHTTPPathPattern("/version"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/Version", runtime.WithHTTPPathPattern("/v0/version"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -153,7 +153,7 @@ func RegisterSphinxCoininfoHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/RegisterCoin", runtime.WithHTTPPathPattern("/coin/register"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/RegisterCoin", runtime.WithHTTPPathPattern("/v0/coin/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -176,7 +176,7 @@ func RegisterSphinxCoininfoHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/GetCoinInfos", runtime.WithHTTPPathPattern("/coin/infos"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/GetCoinInfos", runtime.WithHTTPPathPattern("/v0/coin/infos"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -238,7 +238,7 @@ func RegisterSphinxCoininfoHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/Version", runtime.WithHTTPPathPattern("/version"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/Version", runtime.WithHTTPPathPattern("/v0/version"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -258,7 +258,7 @@ func RegisterSphinxCoininfoHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/RegisterCoin", runtime.WithHTTPPathPattern("/coin/register"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/RegisterCoin", runtime.WithHTTPPathPattern("/v0/coin/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -278,7 +278,7 @@ func RegisterSphinxCoininfoHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/GetCoinInfos", runtime.WithHTTPPathPattern("/coin/infos"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/sphinx.coininfo.v1.SphinxCoininfo/GetCoinInfos", runtime.WithHTTPPathPattern("/v0/coin/infos"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -298,11 +298,11 @@ func RegisterSphinxCoininfoHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_SphinxCoininfo_Version_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"version"}, ""))
+	pattern_SphinxCoininfo_Version_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v0", "version"}, ""))
 
-	pattern_SphinxCoininfo_RegisterCoin_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"coin", "register"}, ""))
+	pattern_SphinxCoininfo_RegisterCoin_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v0", "coin", "register"}, ""))
 
-	pattern_SphinxCoininfo_GetCoinInfos_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"coin", "infos"}, ""))
+	pattern_SphinxCoininfo_GetCoinInfos_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v0", "coin", "infos"}, ""))
 )
 
 var (
