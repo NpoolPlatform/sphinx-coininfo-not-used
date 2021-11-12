@@ -101,7 +101,7 @@ func local_request_SphinxCoininfo_RegisterCoin_0(ctx context.Context, marshaler 
 }
 
 func request_SphinxCoininfo_GetCoinInfos_0(ctx context.Context, marshaler runtime.Marshaler, client SphinxCoininfoClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetCoinInfosRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetCoinInfos(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -110,7 +110,7 @@ func request_SphinxCoininfo_GetCoinInfos_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_SphinxCoininfo_GetCoinInfos_0(ctx context.Context, marshaler runtime.Marshaler, server SphinxCoininfoServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetCoinInfosRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetCoinInfos(ctx, &protoReq)

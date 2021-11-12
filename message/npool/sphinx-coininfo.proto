@@ -24,12 +24,15 @@ service SphinxCoininfo {
 		};
 	}
 	// 获取币种信息
-	rpc GetCoinInfos (google.protobuf.Empty) returns (GetCoinInfosResponse){
+	rpc GetCoinInfos (GetCoinInfosRequest) returns (GetCoinInfosResponse){
 		option (google.api.http) = {
 			get: "/coin/infos"
 		};
 	}
 }
+
+// 获取币种请求
+message GetCoinInfosRequest {}
 
 // request body and response
 message VersionResponse {
