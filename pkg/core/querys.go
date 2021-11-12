@@ -39,14 +39,19 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 		Where(
 			coininfo.Name(in.Unit),
 		).First(ctx)
-	if entResp == nil {
-		// do create
-		entResp, err = Client.CoinInfo.Create().
-			SetName(in.Name).
-			SetUnit(in.Unit).
-			SetNeedSigninfo(in.NeedSigninfo).
-			Save(ctx)
+	if entResp != nil {
+		if in.Unit == entResp.Unit {
+			resp = &npool.RegisterCoinResponse{Info: "success"}
+			err = nil
+		}
+		return
 	}
+	// do create
+	_, err = Client.CoinInfo.Create().
+		SetName(in.Name).
+		SetUnit(in.Unit).
+		SetNeedSigninfo(in.NeedSigninfo).
+		Save(ctx)
 	if err == nil {
 		resp = &npool.RegisterCoinResponse{Info: "success"}
 	}
