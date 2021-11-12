@@ -5,6 +5,7 @@
 
 - [npool/sphinx-coininfo.proto](#npool/sphinx-coininfo.proto)
     - [CoinInfoRow](#sphinx.coininfo.v1.CoinInfoRow)
+    - [GetCoinInfoRequest](#sphinx.coininfo.v1.GetCoinInfoRequest)
     - [GetCoinInfosRequest](#sphinx.coininfo.v1.GetCoinInfosRequest)
     - [GetCoinInfosResponse](#sphinx.coininfo.v1.GetCoinInfosResponse)
     - [RegisterCoinRequest](#sphinx.coininfo.v1.RegisterCoinRequest)
@@ -36,6 +37,21 @@
 | need_signinfo | [bool](#bool) |  | 是否需要预签名信息 |
 | name | [string](#string) |  | 币种名称：Filecoin |
 | unit | [string](#string) |  | 单位：FIL |
+
+
+
+
+
+
+<a name="sphinx.coininfo.v1.GetCoinInfoRequest"></a>
+
+### GetCoinInfoRequest
+获取单个币种
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| coin_id | [int32](#int32) |  |  |
 
 
 
@@ -130,6 +146,7 @@ CoinInfo服务
 | Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#sphinx.coininfo.v1.VersionResponse) | Method Version |
 | RegisterCoin | [RegisterCoinRequest](#sphinx.coininfo.v1.RegisterCoinRequest) | [RegisterCoinResponse](#sphinx.coininfo.v1.RegisterCoinResponse) | 注册新币种 |
 | GetCoinInfos | [GetCoinInfosRequest](#sphinx.coininfo.v1.GetCoinInfosRequest) | [GetCoinInfosResponse](#sphinx.coininfo.v1.GetCoinInfosResponse) | 获取币种信息 |
+| GetCoinInfo | [GetCoinInfoRequest](#sphinx.coininfo.v1.GetCoinInfoRequest) | [CoinInfoRow](#sphinx.coininfo.v1.CoinInfoRow) | 获取单个币种 |
 
  
 

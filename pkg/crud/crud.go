@@ -7,6 +7,9 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
+	"github.com/gogo/status"
+	"golang.org/x/xerrors"
+	"google.golang.org/grpc/codes"
 )
 
 func dbRowToCoinInfoRow(row *ent.CoinInfo) *npool.CoinInfoRow {
@@ -31,27 +34,41 @@ func GetCoinInfos(ctx context.Context, _ *npool.GetCoinInfosRequest) (resp *npoo
 	return
 }
 
+// 获取单个币种
+func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.CoinInfoRow, err error) {
+	entResp, err := db.Client().CoinInfo.Query().Where(
+		coininfo.ID(in.CoinId),
+	).First(ctx)
+	if err != nil {
+		err = status.Error(codes.NotFound, "record not found")
+	}
+	resp = dbRowToCoinInfoRow(entResp)
+	return
+}
+
 // 注册币种
 func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.RegisterCoinResponse, err error) {
 	entResp, err := db.Client().CoinInfo.Query().
 		Where(
-			coininfo.Name(in.Unit),
+			coininfo.Name(in.Name),
 		).First(ctx)
 	if entResp != nil {
+		// already have record
 		if in.Unit == entResp.Unit {
 			resp = &npool.RegisterCoinResponse{Info: "success"}
 			err = nil
+		} else {
+			err = xerrors.Errorf("coin name already registered as: %v, unit: %v", entResp.Name, entResp.Unit)
 		}
-		return
-	}
-	// do create
-	_, err = db.Client().CoinInfo.Create().
-		SetName(in.Name).
-		SetUnit(in.Unit).
-		SetNeedSigninfo(in.NeedSigninfo).
-		Save(ctx)
-	if err == nil {
-		resp = &npool.RegisterCoinResponse{Info: "success"}
+	} else {
+		_, err = db.Client().CoinInfo.Create().
+			SetName(in.Name).
+			SetUnit(in.Unit).
+			SetNeedSigninfo(in.NeedSigninfo).
+			Save(ctx)
+		if err == nil {
+			resp = &npool.RegisterCoinResponse{Info: "success"}
+		}
 	}
 	return
 }

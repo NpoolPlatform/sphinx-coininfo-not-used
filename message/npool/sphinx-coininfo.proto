@@ -29,6 +29,16 @@ service SphinxCoininfo {
 			get: "/v0/coin/infos"
 		};
 	}
+	// 获取单个币种
+	rpc GetCoinInfo (GetCoinInfoRequest) returns (CoinInfoRow) {
+		option (google.api.http) = {
+			get: "/v0/coin/single"
+		};}
+}
+
+// 获取单个币种
+message GetCoinInfoRequest {
+	int32 coin_id = 1;
 }
 
 // 获取币种请求
