@@ -5,8 +5,6 @@ import (
 
 	"github.com/NpoolPlatform/sphinx-coininfo/api"
 	db "github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
-	msgcli "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/client"
-	msglistener "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/listener"
 	msg "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/message"
 	msgsrv "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/server"
 
@@ -35,15 +33,15 @@ var runCmd = &cli.Command{
 			}
 		}()
 
-		if err := msgsrv.Init(); err != nil {
-			return err
-		}
-		if err := msgcli.Init(); err != nil {
-			return err
-		}
-
-		go msglistener.Listen()
-		go msgSender()
+		// 消息队列监听逻辑
+		// if err := msgsrv.Init(); err != nil {
+		// 	return err
+		// }
+		// if err := msgcli.Init(); err != nil {
+		// 	return err
+		// }
+		// go msglistener.Listen()
+		// go msgSender()
 
 		return grpc2.RunGRPCGateWay(rpcGatewayRegister)
 	},
