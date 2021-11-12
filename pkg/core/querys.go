@@ -6,7 +6,7 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/message/npool"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
-	"google.golang.org/protobuf/types/known/emptypb"
+	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 )
 
 var Client *ent.Client
@@ -16,7 +16,7 @@ func init() {
 }
 
 // 查询全部币种
-func GetCoinInfos(ctx context.Context, _ *emptypb.Empty) (resp *npool.GetCoinInfosResponse, err error) {
+func GetCoinInfos(ctx context.Context, _ *npool.GetCoinInfosRequest) (resp *npool.GetCoinInfosResponse, err error) {
 	entResp, err := Client.CoinInfo.Query().All(ctx)
 	tmpCIR := make([]*npool.CoinInfoRow, len(entResp))
 	for i, row := range entResp {
@@ -29,6 +29,26 @@ func GetCoinInfos(ctx context.Context, _ *emptypb.Empty) (resp *npool.GetCoinInf
 	}
 	resp = &npool.GetCoinInfosResponse{
 		Infos: tmpCIR,
+	}
+	return
+}
+
+// 注册币种
+func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.RegisterCoinResponse, err error) {
+	entResp, err := Client.CoinInfo.Query().
+		Where(
+			coininfo.Name(in.Unit),
+		).First(ctx)
+	if entResp == nil {
+		// do create
+		entResp, err = Client.CoinInfo.Create().
+			SetName(in.Name).
+			SetUnit(in.Unit).
+			SetNeedSigninfo(in.NeedSigninfo).
+			Save(ctx)
+	}
+	if err == nil {
+		resp = &npool.RegisterCoinResponse{Info: "success"}
 	}
 	return
 }
