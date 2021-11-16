@@ -1,5 +1,5 @@
 package constant
 
 const (
-	ServiceName = "sphinx-coininfo.npool.top"
+	ServiceName = "sphinx.coininfo.npool.top"
 )
