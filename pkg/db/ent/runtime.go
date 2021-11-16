@@ -52,10 +52,10 @@ func init() {
 			return nil
 		}
 	}()
-	// coininfoDescNeedSigninfo is the schema descriptor for need_signinfo field.
-	coininfoDescNeedSigninfo := coininfoFields[3].Descriptor()
-	// coininfo.DefaultNeedSigninfo holds the default value on creation for the need_signinfo field.
-	coininfo.DefaultNeedSigninfo = coininfoDescNeedSigninfo.Default.(bool)
+	// coininfoDescIsPresale is the schema descriptor for is_presale field.
+	coininfoDescIsPresale := coininfoFields[3].Descriptor()
+	// coininfo.DefaultIsPresale holds the default value on creation for the is_presale field.
+	coininfo.DefaultIsPresale = coininfoDescIsPresale.Default.(bool)
 	keystoreFields := schema.KeyStore{}.Fields()
 	_ = keystoreFields
 	// keystoreDescAddress is the schema descriptor for address field.

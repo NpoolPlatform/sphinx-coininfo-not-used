@@ -13,7 +13,7 @@ var (
 		{Name: "id", Type: field.TypeInt32, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 16},
 		{Name: "unit", Type: field.TypeString, Size: 4},
-		{Name: "need_signinfo", Type: field.TypeBool, Default: false},
+		{Name: "is_presale", Type: field.TypeBool, Default: false},
 	}
 	// CoinInfosTable holds the schema information for the "coin_infos" table.
 	CoinInfosTable = &schema.Table{

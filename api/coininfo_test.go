@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/NpoolPlatform/sphinx-coininfo/message/npool"
+	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/go-resty/resty/v2"
 	"github.com/stretchr/testify/assert"
 )
@@ -30,9 +30,8 @@ func TestRegisterCoin(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.RegisterCoinRequest{
-			NeedSigninfo: true,
-			Name:         "Filecoin",
-			Unit:         "FIL",
+			Name: "Filecoin",
+			Unit: "FIL",
 		}).
 		Post("http://localhost:32759/v0/coin/register")
 	assert.Nil(t, err)

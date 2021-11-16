@@ -11,8 +11,8 @@ const (
 	FieldName = "name"
 	// FieldUnit holds the string denoting the unit field in the database.
 	FieldUnit = "unit"
-	// FieldNeedSigninfo holds the string denoting the need_signinfo field in the database.
-	FieldNeedSigninfo = "need_signinfo"
+	// FieldIsPresale holds the string denoting the is_presale field in the database.
+	FieldIsPresale = "is_presale"
 	// EdgeKeys holds the string denoting the keys edge name in mutations.
 	EdgeKeys = "keys"
 	// EdgeTransactions holds the string denoting the transactions edge name in mutations.
@@ -58,7 +58,7 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldUnit,
-	FieldNeedSigninfo,
+	FieldIsPresale,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -76,6 +76,6 @@ var (
 	NameValidator func(string) error
 	// UnitValidator is a validator for the "unit" field. It is called by the builders before save.
 	UnitValidator func(string) error
-	// DefaultNeedSigninfo holds the default value on creation for the "need_signinfo" field.
-	DefaultNeedSigninfo bool
+	// DefaultIsPresale holds the default value on creation for the "is_presale" field.
+	DefaultIsPresale bool
 )

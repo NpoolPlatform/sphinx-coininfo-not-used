@@ -3,7 +3,7 @@ package crud
 import (
 	"context"
 
-	"github.com/NpoolPlatform/sphinx-coininfo/message/npool"
+	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
@@ -14,10 +14,10 @@ import (
 
 func dbRowToCoinInfoRow(row *ent.CoinInfo) *npool.CoinInfoRow {
 	return &npool.CoinInfoRow{
-		Id:           row.ID,
-		Name:         row.Name,
-		Unit:         row.Unit,
-		NeedSigninfo: row.NeedSigninfo,
+		Id:        row.ID,
+		Name:      row.Name,
+		Unit:      row.Unit,
+		IsPresale: row.IsPresale,
 	}
 }
 
@@ -65,10 +65,11 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 			err = xerrors.Errorf("coin name already registered as: %v, unit: %v", entResp.Name, entResp.Unit)
 		}
 	} else {
+		// MARK 默认均为在售商品？
 		_, err = db.Client().CoinInfo.Create().
 			SetName(in.Name).
 			SetUnit(in.Unit).
-			SetNeedSigninfo(in.NeedSigninfo).
+			SetIsPresale(false).
 			Save(ctx)
 		if err == nil {
 			resp = &npool.RegisterCoinResponse{Info: "success"}

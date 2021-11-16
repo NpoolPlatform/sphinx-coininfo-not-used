@@ -42,7 +42,7 @@ type CoinInfoMutation struct {
 	id                  *int32
 	name                *string
 	unit                *string
-	need_signinfo       *bool
+	is_presale          *bool
 	clearedFields       map[string]struct{}
 	keys                map[int32]struct{}
 	removedkeys         map[int32]struct{}
@@ -218,40 +218,40 @@ func (m *CoinInfoMutation) ResetUnit() {
 	m.unit = nil
 }
 
-// SetNeedSigninfo sets the "need_signinfo" field.
-func (m *CoinInfoMutation) SetNeedSigninfo(b bool) {
-	m.need_signinfo = &b
+// SetIsPresale sets the "is_presale" field.
+func (m *CoinInfoMutation) SetIsPresale(b bool) {
+	m.is_presale = &b
 }
 
-// NeedSigninfo returns the value of the "need_signinfo" field in the mutation.
-func (m *CoinInfoMutation) NeedSigninfo() (r bool, exists bool) {
-	v := m.need_signinfo
+// IsPresale returns the value of the "is_presale" field in the mutation.
+func (m *CoinInfoMutation) IsPresale() (r bool, exists bool) {
+	v := m.is_presale
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldNeedSigninfo returns the old "need_signinfo" field's value of the CoinInfo entity.
+// OldIsPresale returns the old "is_presale" field's value of the CoinInfo entity.
 // If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CoinInfoMutation) OldNeedSigninfo(ctx context.Context) (v bool, err error) {
+func (m *CoinInfoMutation) OldIsPresale(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldNeedSigninfo is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldIsPresale is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldNeedSigninfo requires an ID field in the mutation")
+		return v, fmt.Errorf("OldIsPresale requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldNeedSigninfo: %w", err)
+		return v, fmt.Errorf("querying old value for OldIsPresale: %w", err)
 	}
-	return oldValue.NeedSigninfo, nil
+	return oldValue.IsPresale, nil
 }
 
-// ResetNeedSigninfo resets all changes to the "need_signinfo" field.
-func (m *CoinInfoMutation) ResetNeedSigninfo() {
-	m.need_signinfo = nil
+// ResetIsPresale resets all changes to the "is_presale" field.
+func (m *CoinInfoMutation) ResetIsPresale() {
+	m.is_presale = nil
 }
 
 // AddKeyIDs adds the "keys" edge to the KeyStore entity by ids.
@@ -496,8 +496,8 @@ func (m *CoinInfoMutation) Fields() []string {
 	if m.unit != nil {
 		fields = append(fields, coininfo.FieldUnit)
 	}
-	if m.need_signinfo != nil {
-		fields = append(fields, coininfo.FieldNeedSigninfo)
+	if m.is_presale != nil {
+		fields = append(fields, coininfo.FieldIsPresale)
 	}
 	return fields
 }
@@ -511,8 +511,8 @@ func (m *CoinInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case coininfo.FieldUnit:
 		return m.Unit()
-	case coininfo.FieldNeedSigninfo:
-		return m.NeedSigninfo()
+	case coininfo.FieldIsPresale:
+		return m.IsPresale()
 	}
 	return nil, false
 }
@@ -526,8 +526,8 @@ func (m *CoinInfoMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldName(ctx)
 	case coininfo.FieldUnit:
 		return m.OldUnit(ctx)
-	case coininfo.FieldNeedSigninfo:
-		return m.OldNeedSigninfo(ctx)
+	case coininfo.FieldIsPresale:
+		return m.OldIsPresale(ctx)
 	}
 	return nil, fmt.Errorf("unknown CoinInfo field %s", name)
 }
@@ -551,12 +551,12 @@ func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnit(v)
 		return nil
-	case coininfo.FieldNeedSigninfo:
+	case coininfo.FieldIsPresale:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetNeedSigninfo(v)
+		m.SetIsPresale(v)
 		return nil
 	}
 	return fmt.Errorf("unknown CoinInfo field %s", name)
@@ -613,8 +613,8 @@ func (m *CoinInfoMutation) ResetField(name string) error {
 	case coininfo.FieldUnit:
 		m.ResetUnit()
 		return nil
-	case coininfo.FieldNeedSigninfo:
-		m.ResetNeedSigninfo()
+	case coininfo.FieldIsPresale:
+		m.ResetIsPresale()
 		return nil
 	}
 	return fmt.Errorf("unknown CoinInfo field %s", name)

@@ -105,10 +105,10 @@ func Unit(v string) predicate.CoinInfo {
 	})
 }
 
-// NeedSigninfo applies equality check predicate on the "need_signinfo" field. It's identical to NeedSigninfoEQ.
-func NeedSigninfo(v bool) predicate.CoinInfo {
+// IsPresale applies equality check predicate on the "is_presale" field. It's identical to IsPresaleEQ.
+func IsPresale(v bool) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldNeedSigninfo), v))
+		s.Where(sql.EQ(s.C(FieldIsPresale), v))
 	})
 }
 
@@ -334,17 +334,17 @@ func UnitContainsFold(v string) predicate.CoinInfo {
 	})
 }
 
-// NeedSigninfoEQ applies the EQ predicate on the "need_signinfo" field.
-func NeedSigninfoEQ(v bool) predicate.CoinInfo {
+// IsPresaleEQ applies the EQ predicate on the "is_presale" field.
+func IsPresaleEQ(v bool) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldNeedSigninfo), v))
+		s.Where(sql.EQ(s.C(FieldIsPresale), v))
 	})
 }
 
-// NeedSigninfoNEQ applies the NEQ predicate on the "need_signinfo" field.
-func NeedSigninfoNEQ(v bool) predicate.CoinInfo {
+// IsPresaleNEQ applies the NEQ predicate on the "is_presale" field.
+func IsPresaleNEQ(v bool) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldNeedSigninfo), v))
+		s.Where(sql.NEQ(s.C(FieldIsPresale), v))
 	})
 }
 

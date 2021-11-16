@@ -35,16 +35,16 @@ func (cic *CoinInfoCreate) SetUnit(s string) *CoinInfoCreate {
 	return cic
 }
 
-// SetNeedSigninfo sets the "need_signinfo" field.
-func (cic *CoinInfoCreate) SetNeedSigninfo(b bool) *CoinInfoCreate {
-	cic.mutation.SetNeedSigninfo(b)
+// SetIsPresale sets the "is_presale" field.
+func (cic *CoinInfoCreate) SetIsPresale(b bool) *CoinInfoCreate {
+	cic.mutation.SetIsPresale(b)
 	return cic
 }
 
-// SetNillableNeedSigninfo sets the "need_signinfo" field if the given value is not nil.
-func (cic *CoinInfoCreate) SetNillableNeedSigninfo(b *bool) *CoinInfoCreate {
+// SetNillableIsPresale sets the "is_presale" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableIsPresale(b *bool) *CoinInfoCreate {
 	if b != nil {
-		cic.SetNeedSigninfo(*b)
+		cic.SetIsPresale(*b)
 	}
 	return cic
 }
@@ -186,9 +186,9 @@ func (cic *CoinInfoCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (cic *CoinInfoCreate) defaults() {
-	if _, ok := cic.mutation.NeedSigninfo(); !ok {
-		v := coininfo.DefaultNeedSigninfo
-		cic.mutation.SetNeedSigninfo(v)
+	if _, ok := cic.mutation.IsPresale(); !ok {
+		v := coininfo.DefaultIsPresale
+		cic.mutation.SetIsPresale(v)
 	}
 }
 
@@ -210,8 +210,8 @@ func (cic *CoinInfoCreate) check() error {
 			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "unit": %w`, err)}
 		}
 	}
-	if _, ok := cic.mutation.NeedSigninfo(); !ok {
-		return &ValidationError{Name: "need_signinfo", err: errors.New(`ent: missing required field "need_signinfo"`)}
+	if _, ok := cic.mutation.IsPresale(); !ok {
+		return &ValidationError{Name: "is_presale", err: errors.New(`ent: missing required field "is_presale"`)}
 	}
 	return nil
 }
@@ -262,13 +262,13 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.Unit = value
 	}
-	if value, ok := cic.mutation.NeedSigninfo(); ok {
+	if value, ok := cic.mutation.IsPresale(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: coininfo.FieldNeedSigninfo,
+			Column: coininfo.FieldIsPresale,
 		})
-		_node.NeedSigninfo = value
+		_node.IsPresale = value
 	}
 	if nodes := cic.mutation.KeysIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
