@@ -8,7 +8,16 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/go-resty/resty/v2"
 	"github.com/stretchr/testify/assert"
+
+	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 )
+
+func init() {
+	err := testinit.Init()
+	if err != nil {
+		panic(err)
+	}
+}
 
 func TestGetCoinInfos(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
@@ -18,7 +27,7 @@ func TestGetCoinInfos(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.GetCoinInfosRequest{}).
-		Get("http://sphinx-coininfo.npool.top:32759/v0/coin/infos")
+		Get("http://sphinx.coininfo.npool.top:32759/v0/coin/infos")
 	assert.Nil(t, err)
 }
 
@@ -33,6 +42,6 @@ func TestRegisterCoin(t *testing.T) {
 			Name: "Filecoin",
 			Unit: "FIL",
 		}).
-		Post("http://sphinx-coininfo.npool.top:32759/v0/coin/register")
+		Post("http://sphinx.coininfo.npool.top:32759/v0/coin/register")
 	assert.Nil(t, err)
 }
