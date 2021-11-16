@@ -18,7 +18,7 @@ func TestGetCoinInfos(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.GetCoinInfosRequest{}).
-		Get("http://localhost:32759/v0/coin/infos")
+		Get("http://sphinx-coininfo.npool.top:32759/v0/coin/infos")
 	assert.Nil(t, err)
 }
 
@@ -33,6 +33,6 @@ func TestRegisterCoin(t *testing.T) {
 			Name: "Filecoin",
 			Unit: "FIL",
 		}).
-		Post("http://localhost:32759/v0/coin/register")
+		Post("http://sphinx-coininfo.npool.top:32759/v0/coin/register")
 	assert.Nil(t, err)
 }
