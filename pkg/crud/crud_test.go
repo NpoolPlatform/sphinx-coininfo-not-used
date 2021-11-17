@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
+	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,6 +17,9 @@ var (
 )
 
 func init() {
+	if testinit.Init() != nil {
+		panic("testinit failed")
+	}
 	ctx = context.Background()
 	tmpCoinInfo = &npool.CoinInfoRow{
 		CoinType:  -2,
