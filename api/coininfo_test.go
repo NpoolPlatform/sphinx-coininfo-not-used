@@ -22,8 +22,8 @@ func init() {
 	tmpCoinInfo = &npool.CoinInfoRow{
 		CoinType:  0,
 		IsPresale: false,
-		Name:      "Unit Test",
-		Unit:      "UT",
+		Name:      "Unknown",
+		Unit:      "DK",
 	}
 }
 
