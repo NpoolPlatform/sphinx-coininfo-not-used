@@ -70,7 +70,7 @@ func TestGetCoinInfo(t *testing.T) {
 		assert.Nil(t, resp)
 	} else {
 		assert.NotNil(t, resp)
-		assert.Equal(t, tmpCoinInfo.Name, resp.Unit)
+		assert.Equal(t, tmpCoinInfo.Name, resp.Name)
 	}
 }
 
