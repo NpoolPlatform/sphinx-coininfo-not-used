@@ -8,13 +8,12 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 	"github.com/gogo/status"
-	"golang.org/x/xerrors"
 	"google.golang.org/grpc/codes"
 )
 
 func dbRowToCoinInfoRow(row *ent.CoinInfo) *npool.CoinInfoRow {
 	return &npool.CoinInfoRow{
-		Id:        row.ID,
+		CoinType:  npool.Int32ToCoinType(row.ID),
 		Name:      row.Name,
 		Unit:      row.Unit,
 		IsPresale: row.IsPresale,
@@ -37,7 +36,7 @@ func GetCoinInfos(ctx context.Context, _ *npool.GetCoinInfosRequest) (resp *npoo
 // 获取单个币种
 func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.CoinInfoRow, err error) {
 	entResp, err := db.Client().CoinInfo.Query().Where(
-		coininfo.ID(in.CoinId),
+		coininfo.ID(npool.CoinTypeToInt32(in.CoinType)),
 	).First(ctx)
 	if err != nil {
 		err = status.Error(codes.NotFound, "record not found")
@@ -47,33 +46,52 @@ func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool
 }
 
 // 注册币种
-func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.RegisterCoinResponse, err error) {
+func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.CoinInfoRow, err error) {
+	resp = nil
 	entResp, err := db.Client().CoinInfo.Query().
 		Where(
-			coininfo.Name(in.Name),
+			coininfo.ID(npool.CoinTypeToInt32(in.CoinType)),
 		).First(ctx)
-	if err != nil {
-		err = xerrors.Errorf("internal server error: %v", err)
-		return
-	}
-	if entResp != nil {
-		// already have record
-		if in.Unit == entResp.Unit {
-			resp = &npool.RegisterCoinResponse{Info: "success"}
+	if entResp != nil && err == nil {
+		// 记录已存在
+		if in.Unit == entResp.Unit && in.Name == entResp.Name {
+			resp = dbRowToCoinInfoRow(entResp)
 			err = nil
 		} else {
-			err = xerrors.Errorf("coin name already registered as: %v, unit: %v", entResp.Name, entResp.Unit)
+			err = status.Errorf(codes.AlreadyExists, "coin name already registered as: %v, unit: %v", entResp.Name, entResp.Unit)
 		}
-	} else {
-		// MARK 默认均为在售商品？
-		_, err = db.Client().CoinInfo.Create().
-			SetName(in.Name).
-			SetUnit(in.Unit).
-			SetIsPresale(false).
-			Save(ctx)
-		if err == nil {
-			resp = &npool.RegisterCoinResponse{Info: "success"}
-		}
+		return
+	}
+	// MARK 默认均为在售商品？
+	entResp, err = db.Client().CoinInfo.Create().
+		SetID(npool.CoinTypeToInt32(in.CoinType)).
+		SetName(in.Name).
+		SetUnit(in.Unit).
+		SetIsPresale(false).
+		Save(ctx)
+	if err == nil {
+		resp = dbRowToCoinInfoRow(entResp)
+	}
+	return
+}
+
+// 设置币种权限
+func SetCoinPresale(ctx context.Context, in *npool.SetCoinPresaleRequest) (resp *npool.CoinInfoRow, err error) {
+	ci, err := db.Client().CoinInfo.Query().
+		Where(
+			coininfo.And(
+				coininfo.ID(npool.CoinTypeToInt32(in.CoinType)),
+			),
+		).First(ctx)
+	if ci == nil || err != nil {
+		err = status.Errorf(codes.NotFound, "no record found, err: %v", err)
+		return
+	}
+	ci, err = ci.Update().
+		SetIsPresale(in.IsPresale).
+		Save(ctx)
+	if err == nil {
+		resp = dbRowToCoinInfoRow(ci)
 	}
 	return
 }
