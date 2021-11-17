@@ -8,6 +8,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+var DebugFlag bool
+
 // https://github.com/grpc/grpc-go/issues/3794
 // require_unimplemented_servers=false
 type Server struct {

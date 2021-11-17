@@ -14,11 +14,35 @@ func (Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest) (
 	return crud.GetCoinInfos(ctx, in)
 }
 
-func (Server) RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.RegisterCoinResponse, err error) {
+func (Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.CoinInfoRow, err error) {
+	resp, err = crud.GetCoinInfo(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("get coininfo error: %w", err)
+		if DebugFlag {
+			err = status.Error(codes.Internal, "internal server error")
+		}
+	}
+	return
+}
+
+func (Server) RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.CoinInfoRow, err error) {
 	resp, err = crud.RegisterCoin(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorf("register coin error: %w", err)
-		return &npool.RegisterCoinResponse{Info: "failed"}, status.Error(codes.Internal, "internal server error")
+		if DebugFlag {
+			err = status.Error(codes.Internal, "internal server error")
+		}
 	}
-	return resp, nil
+	return
+}
+
+func (Server) SetCoinPresale(ctx context.Context, in *npool.SetCoinPresaleRequest) (resp *npool.CoinInfoRow, err error) {
+	resp, err = crud.SetCoinPresale(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("set coinpresale error: %w", err)
+		if DebugFlag {
+			err = status.Error(codes.Internal, "internal server error")
+		}
+	}
+	return
 }
