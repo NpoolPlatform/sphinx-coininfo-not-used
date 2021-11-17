@@ -22,7 +22,7 @@ func init() {
 	}
 	ctx = context.Background()
 	tmpCoinInfo = &npool.CoinInfoRow{
-		CoinType:  -2,
+		CoinType:  0,
 		IsPresale: false,
 		Name:      "Unit Test",
 		Unit:      "UT",

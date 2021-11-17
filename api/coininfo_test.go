@@ -20,7 +20,7 @@ func init() {
 		panic(err)
 	}
 	tmpCoinInfo = &npool.CoinInfoRow{
-		CoinType:  -2,
+		CoinType:  0,
 		IsPresale: false,
 		Name:      "Unit Test",
 		Unit:      "UT",
