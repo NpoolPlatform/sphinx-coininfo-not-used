@@ -44,6 +44,7 @@ pipeline {
       steps {
         sh (returnStdout: false, script: '''
           make -C tools/grpc install
+          rm -rf /tmp/message
           rm -rf message
           git clone https://github.com/NpoolPlatform/message.git /tmp/message
           mkdir message; mkdir message/npool
