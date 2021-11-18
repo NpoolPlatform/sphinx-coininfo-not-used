@@ -36,11 +36,14 @@ func init() {
 	tmpCoinInfo.IsPresale = false
 	tmpCoinInfo.Name = "Unknown"
 	tmpCoinInfo.Unit = "DK"
-	RegisterCoin(ctx, &npool.RegisterCoinRequest{
+	_, err := RegisterCoin(ctx, &npool.RegisterCoinRequest{
 		CoinType: tmpCoinInfo.CoinType,
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
 	})
+	if err != nil {
+		panic("create test coin failed")
+	}
 }
 
 func runByGithub() bool {

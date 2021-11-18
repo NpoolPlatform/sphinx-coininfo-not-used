@@ -61,10 +61,9 @@ func TestRegisterCoin(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.RegisterCoinRequest{
-			CoinType:   tmpCoinInfo.CoinType,
-			CoinTypeID: tmpCoinInfo.CoinTypeID,
-			Name:       tmpCoinInfo.Name,
-			Unit:       tmpCoinInfo.Unit,
+			CoinType: tmpCoinInfo.CoinType,
+			Name:     tmpCoinInfo.Name,
+			Unit:     tmpCoinInfo.Unit,
 		}).
 		Post("http://localhost:50130/v1/coin/register")
 	assert.Nil(t, err)
