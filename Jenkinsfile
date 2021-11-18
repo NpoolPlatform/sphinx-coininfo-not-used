@@ -50,7 +50,7 @@ pipeline {
           mkdir message; mkdir message/npool
           cp -r /tmp/message/npool/trading message/npool/trading
           cp -r /tmp/message/google message/google
-          cp /tmp/message/* message/
+          cp /tmp/message/* message/ || true
           PATH=$PATH:/usr/go/bin:$HOME/go/bin make -C message clean proto
           make verify-build
         '''.stripIndent())
