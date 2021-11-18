@@ -16,16 +16,16 @@ import (
 var (
 	ctx         context.Context
 	tmpCoinInfo npool.CoinInfoRow
-	Flag删库      bool
+	FlagDROP    bool // 删库开关
 )
 
 func init() {
 	if testinit.Init() != nil {
 		panic("testinit failed")
 	}
-	Flag删库 = true
+	FlagDROP = true
 	ctx = context.Background()
-	if Flag删库 {
+	if FlagDROP {
 		// dangerous
 		_, err := db.Client().CoinInfo.Delete().Where(coininfo.Not(coininfo.Name("anything"))).Exec(ctx)
 		if err != nil {
