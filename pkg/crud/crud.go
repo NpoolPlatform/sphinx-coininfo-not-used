@@ -39,8 +39,10 @@ func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool
 	entResp, err := db.Client().CoinInfo.Query().Where(
 		coininfo.ID(npool.CoinTypeToInt32(in.CoinType)),
 	).First(ctx)
-	if err != nil {
-		err = status.Error(codes.NotFound, "record not found")
+	if entResp == nil || err != nil {
+		err = status.Errorf(codes.NotFound, "record not found, err: %v", err)
+		resp = nil
+		return
 	}
 	resp = dbRowToCoinInfoRow(entResp)
 	return
