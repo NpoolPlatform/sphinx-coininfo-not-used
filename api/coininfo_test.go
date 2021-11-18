@@ -12,19 +12,17 @@ import (
 	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 )
 
-var tmpCoinInfo *npool.CoinInfoRow
+var tmpCoinInfo npool.CoinInfoRow
 
 func init() {
 	err := testinit.Init()
 	if err != nil {
 		panic(err)
 	}
-	tmpCoinInfo = &npool.CoinInfoRow{
-		CoinType:  0,
-		IsPresale: false,
-		Name:      "Unknown",
-		Unit:      "DK",
-	}
+	tmpCoinInfo.CoinType = 0
+	tmpCoinInfo.IsPresale = false
+	tmpCoinInfo.Name = "Unknown"
+	tmpCoinInfo.Unit = "DK"
 }
 
 func TestGetCoinInfo(t *testing.T) {

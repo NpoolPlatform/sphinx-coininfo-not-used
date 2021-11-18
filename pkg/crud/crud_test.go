@@ -13,7 +13,7 @@ import (
 
 var (
 	ctx         context.Context
-	tmpCoinInfo *npool.CoinInfoRow
+	tmpCoinInfo npool.CoinInfoRow
 )
 
 func init() {
@@ -21,13 +21,15 @@ func init() {
 		panic("testinit failed")
 	}
 	ctx = context.Background()
-	tmpCoinInfo = &npool.CoinInfoRow{
-		CoinType:  0,
-		IsPresale: false,
-		Name:      "Unknown",
-		Unit:      "DK",
-	}
-	TestRegisterCoin(&testing.T{})
+	tmpCoinInfo.CoinType = 0
+	tmpCoinInfo.IsPresale = false
+	tmpCoinInfo.Name = "Unknown"
+	tmpCoinInfo.Unit = "DK"
+	RegisterCoin(ctx, &npool.RegisterCoinRequest{
+		CoinType: tmpCoinInfo.CoinType,
+		Name:     tmpCoinInfo.Name,
+		Unit:     tmpCoinInfo.Unit,
+	})
 }
 
 func runByGithub() bool {
