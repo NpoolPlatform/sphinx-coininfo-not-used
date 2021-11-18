@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/go-resty/resty/v2"
 	"github.com/stretchr/testify/assert"
@@ -12,15 +13,14 @@ import (
 	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 )
 
-var tmpCoinInfo npool.CoinInfoRow
+var (
+	tmpCoinInfo     npool.CoinInfoRow
+	testInitAlready bool
+)
 
 func init() {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
-	}
-	err := testinit.Init()
-	if err != nil {
-		panic(err)
 	}
 	tmpCoinInfo.CoinTypeID = 0
 	tmpCoinInfo.CoinType = 0
@@ -31,7 +31,17 @@ func init() {
 
 func runByGithub() bool {
 	runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION"))
-	return err == nil && runByGithubAction
+	if err == nil && runByGithubAction {
+		return true
+	}
+	if testInitAlready == false {
+		testInitAlready = true
+		err = testinit.Init()
+		if err != nil {
+			logger.Sugar().Errorf("test init failed: %v", err)
+		}
+	}
+	return err == nil
 }
 
 func TestGetCoinInfo(t *testing.T) {

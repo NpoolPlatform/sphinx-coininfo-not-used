@@ -44,6 +44,9 @@ pipeline {
       steps {
         sh (returnStdout: false, script: '''
           make -C tools/grpc install
+          rm -rf message
+          git clone https://github.com/NpoolPlatform/message.git /tmp/message
+          cp -r /tmp/message/npool/trading message
           PATH=$PATH:/usr/go/bin:$HOME/go/bin make -C message clean proto
           make verify-build
         '''.stripIndent())

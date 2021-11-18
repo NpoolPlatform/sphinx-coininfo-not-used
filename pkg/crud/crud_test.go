@@ -2,6 +2,7 @@ package crud
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strconv"
 	"testing"
@@ -9,7 +10,6 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
-	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,16 +23,13 @@ func init() {
 	if runByGithub() {
 		return
 	}
-	if testinit.Init() != nil {
-		panic("testinit failed")
-	}
 	FlagDROP = true
 	ctx = context.Background()
 	if FlagDROP {
 		// dangerous
 		_, err := db.Client().CoinInfo.Delete().Where(coininfo.Not(coininfo.Name("anything"))).Exec(ctx)
 		if err != nil {
-			panic(err)
+			fmt.Println("drop database failed, ", err)
 		}
 	}
 	tmpCoinInfo.CoinType = 0
