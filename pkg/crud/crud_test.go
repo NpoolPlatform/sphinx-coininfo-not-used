@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
+	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
+	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,13 +16,22 @@ import (
 var (
 	ctx         context.Context
 	tmpCoinInfo npool.CoinInfoRow
+	Flag删库      bool
 )
 
 func init() {
 	if testinit.Init() != nil {
 		panic("testinit failed")
 	}
+	Flag删库 = true
 	ctx = context.Background()
+	if Flag删库 {
+		// dangerous
+		_, err := db.Client().CoinInfo.Delete().Where(coininfo.Not(coininfo.Name("anything"))).Exec(ctx)
+		if err != nil {
+			panic(err)
+		}
+	}
 	tmpCoinInfo.CoinType = 0
 	tmpCoinInfo.IsPresale = false
 	tmpCoinInfo.Name = "Unknown"

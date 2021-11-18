@@ -36,8 +36,9 @@ func GetCoinInfos(ctx context.Context, _ *npool.GetCoinInfosRequest) (resp *npoo
 
 // 获取单个币种
 func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.CoinInfoRow, err error) {
+	tmpID := int32(in.GetCoinType())
 	entResp, err := db.Client().CoinInfo.Query().Where(
-		coininfo.ID(npool.CoinTypeToInt32(in.CoinType)),
+		coininfo.ID(tmpID),
 	).First(ctx)
 	if entResp == nil || err != nil {
 		err = status.Errorf(codes.NotFound, "record not found, err: %v", err)
@@ -51,9 +52,10 @@ func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool
 // 注册币种
 func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.CoinInfoRow, err error) {
 	resp = nil
+	tmpID := int32(in.GetCoinType())
 	entResp, err := db.Client().CoinInfo.Query().
 		Where(
-			coininfo.ID(npool.CoinTypeToInt32(in.CoinType)),
+			coininfo.ID(tmpID),
 		).First(ctx)
 	if entResp != nil && err == nil {
 		// 记录已存在
@@ -67,7 +69,7 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 	}
 	// MARK 默认均为在售商品？
 	entResp, err = db.Client().CoinInfo.Create().
-		SetID(npool.CoinTypeToInt32(in.CoinType)).
+		SetID(int32(in.CoinType)).
 		SetName(in.Name).
 		SetUnit(in.Unit).
 		SetIsPresale(false).
@@ -83,7 +85,7 @@ func SetCoinPresale(ctx context.Context, in *npool.SetCoinPresaleRequest) (resp 
 	ci, err := db.Client().CoinInfo.Query().
 		Where(
 			coininfo.And(
-				coininfo.ID(npool.CoinTypeToInt32(in.CoinType)),
+				coininfo.ID(int32(in.CoinType)),
 			),
 		).First(ctx)
 	if ci == nil || err != nil {

@@ -19,6 +19,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	tmpCoinInfo.CoinTypeID = 0
 	tmpCoinInfo.CoinType = 0
 	tmpCoinInfo.IsPresale = false
 	tmpCoinInfo.Name = "Unknown"
@@ -33,7 +34,8 @@ func TestGetCoinInfo(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.GetCoinInfoRequest{
-			CoinType: tmpCoinInfo.CoinType,
+			CoinType:   tmpCoinInfo.CoinType,
+			CoinTypeID: tmpCoinInfo.CoinTypeID,
 		}).
 		Get("http://localhost:50130/v1/coin/single")
 	assert.Nil(t, err)
@@ -59,9 +61,10 @@ func TestRegisterCoin(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.RegisterCoinRequest{
-			CoinType: tmpCoinInfo.CoinType,
-			Name:     tmpCoinInfo.Name,
-			Unit:     tmpCoinInfo.Unit,
+			CoinType:   tmpCoinInfo.CoinType,
+			CoinTypeID: tmpCoinInfo.CoinTypeID,
+			Name:       tmpCoinInfo.Name,
+			Unit:       tmpCoinInfo.Unit,
 		}).
 		Post("http://localhost:50130/v1/coin/register")
 	assert.Nil(t, err)
@@ -75,8 +78,9 @@ func TestSetCoinPresale(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.SetCoinPresaleRequest{
-			CoinType:  tmpCoinInfo.CoinType,
-			IsPresale: false,
+			CoinType:   tmpCoinInfo.CoinType,
+			CoinTypeID: tmpCoinInfo.CoinTypeID,
+			IsPresale:  false,
 		}).
 		Post("http://localhost:50130/v1/coin/presale")
 	assert.Nil(t, err)
