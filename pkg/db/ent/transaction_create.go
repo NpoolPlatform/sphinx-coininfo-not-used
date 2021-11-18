@@ -21,23 +21,15 @@ type TransactionCreate struct {
 	hooks    []Hook
 }
 
-// SetAmountInt sets the "amount_int" field.
-func (tc *TransactionCreate) SetAmountInt(i int) *TransactionCreate {
-	tc.mutation.SetAmountInt(i)
+// SetAmountUint64 sets the "amount_uint64" field.
+func (tc *TransactionCreate) SetAmountUint64(u uint64) *TransactionCreate {
+	tc.mutation.SetAmountUint64(u)
 	return tc
 }
 
-// SetAmountDigits sets the "amount_digits" field.
-func (tc *TransactionCreate) SetAmountDigits(i int) *TransactionCreate {
-	tc.mutation.SetAmountDigits(i)
-	return tc
-}
-
-// SetNillableAmountDigits sets the "amount_digits" field if the given value is not nil.
-func (tc *TransactionCreate) SetNillableAmountDigits(i *int) *TransactionCreate {
-	if i != nil {
-		tc.SetAmountDigits(*i)
-	}
+// SetAmountFloat64 sets the "amount_float64" field.
+func (tc *TransactionCreate) SetAmountFloat64(f float64) *TransactionCreate {
+	tc.mutation.SetAmountFloat64(f)
 	return tc
 }
 
@@ -105,14 +97,26 @@ func (tc *TransactionCreate) SetNillableMutex(b *bool) *TransactionCreate {
 	return tc
 }
 
+// SetSignatureUser sets the "signature_user" field.
+func (tc *TransactionCreate) SetSignatureUser(s string) *TransactionCreate {
+	tc.mutation.SetSignatureUser(s)
+	return tc
+}
+
+// SetSignaturePlatform sets the "signature_platform" field.
+func (tc *TransactionCreate) SetSignaturePlatform(s string) *TransactionCreate {
+	tc.mutation.SetSignaturePlatform(s)
+	return tc
+}
+
 // SetCreatetimeUtc sets the "createtime_utc" field.
-func (tc *TransactionCreate) SetCreatetimeUtc(i int) *TransactionCreate {
+func (tc *TransactionCreate) SetCreatetimeUtc(i int64) *TransactionCreate {
 	tc.mutation.SetCreatetimeUtc(i)
 	return tc
 }
 
 // SetUpdatetimeUtc sets the "updatetime_utc" field.
-func (tc *TransactionCreate) SetUpdatetimeUtc(i int) *TransactionCreate {
+func (tc *TransactionCreate) SetUpdatetimeUtc(i int64) *TransactionCreate {
 	tc.mutation.SetUpdatetimeUtc(i)
 	return tc
 }
@@ -220,10 +224,6 @@ func (tc *TransactionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (tc *TransactionCreate) defaults() {
-	if _, ok := tc.mutation.AmountDigits(); !ok {
-		v := transaction.DefaultAmountDigits
-		tc.mutation.SetAmountDigits(v)
-	}
 	if _, ok := tc.mutation.NeedManualReview(); !ok {
 		v := transaction.DefaultNeedManualReview
 		tc.mutation.SetNeedManualReview(v)
@@ -236,21 +236,11 @@ func (tc *TransactionCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (tc *TransactionCreate) check() error {
-	if _, ok := tc.mutation.AmountInt(); !ok {
-		return &ValidationError{Name: "amount_int", err: errors.New(`ent: missing required field "amount_int"`)}
+	if _, ok := tc.mutation.AmountUint64(); !ok {
+		return &ValidationError{Name: "amount_uint64", err: errors.New(`ent: missing required field "amount_uint64"`)}
 	}
-	if v, ok := tc.mutation.AmountInt(); ok {
-		if err := transaction.AmountIntValidator(v); err != nil {
-			return &ValidationError{Name: "amount_int", err: fmt.Errorf(`ent: validator failed for field "amount_int": %w`, err)}
-		}
-	}
-	if _, ok := tc.mutation.AmountDigits(); !ok {
-		return &ValidationError{Name: "amount_digits", err: errors.New(`ent: missing required field "amount_digits"`)}
-	}
-	if v, ok := tc.mutation.AmountDigits(); ok {
-		if err := transaction.AmountDigitsValidator(v); err != nil {
-			return &ValidationError{Name: "amount_digits", err: fmt.Errorf(`ent: validator failed for field "amount_digits": %w`, err)}
-		}
+	if _, ok := tc.mutation.AmountFloat64(); !ok {
+		return &ValidationError{Name: "amount_float64", err: errors.New(`ent: missing required field "amount_float64"`)}
 	}
 	if _, ok := tc.mutation.AddressFrom(); !ok {
 		return &ValidationError{Name: "address_from", err: errors.New(`ent: missing required field "address_from"`)}
@@ -306,6 +296,22 @@ func (tc *TransactionCreate) check() error {
 	if _, ok := tc.mutation.Mutex(); !ok {
 		return &ValidationError{Name: "mutex", err: errors.New(`ent: missing required field "mutex"`)}
 	}
+	if _, ok := tc.mutation.SignatureUser(); !ok {
+		return &ValidationError{Name: "signature_user", err: errors.New(`ent: missing required field "signature_user"`)}
+	}
+	if v, ok := tc.mutation.SignatureUser(); ok {
+		if err := transaction.SignatureUserValidator(v); err != nil {
+			return &ValidationError{Name: "signature_user", err: fmt.Errorf(`ent: validator failed for field "signature_user": %w`, err)}
+		}
+	}
+	if _, ok := tc.mutation.SignaturePlatform(); !ok {
+		return &ValidationError{Name: "signature_platform", err: errors.New(`ent: missing required field "signature_platform"`)}
+	}
+	if v, ok := tc.mutation.SignaturePlatform(); ok {
+		if err := transaction.SignaturePlatformValidator(v); err != nil {
+			return &ValidationError{Name: "signature_platform", err: fmt.Errorf(`ent: validator failed for field "signature_platform": %w`, err)}
+		}
+	}
 	if _, ok := tc.mutation.CreatetimeUtc(); !ok {
 		return &ValidationError{Name: "createtime_utc", err: errors.New(`ent: missing required field "createtime_utc"`)}
 	}
@@ -348,21 +354,21 @@ func (tc *TransactionCreate) createSpec() (*Transaction, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := tc.mutation.AmountInt(); ok {
+	if value, ok := tc.mutation.AmountUint64(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint64,
 			Value:  value,
-			Column: transaction.FieldAmountInt,
+			Column: transaction.FieldAmountUint64,
 		})
-		_node.AmountInt = value
+		_node.AmountUint64 = value
 	}
-	if value, ok := tc.mutation.AmountDigits(); ok {
+	if value, ok := tc.mutation.AmountFloat64(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeFloat64,
 			Value:  value,
-			Column: transaction.FieldAmountDigits,
+			Column: transaction.FieldAmountFloat64,
 		})
-		_node.AmountDigits = value
+		_node.AmountFloat64 = value
 	}
 	if value, ok := tc.mutation.AddressFrom(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -428,9 +434,25 @@ func (tc *TransactionCreate) createSpec() (*Transaction, *sqlgraph.CreateSpec) {
 		})
 		_node.Mutex = value
 	}
+	if value, ok := tc.mutation.SignatureUser(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: transaction.FieldSignatureUser,
+		})
+		_node.SignatureUser = value
+	}
+	if value, ok := tc.mutation.SignaturePlatform(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: transaction.FieldSignaturePlatform,
+		})
+		_node.SignaturePlatform = value
+	}
 	if value, ok := tc.mutation.CreatetimeUtc(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldCreatetimeUtc,
 		})
@@ -438,7 +460,7 @@ func (tc *TransactionCreate) createSpec() (*Transaction, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := tc.mutation.UpdatetimeUtc(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldUpdatetimeUtc,
 		})

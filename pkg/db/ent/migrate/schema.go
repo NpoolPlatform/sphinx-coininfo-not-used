@@ -76,8 +76,8 @@ var (
 		{Name: "id", Type: field.TypeInt32, Increment: true},
 		{Name: "is_approved", Type: field.TypeBool, Default: false},
 		{Name: "operator_note", Type: field.TypeString, Size: 70},
-		{Name: "createtime_utc", Type: field.TypeInt},
-		{Name: "updatetime_utc", Type: field.TypeInt},
+		{Name: "createtime_utc", Type: field.TypeInt64},
+		{Name: "updatetime_utc", Type: field.TypeInt64},
 		{Name: "coin_info_reviews", Type: field.TypeInt32, Nullable: true},
 		{Name: "transaction_review", Type: field.TypeInt32, Nullable: true},
 	}
@@ -116,18 +116,20 @@ var (
 	// TransactionsColumns holds the columns for the "transactions" table.
 	TransactionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt32, Increment: true},
-		{Name: "amount_int", Type: field.TypeInt},
-		{Name: "amount_digits", Type: field.TypeInt, Default: 9},
+		{Name: "amount_uint64", Type: field.TypeUint64},
+		{Name: "amount_float64", Type: field.TypeFloat64},
 		{Name: "address_from", Type: field.TypeString, Size: 64},
 		{Name: "address_to", Type: field.TypeString, Size: 64},
 		{Name: "need_manual_review", Type: field.TypeBool, Default: true},
 		{Name: "type", Type: field.TypeEnum, Enums: []string{"recharge", "payment", "withdraw", "unknown"}},
 		{Name: "transaction_id_insite", Type: field.TypeString, Unique: true, Size: 64},
 		{Name: "transaction_id_chain", Type: field.TypeString, Size: 80},
-		{Name: "status", Type: field.TypeEnum, Enums: []string{"pending_review", "pending_process", "pending_signinfo", "pending_signaction", "pending_broadcast", "pending_confirm", "done", "rejected", "error", "error_expected"}},
+		{Name: "status", Type: field.TypeEnum, Enums: []string{"pending_review", "pending_process", "pending_signinfo", "pending_sign", "pending_broadcast", "pending_confirm", "done", "rejected", "error", "error_expected"}},
 		{Name: "mutex", Type: field.TypeBool, Default: false},
-		{Name: "createtime_utc", Type: field.TypeInt},
-		{Name: "updatetime_utc", Type: field.TypeInt},
+		{Name: "signature_user", Type: field.TypeString, Size: 16},
+		{Name: "signature_platform", Type: field.TypeString, Size: 64},
+		{Name: "createtime_utc", Type: field.TypeInt64},
+		{Name: "updatetime_utc", Type: field.TypeInt64},
 		{Name: "coin_info_transactions", Type: field.TypeInt32, Nullable: true},
 	}
 	// TransactionsTable holds the schema information for the "transactions" table.
@@ -138,7 +140,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "transactions_coin_infos_transactions",
-				Columns:    []*schema.Column{TransactionsColumns[13]},
+				Columns:    []*schema.Column{TransactionsColumns[15]},
 				RefColumns: []*schema.Column{CoinInfosColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -167,17 +169,17 @@ var (
 			{
 				Name:    "transaction_createtime_utc",
 				Unique:  false,
-				Columns: []*schema.Column{TransactionsColumns[11]},
+				Columns: []*schema.Column{TransactionsColumns[13]},
 			},
 			{
 				Name:    "transaction_transaction_id_insite_coin_info_transactions",
 				Unique:  true,
-				Columns: []*schema.Column{TransactionsColumns[7], TransactionsColumns[13]},
+				Columns: []*schema.Column{TransactionsColumns[7], TransactionsColumns[15]},
 			},
 			{
 				Name:    "transaction_transaction_id_chain_coin_info_transactions",
 				Unique:  true,
-				Columns: []*schema.Column{TransactionsColumns[8], TransactionsColumns[13]},
+				Columns: []*schema.Column{TransactionsColumns[8], TransactionsColumns[15]},
 			},
 		},
 	}
@@ -189,8 +191,8 @@ var (
 		{Name: "host_vendor", Type: field.TypeString},
 		{Name: "public_ip", Type: field.TypeString},
 		{Name: "local_ip", Type: field.TypeString},
-		{Name: "createtime_utc", Type: field.TypeInt},
-		{Name: "last_online_time_utc", Type: field.TypeInt},
+		{Name: "createtime_utc", Type: field.TypeInt64},
+		{Name: "last_online_time_utc", Type: field.TypeInt64},
 		{Name: "coin_info_wallet_nodes", Type: field.TypeInt32, Nullable: true},
 	}
 	// WalletNodesTable holds the schema information for the "wallet_nodes" table.

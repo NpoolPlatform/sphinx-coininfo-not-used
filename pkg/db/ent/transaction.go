@@ -16,10 +16,10 @@ type Transaction struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int32 `json:"id,omitempty"`
-	// AmountInt holds the value of the "amount_int" field.
-	AmountInt int `json:"amount_int,omitempty"`
-	// AmountDigits holds the value of the "amount_digits" field.
-	AmountDigits int `json:"amount_digits,omitempty"`
+	// AmountUint64 holds the value of the "amount_uint64" field.
+	AmountUint64 uint64 `json:"amount_uint64,omitempty"`
+	// AmountFloat64 holds the value of the "amount_float64" field.
+	AmountFloat64 float64 `json:"amount_float64,omitempty"`
 	// AddressFrom holds the value of the "address_from" field.
 	AddressFrom string `json:"address_from,omitempty"`
 	// AddressTo holds the value of the "address_to" field.
@@ -36,10 +36,14 @@ type Transaction struct {
 	Status transaction.Status `json:"status,omitempty"`
 	// Mutex holds the value of the "mutex" field.
 	Mutex bool `json:"mutex,omitempty"`
+	// SignatureUser holds the value of the "signature_user" field.
+	SignatureUser string `json:"signature_user,omitempty"`
+	// SignaturePlatform holds the value of the "signature_platform" field.
+	SignaturePlatform string `json:"signature_platform,omitempty"`
 	// CreatetimeUtc holds the value of the "createtime_utc" field.
-	CreatetimeUtc int `json:"createtime_utc,omitempty"`
+	CreatetimeUtc int64 `json:"createtime_utc,omitempty"`
 	// UpdatetimeUtc holds the value of the "updatetime_utc" field.
-	UpdatetimeUtc int `json:"updatetime_utc,omitempty"`
+	UpdatetimeUtc int64 `json:"updatetime_utc,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TransactionQuery when eager-loading is set.
 	Edges                  TransactionEdges `json:"edges"`
@@ -87,9 +91,11 @@ func (*Transaction) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case transaction.FieldNeedManualReview, transaction.FieldMutex:
 			values[i] = new(sql.NullBool)
-		case transaction.FieldID, transaction.FieldAmountInt, transaction.FieldAmountDigits, transaction.FieldCreatetimeUtc, transaction.FieldUpdatetimeUtc:
+		case transaction.FieldAmountFloat64:
+			values[i] = new(sql.NullFloat64)
+		case transaction.FieldID, transaction.FieldAmountUint64, transaction.FieldCreatetimeUtc, transaction.FieldUpdatetimeUtc:
 			values[i] = new(sql.NullInt64)
-		case transaction.FieldAddressFrom, transaction.FieldAddressTo, transaction.FieldType, transaction.FieldTransactionIDInsite, transaction.FieldTransactionIDChain, transaction.FieldStatus:
+		case transaction.FieldAddressFrom, transaction.FieldAddressTo, transaction.FieldType, transaction.FieldTransactionIDInsite, transaction.FieldTransactionIDChain, transaction.FieldStatus, transaction.FieldSignatureUser, transaction.FieldSignaturePlatform:
 			values[i] = new(sql.NullString)
 		case transaction.ForeignKeys[0]: // coin_info_transactions
 			values[i] = new(sql.NullInt64)
@@ -114,17 +120,17 @@ func (t *Transaction) assignValues(columns []string, values []interface{}) error
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			t.ID = int32(value.Int64)
-		case transaction.FieldAmountInt:
+		case transaction.FieldAmountUint64:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field amount_int", values[i])
+				return fmt.Errorf("unexpected type %T for field amount_uint64", values[i])
 			} else if value.Valid {
-				t.AmountInt = int(value.Int64)
+				t.AmountUint64 = uint64(value.Int64)
 			}
-		case transaction.FieldAmountDigits:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field amount_digits", values[i])
+		case transaction.FieldAmountFloat64:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field amount_float64", values[i])
 			} else if value.Valid {
-				t.AmountDigits = int(value.Int64)
+				t.AmountFloat64 = value.Float64
 			}
 		case transaction.FieldAddressFrom:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -174,17 +180,29 @@ func (t *Transaction) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				t.Mutex = value.Bool
 			}
+		case transaction.FieldSignatureUser:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field signature_user", values[i])
+			} else if value.Valid {
+				t.SignatureUser = value.String
+			}
+		case transaction.FieldSignaturePlatform:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field signature_platform", values[i])
+			} else if value.Valid {
+				t.SignaturePlatform = value.String
+			}
 		case transaction.FieldCreatetimeUtc:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field createtime_utc", values[i])
 			} else if value.Valid {
-				t.CreatetimeUtc = int(value.Int64)
+				t.CreatetimeUtc = value.Int64
 			}
 		case transaction.FieldUpdatetimeUtc:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updatetime_utc", values[i])
 			} else if value.Valid {
-				t.UpdatetimeUtc = int(value.Int64)
+				t.UpdatetimeUtc = value.Int64
 			}
 		case transaction.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -231,10 +249,10 @@ func (t *Transaction) String() string {
 	var builder strings.Builder
 	builder.WriteString("Transaction(")
 	builder.WriteString(fmt.Sprintf("id=%v", t.ID))
-	builder.WriteString(", amount_int=")
-	builder.WriteString(fmt.Sprintf("%v", t.AmountInt))
-	builder.WriteString(", amount_digits=")
-	builder.WriteString(fmt.Sprintf("%v", t.AmountDigits))
+	builder.WriteString(", amount_uint64=")
+	builder.WriteString(fmt.Sprintf("%v", t.AmountUint64))
+	builder.WriteString(", amount_float64=")
+	builder.WriteString(fmt.Sprintf("%v", t.AmountFloat64))
 	builder.WriteString(", address_from=")
 	builder.WriteString(t.AddressFrom)
 	builder.WriteString(", address_to=")
@@ -251,6 +269,10 @@ func (t *Transaction) String() string {
 	builder.WriteString(fmt.Sprintf("%v", t.Status))
 	builder.WriteString(", mutex=")
 	builder.WriteString(fmt.Sprintf("%v", t.Mutex))
+	builder.WriteString(", signature_user=")
+	builder.WriteString(t.SignatureUser)
+	builder.WriteString(", signature_platform=")
+	builder.WriteString(t.SignaturePlatform)
 	builder.WriteString(", createtime_utc=")
 	builder.WriteString(fmt.Sprintf("%v", t.CreatetimeUtc))
 	builder.WriteString(", updatetime_utc=")

@@ -29,37 +29,29 @@ func (tu *TransactionUpdate) Where(ps ...predicate.Transaction) *TransactionUpda
 	return tu
 }
 
-// SetAmountInt sets the "amount_int" field.
-func (tu *TransactionUpdate) SetAmountInt(i int) *TransactionUpdate {
-	tu.mutation.ResetAmountInt()
-	tu.mutation.SetAmountInt(i)
+// SetAmountUint64 sets the "amount_uint64" field.
+func (tu *TransactionUpdate) SetAmountUint64(u uint64) *TransactionUpdate {
+	tu.mutation.ResetAmountUint64()
+	tu.mutation.SetAmountUint64(u)
 	return tu
 }
 
-// AddAmountInt adds i to the "amount_int" field.
-func (tu *TransactionUpdate) AddAmountInt(i int) *TransactionUpdate {
-	tu.mutation.AddAmountInt(i)
+// AddAmountUint64 adds u to the "amount_uint64" field.
+func (tu *TransactionUpdate) AddAmountUint64(u uint64) *TransactionUpdate {
+	tu.mutation.AddAmountUint64(u)
 	return tu
 }
 
-// SetAmountDigits sets the "amount_digits" field.
-func (tu *TransactionUpdate) SetAmountDigits(i int) *TransactionUpdate {
-	tu.mutation.ResetAmountDigits()
-	tu.mutation.SetAmountDigits(i)
+// SetAmountFloat64 sets the "amount_float64" field.
+func (tu *TransactionUpdate) SetAmountFloat64(f float64) *TransactionUpdate {
+	tu.mutation.ResetAmountFloat64()
+	tu.mutation.SetAmountFloat64(f)
 	return tu
 }
 
-// SetNillableAmountDigits sets the "amount_digits" field if the given value is not nil.
-func (tu *TransactionUpdate) SetNillableAmountDigits(i *int) *TransactionUpdate {
-	if i != nil {
-		tu.SetAmountDigits(*i)
-	}
-	return tu
-}
-
-// AddAmountDigits adds i to the "amount_digits" field.
-func (tu *TransactionUpdate) AddAmountDigits(i int) *TransactionUpdate {
-	tu.mutation.AddAmountDigits(i)
+// AddAmountFloat64 adds f to the "amount_float64" field.
+func (tu *TransactionUpdate) AddAmountFloat64(f float64) *TransactionUpdate {
+	tu.mutation.AddAmountFloat64(f)
 	return tu
 }
 
@@ -127,28 +119,40 @@ func (tu *TransactionUpdate) SetNillableMutex(b *bool) *TransactionUpdate {
 	return tu
 }
 
+// SetSignatureUser sets the "signature_user" field.
+func (tu *TransactionUpdate) SetSignatureUser(s string) *TransactionUpdate {
+	tu.mutation.SetSignatureUser(s)
+	return tu
+}
+
+// SetSignaturePlatform sets the "signature_platform" field.
+func (tu *TransactionUpdate) SetSignaturePlatform(s string) *TransactionUpdate {
+	tu.mutation.SetSignaturePlatform(s)
+	return tu
+}
+
 // SetCreatetimeUtc sets the "createtime_utc" field.
-func (tu *TransactionUpdate) SetCreatetimeUtc(i int) *TransactionUpdate {
+func (tu *TransactionUpdate) SetCreatetimeUtc(i int64) *TransactionUpdate {
 	tu.mutation.ResetCreatetimeUtc()
 	tu.mutation.SetCreatetimeUtc(i)
 	return tu
 }
 
 // AddCreatetimeUtc adds i to the "createtime_utc" field.
-func (tu *TransactionUpdate) AddCreatetimeUtc(i int) *TransactionUpdate {
+func (tu *TransactionUpdate) AddCreatetimeUtc(i int64) *TransactionUpdate {
 	tu.mutation.AddCreatetimeUtc(i)
 	return tu
 }
 
 // SetUpdatetimeUtc sets the "updatetime_utc" field.
-func (tu *TransactionUpdate) SetUpdatetimeUtc(i int) *TransactionUpdate {
+func (tu *TransactionUpdate) SetUpdatetimeUtc(i int64) *TransactionUpdate {
 	tu.mutation.ResetUpdatetimeUtc()
 	tu.mutation.SetUpdatetimeUtc(i)
 	return tu
 }
 
 // AddUpdatetimeUtc adds i to the "updatetime_utc" field.
-func (tu *TransactionUpdate) AddUpdatetimeUtc(i int) *TransactionUpdate {
+func (tu *TransactionUpdate) AddUpdatetimeUtc(i int64) *TransactionUpdate {
 	tu.mutation.AddUpdatetimeUtc(i)
 	return tu
 }
@@ -273,16 +277,6 @@ func (tu *TransactionUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (tu *TransactionUpdate) check() error {
-	if v, ok := tu.mutation.AmountInt(); ok {
-		if err := transaction.AmountIntValidator(v); err != nil {
-			return &ValidationError{Name: "amount_int", err: fmt.Errorf("ent: validator failed for field \"amount_int\": %w", err)}
-		}
-	}
-	if v, ok := tu.mutation.AmountDigits(); ok {
-		if err := transaction.AmountDigitsValidator(v); err != nil {
-			return &ValidationError{Name: "amount_digits", err: fmt.Errorf("ent: validator failed for field \"amount_digits\": %w", err)}
-		}
-	}
 	if v, ok := tu.mutation.AddressFrom(); ok {
 		if err := transaction.AddressFromValidator(v); err != nil {
 			return &ValidationError{Name: "address_from", err: fmt.Errorf("ent: validator failed for field \"address_from\": %w", err)}
@@ -313,6 +307,16 @@ func (tu *TransactionUpdate) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf("ent: validator failed for field \"status\": %w", err)}
 		}
 	}
+	if v, ok := tu.mutation.SignatureUser(); ok {
+		if err := transaction.SignatureUserValidator(v); err != nil {
+			return &ValidationError{Name: "signature_user", err: fmt.Errorf("ent: validator failed for field \"signature_user\": %w", err)}
+		}
+	}
+	if v, ok := tu.mutation.SignaturePlatform(); ok {
+		if err := transaction.SignaturePlatformValidator(v); err != nil {
+			return &ValidationError{Name: "signature_platform", err: fmt.Errorf("ent: validator failed for field \"signature_platform\": %w", err)}
+		}
+	}
 	if _, ok := tu.mutation.CoinID(); tu.mutation.CoinCleared() && !ok {
 		return errors.New("ent: clearing a required unique edge \"coin\"")
 	}
@@ -337,32 +341,32 @@ func (tu *TransactionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := tu.mutation.AmountInt(); ok {
+	if value, ok := tu.mutation.AmountUint64(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint64,
 			Value:  value,
-			Column: transaction.FieldAmountInt,
+			Column: transaction.FieldAmountUint64,
 		})
 	}
-	if value, ok := tu.mutation.AddedAmountInt(); ok {
+	if value, ok := tu.mutation.AddedAmountUint64(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint64,
 			Value:  value,
-			Column: transaction.FieldAmountInt,
+			Column: transaction.FieldAmountUint64,
 		})
 	}
-	if value, ok := tu.mutation.AmountDigits(); ok {
+	if value, ok := tu.mutation.AmountFloat64(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeFloat64,
 			Value:  value,
-			Column: transaction.FieldAmountDigits,
+			Column: transaction.FieldAmountFloat64,
 		})
 	}
-	if value, ok := tu.mutation.AddedAmountDigits(); ok {
+	if value, ok := tu.mutation.AddedAmountFloat64(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeFloat64,
 			Value:  value,
-			Column: transaction.FieldAmountDigits,
+			Column: transaction.FieldAmountFloat64,
 		})
 	}
 	if value, ok := tu.mutation.AddressFrom(); ok {
@@ -421,30 +425,44 @@ func (tu *TransactionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: transaction.FieldMutex,
 		})
 	}
+	if value, ok := tu.mutation.SignatureUser(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: transaction.FieldSignatureUser,
+		})
+	}
+	if value, ok := tu.mutation.SignaturePlatform(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: transaction.FieldSignaturePlatform,
+		})
+	}
 	if value, ok := tu.mutation.CreatetimeUtc(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldCreatetimeUtc,
 		})
 	}
 	if value, ok := tu.mutation.AddedCreatetimeUtc(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldCreatetimeUtc,
 		})
 	}
 	if value, ok := tu.mutation.UpdatetimeUtc(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldUpdatetimeUtc,
 		})
 	}
 	if value, ok := tu.mutation.AddedUpdatetimeUtc(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldUpdatetimeUtc,
 		})
@@ -557,37 +575,29 @@ type TransactionUpdateOne struct {
 	mutation *TransactionMutation
 }
 
-// SetAmountInt sets the "amount_int" field.
-func (tuo *TransactionUpdateOne) SetAmountInt(i int) *TransactionUpdateOne {
-	tuo.mutation.ResetAmountInt()
-	tuo.mutation.SetAmountInt(i)
+// SetAmountUint64 sets the "amount_uint64" field.
+func (tuo *TransactionUpdateOne) SetAmountUint64(u uint64) *TransactionUpdateOne {
+	tuo.mutation.ResetAmountUint64()
+	tuo.mutation.SetAmountUint64(u)
 	return tuo
 }
 
-// AddAmountInt adds i to the "amount_int" field.
-func (tuo *TransactionUpdateOne) AddAmountInt(i int) *TransactionUpdateOne {
-	tuo.mutation.AddAmountInt(i)
+// AddAmountUint64 adds u to the "amount_uint64" field.
+func (tuo *TransactionUpdateOne) AddAmountUint64(u uint64) *TransactionUpdateOne {
+	tuo.mutation.AddAmountUint64(u)
 	return tuo
 }
 
-// SetAmountDigits sets the "amount_digits" field.
-func (tuo *TransactionUpdateOne) SetAmountDigits(i int) *TransactionUpdateOne {
-	tuo.mutation.ResetAmountDigits()
-	tuo.mutation.SetAmountDigits(i)
+// SetAmountFloat64 sets the "amount_float64" field.
+func (tuo *TransactionUpdateOne) SetAmountFloat64(f float64) *TransactionUpdateOne {
+	tuo.mutation.ResetAmountFloat64()
+	tuo.mutation.SetAmountFloat64(f)
 	return tuo
 }
 
-// SetNillableAmountDigits sets the "amount_digits" field if the given value is not nil.
-func (tuo *TransactionUpdateOne) SetNillableAmountDigits(i *int) *TransactionUpdateOne {
-	if i != nil {
-		tuo.SetAmountDigits(*i)
-	}
-	return tuo
-}
-
-// AddAmountDigits adds i to the "amount_digits" field.
-func (tuo *TransactionUpdateOne) AddAmountDigits(i int) *TransactionUpdateOne {
-	tuo.mutation.AddAmountDigits(i)
+// AddAmountFloat64 adds f to the "amount_float64" field.
+func (tuo *TransactionUpdateOne) AddAmountFloat64(f float64) *TransactionUpdateOne {
+	tuo.mutation.AddAmountFloat64(f)
 	return tuo
 }
 
@@ -655,28 +665,40 @@ func (tuo *TransactionUpdateOne) SetNillableMutex(b *bool) *TransactionUpdateOne
 	return tuo
 }
 
+// SetSignatureUser sets the "signature_user" field.
+func (tuo *TransactionUpdateOne) SetSignatureUser(s string) *TransactionUpdateOne {
+	tuo.mutation.SetSignatureUser(s)
+	return tuo
+}
+
+// SetSignaturePlatform sets the "signature_platform" field.
+func (tuo *TransactionUpdateOne) SetSignaturePlatform(s string) *TransactionUpdateOne {
+	tuo.mutation.SetSignaturePlatform(s)
+	return tuo
+}
+
 // SetCreatetimeUtc sets the "createtime_utc" field.
-func (tuo *TransactionUpdateOne) SetCreatetimeUtc(i int) *TransactionUpdateOne {
+func (tuo *TransactionUpdateOne) SetCreatetimeUtc(i int64) *TransactionUpdateOne {
 	tuo.mutation.ResetCreatetimeUtc()
 	tuo.mutation.SetCreatetimeUtc(i)
 	return tuo
 }
 
 // AddCreatetimeUtc adds i to the "createtime_utc" field.
-func (tuo *TransactionUpdateOne) AddCreatetimeUtc(i int) *TransactionUpdateOne {
+func (tuo *TransactionUpdateOne) AddCreatetimeUtc(i int64) *TransactionUpdateOne {
 	tuo.mutation.AddCreatetimeUtc(i)
 	return tuo
 }
 
 // SetUpdatetimeUtc sets the "updatetime_utc" field.
-func (tuo *TransactionUpdateOne) SetUpdatetimeUtc(i int) *TransactionUpdateOne {
+func (tuo *TransactionUpdateOne) SetUpdatetimeUtc(i int64) *TransactionUpdateOne {
 	tuo.mutation.ResetUpdatetimeUtc()
 	tuo.mutation.SetUpdatetimeUtc(i)
 	return tuo
 }
 
 // AddUpdatetimeUtc adds i to the "updatetime_utc" field.
-func (tuo *TransactionUpdateOne) AddUpdatetimeUtc(i int) *TransactionUpdateOne {
+func (tuo *TransactionUpdateOne) AddUpdatetimeUtc(i int64) *TransactionUpdateOne {
 	tuo.mutation.AddUpdatetimeUtc(i)
 	return tuo
 }
@@ -808,16 +830,6 @@ func (tuo *TransactionUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (tuo *TransactionUpdateOne) check() error {
-	if v, ok := tuo.mutation.AmountInt(); ok {
-		if err := transaction.AmountIntValidator(v); err != nil {
-			return &ValidationError{Name: "amount_int", err: fmt.Errorf("ent: validator failed for field \"amount_int\": %w", err)}
-		}
-	}
-	if v, ok := tuo.mutation.AmountDigits(); ok {
-		if err := transaction.AmountDigitsValidator(v); err != nil {
-			return &ValidationError{Name: "amount_digits", err: fmt.Errorf("ent: validator failed for field \"amount_digits\": %w", err)}
-		}
-	}
 	if v, ok := tuo.mutation.AddressFrom(); ok {
 		if err := transaction.AddressFromValidator(v); err != nil {
 			return &ValidationError{Name: "address_from", err: fmt.Errorf("ent: validator failed for field \"address_from\": %w", err)}
@@ -846,6 +858,16 @@ func (tuo *TransactionUpdateOne) check() error {
 	if v, ok := tuo.mutation.Status(); ok {
 		if err := transaction.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf("ent: validator failed for field \"status\": %w", err)}
+		}
+	}
+	if v, ok := tuo.mutation.SignatureUser(); ok {
+		if err := transaction.SignatureUserValidator(v); err != nil {
+			return &ValidationError{Name: "signature_user", err: fmt.Errorf("ent: validator failed for field \"signature_user\": %w", err)}
+		}
+	}
+	if v, ok := tuo.mutation.SignaturePlatform(); ok {
+		if err := transaction.SignaturePlatformValidator(v); err != nil {
+			return &ValidationError{Name: "signature_platform", err: fmt.Errorf("ent: validator failed for field \"signature_platform\": %w", err)}
 		}
 	}
 	if _, ok := tuo.mutation.CoinID(); tuo.mutation.CoinCleared() && !ok {
@@ -889,32 +911,32 @@ func (tuo *TransactionUpdateOne) sqlSave(ctx context.Context) (_node *Transactio
 			}
 		}
 	}
-	if value, ok := tuo.mutation.AmountInt(); ok {
+	if value, ok := tuo.mutation.AmountUint64(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint64,
 			Value:  value,
-			Column: transaction.FieldAmountInt,
+			Column: transaction.FieldAmountUint64,
 		})
 	}
-	if value, ok := tuo.mutation.AddedAmountInt(); ok {
+	if value, ok := tuo.mutation.AddedAmountUint64(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint64,
 			Value:  value,
-			Column: transaction.FieldAmountInt,
+			Column: transaction.FieldAmountUint64,
 		})
 	}
-	if value, ok := tuo.mutation.AmountDigits(); ok {
+	if value, ok := tuo.mutation.AmountFloat64(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeFloat64,
 			Value:  value,
-			Column: transaction.FieldAmountDigits,
+			Column: transaction.FieldAmountFloat64,
 		})
 	}
-	if value, ok := tuo.mutation.AddedAmountDigits(); ok {
+	if value, ok := tuo.mutation.AddedAmountFloat64(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeFloat64,
 			Value:  value,
-			Column: transaction.FieldAmountDigits,
+			Column: transaction.FieldAmountFloat64,
 		})
 	}
 	if value, ok := tuo.mutation.AddressFrom(); ok {
@@ -973,30 +995,44 @@ func (tuo *TransactionUpdateOne) sqlSave(ctx context.Context) (_node *Transactio
 			Column: transaction.FieldMutex,
 		})
 	}
+	if value, ok := tuo.mutation.SignatureUser(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: transaction.FieldSignatureUser,
+		})
+	}
+	if value, ok := tuo.mutation.SignaturePlatform(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: transaction.FieldSignaturePlatform,
+		})
+	}
 	if value, ok := tuo.mutation.CreatetimeUtc(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldCreatetimeUtc,
 		})
 	}
 	if value, ok := tuo.mutation.AddedCreatetimeUtc(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldCreatetimeUtc,
 		})
 	}
 	if value, ok := tuo.mutation.UpdatetimeUtc(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldUpdatetimeUtc,
 		})
 	}
 	if value, ok := tuo.mutation.AddedUpdatetimeUtc(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt64,
 			Value:  value,
 			Column: transaction.FieldUpdatetimeUtc,
 		})

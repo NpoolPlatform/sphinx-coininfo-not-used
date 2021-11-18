@@ -11,10 +11,10 @@ const (
 	Label = "transaction"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldAmountInt holds the string denoting the amount_int field in the database.
-	FieldAmountInt = "amount_int"
-	// FieldAmountDigits holds the string denoting the amount_digits field in the database.
-	FieldAmountDigits = "amount_digits"
+	// FieldAmountUint64 holds the string denoting the amount_uint64 field in the database.
+	FieldAmountUint64 = "amount_uint64"
+	// FieldAmountFloat64 holds the string denoting the amount_float64 field in the database.
+	FieldAmountFloat64 = "amount_float64"
 	// FieldAddressFrom holds the string denoting the address_from field in the database.
 	FieldAddressFrom = "address_from"
 	// FieldAddressTo holds the string denoting the address_to field in the database.
@@ -31,6 +31,10 @@ const (
 	FieldStatus = "status"
 	// FieldMutex holds the string denoting the mutex field in the database.
 	FieldMutex = "mutex"
+	// FieldSignatureUser holds the string denoting the signature_user field in the database.
+	FieldSignatureUser = "signature_user"
+	// FieldSignaturePlatform holds the string denoting the signature_platform field in the database.
+	FieldSignaturePlatform = "signature_platform"
 	// FieldCreatetimeUtc holds the string denoting the createtime_utc field in the database.
 	FieldCreatetimeUtc = "createtime_utc"
 	// FieldUpdatetimeUtc holds the string denoting the updatetime_utc field in the database.
@@ -60,8 +64,8 @@ const (
 // Columns holds all SQL columns for transaction fields.
 var Columns = []string{
 	FieldID,
-	FieldAmountInt,
-	FieldAmountDigits,
+	FieldAmountUint64,
+	FieldAmountFloat64,
 	FieldAddressFrom,
 	FieldAddressTo,
 	FieldNeedManualReview,
@@ -70,6 +74,8 @@ var Columns = []string{
 	FieldTransactionIDChain,
 	FieldStatus,
 	FieldMutex,
+	FieldSignatureUser,
+	FieldSignaturePlatform,
 	FieldCreatetimeUtc,
 	FieldUpdatetimeUtc,
 }
@@ -96,12 +102,6 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// AmountIntValidator is a validator for the "amount_int" field. It is called by the builders before save.
-	AmountIntValidator func(int) error
-	// DefaultAmountDigits holds the default value on creation for the "amount_digits" field.
-	DefaultAmountDigits int
-	// AmountDigitsValidator is a validator for the "amount_digits" field. It is called by the builders before save.
-	AmountDigitsValidator func(int) error
 	// AddressFromValidator is a validator for the "address_from" field. It is called by the builders before save.
 	AddressFromValidator func(string) error
 	// AddressToValidator is a validator for the "address_to" field. It is called by the builders before save.
@@ -114,6 +114,10 @@ var (
 	TransactionIDChainValidator func(string) error
 	// DefaultMutex holds the default value on creation for the "mutex" field.
 	DefaultMutex bool
+	// SignatureUserValidator is a validator for the "signature_user" field. It is called by the builders before save.
+	SignatureUserValidator func(string) error
+	// SignaturePlatformValidator is a validator for the "signature_platform" field. It is called by the builders before save.
+	SignaturePlatformValidator func(string) error
 )
 
 // Type defines the type for the "type" enum field.
@@ -146,16 +150,16 @@ type Status string
 
 // Status values.
 const (
-	StatusPendingReview     Status = "pending_review"
-	StatusPendingProcess    Status = "pending_process"
-	StatusPendingSigninfo   Status = "pending_signinfo"
-	StatusPendingSignaction Status = "pending_signaction"
-	StatusPendingBroadcast  Status = "pending_broadcast"
-	StatusPendingConfirm    Status = "pending_confirm"
-	StatusDone              Status = "done"
-	StatusRejected          Status = "rejected"
-	StatusError             Status = "error"
-	StatusErrorExpected     Status = "error_expected"
+	StatusPendingReview    Status = "pending_review"
+	StatusPendingProcess   Status = "pending_process"
+	StatusPendingSigninfo  Status = "pending_signinfo"
+	StatusPendingSign      Status = "pending_sign"
+	StatusPendingBroadcast Status = "pending_broadcast"
+	StatusPendingConfirm   Status = "pending_confirm"
+	StatusDone             Status = "done"
+	StatusRejected         Status = "rejected"
+	StatusError            Status = "error"
+	StatusErrorExpected    Status = "error_expected"
 )
 
 func (s Status) String() string {
@@ -165,7 +169,7 @@ func (s Status) String() string {
 // StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
 func StatusValidator(s Status) error {
 	switch s {
-	case StatusPendingReview, StatusPendingProcess, StatusPendingSigninfo, StatusPendingSignaction, StatusPendingBroadcast, StatusPendingConfirm, StatusDone, StatusRejected, StatusError, StatusErrorExpected:
+	case StatusPendingReview, StatusPendingProcess, StatusPendingSigninfo, StatusPendingSign, StatusPendingBroadcast, StatusPendingConfirm, StatusDone, StatusRejected, StatusError, StatusErrorExpected:
 		return nil
 	default:
 		return fmt.Errorf("transaction: invalid enum value for status field: %q", s)

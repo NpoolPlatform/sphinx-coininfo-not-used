@@ -91,17 +91,17 @@ func IDLTE(id int32) predicate.Transaction {
 	})
 }
 
-// AmountInt applies equality check predicate on the "amount_int" field. It's identical to AmountIntEQ.
-func AmountInt(v int) predicate.Transaction {
+// AmountUint64 applies equality check predicate on the "amount_uint64" field. It's identical to AmountUint64EQ.
+func AmountUint64(v uint64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAmountInt), v))
+		s.Where(sql.EQ(s.C(FieldAmountUint64), v))
 	})
 }
 
-// AmountDigits applies equality check predicate on the "amount_digits" field. It's identical to AmountDigitsEQ.
-func AmountDigits(v int) predicate.Transaction {
+// AmountFloat64 applies equality check predicate on the "amount_float64" field. It's identical to AmountFloat64EQ.
+func AmountFloat64(v float64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAmountDigits), v))
+		s.Where(sql.EQ(s.C(FieldAmountFloat64), v))
 	})
 }
 
@@ -147,36 +147,50 @@ func Mutex(v bool) predicate.Transaction {
 	})
 }
 
+// SignatureUser applies equality check predicate on the "signature_user" field. It's identical to SignatureUserEQ.
+func SignatureUser(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignaturePlatform applies equality check predicate on the "signature_platform" field. It's identical to SignaturePlatformEQ.
+func SignaturePlatform(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSignaturePlatform), v))
+	})
+}
+
 // CreatetimeUtc applies equality check predicate on the "createtime_utc" field. It's identical to CreatetimeUtcEQ.
-func CreatetimeUtc(v int) predicate.Transaction {
+func CreatetimeUtc(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldCreatetimeUtc), v))
 	})
 }
 
 // UpdatetimeUtc applies equality check predicate on the "updatetime_utc" field. It's identical to UpdatetimeUtcEQ.
-func UpdatetimeUtc(v int) predicate.Transaction {
+func UpdatetimeUtc(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUpdatetimeUtc), v))
 	})
 }
 
-// AmountIntEQ applies the EQ predicate on the "amount_int" field.
-func AmountIntEQ(v int) predicate.Transaction {
+// AmountUint64EQ applies the EQ predicate on the "amount_uint64" field.
+func AmountUint64EQ(v uint64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAmountInt), v))
+		s.Where(sql.EQ(s.C(FieldAmountUint64), v))
 	})
 }
 
-// AmountIntNEQ applies the NEQ predicate on the "amount_int" field.
-func AmountIntNEQ(v int) predicate.Transaction {
+// AmountUint64NEQ applies the NEQ predicate on the "amount_uint64" field.
+func AmountUint64NEQ(v uint64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAmountInt), v))
+		s.Where(sql.NEQ(s.C(FieldAmountUint64), v))
 	})
 }
 
-// AmountIntIn applies the In predicate on the "amount_int" field.
-func AmountIntIn(vs ...int) predicate.Transaction {
+// AmountUint64In applies the In predicate on the "amount_uint64" field.
+func AmountUint64In(vs ...uint64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -188,12 +202,12 @@ func AmountIntIn(vs ...int) predicate.Transaction {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAmountInt), v...))
+		s.Where(sql.In(s.C(FieldAmountUint64), v...))
 	})
 }
 
-// AmountIntNotIn applies the NotIn predicate on the "amount_int" field.
-func AmountIntNotIn(vs ...int) predicate.Transaction {
+// AmountUint64NotIn applies the NotIn predicate on the "amount_uint64" field.
+func AmountUint64NotIn(vs ...uint64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -205,54 +219,54 @@ func AmountIntNotIn(vs ...int) predicate.Transaction {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAmountInt), v...))
+		s.Where(sql.NotIn(s.C(FieldAmountUint64), v...))
 	})
 }
 
-// AmountIntGT applies the GT predicate on the "amount_int" field.
-func AmountIntGT(v int) predicate.Transaction {
+// AmountUint64GT applies the GT predicate on the "amount_uint64" field.
+func AmountUint64GT(v uint64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAmountInt), v))
+		s.Where(sql.GT(s.C(FieldAmountUint64), v))
 	})
 }
 
-// AmountIntGTE applies the GTE predicate on the "amount_int" field.
-func AmountIntGTE(v int) predicate.Transaction {
+// AmountUint64GTE applies the GTE predicate on the "amount_uint64" field.
+func AmountUint64GTE(v uint64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAmountInt), v))
+		s.Where(sql.GTE(s.C(FieldAmountUint64), v))
 	})
 }
 
-// AmountIntLT applies the LT predicate on the "amount_int" field.
-func AmountIntLT(v int) predicate.Transaction {
+// AmountUint64LT applies the LT predicate on the "amount_uint64" field.
+func AmountUint64LT(v uint64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAmountInt), v))
+		s.Where(sql.LT(s.C(FieldAmountUint64), v))
 	})
 }
 
-// AmountIntLTE applies the LTE predicate on the "amount_int" field.
-func AmountIntLTE(v int) predicate.Transaction {
+// AmountUint64LTE applies the LTE predicate on the "amount_uint64" field.
+func AmountUint64LTE(v uint64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAmountInt), v))
+		s.Where(sql.LTE(s.C(FieldAmountUint64), v))
 	})
 }
 
-// AmountDigitsEQ applies the EQ predicate on the "amount_digits" field.
-func AmountDigitsEQ(v int) predicate.Transaction {
+// AmountFloat64EQ applies the EQ predicate on the "amount_float64" field.
+func AmountFloat64EQ(v float64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAmountDigits), v))
+		s.Where(sql.EQ(s.C(FieldAmountFloat64), v))
 	})
 }
 
-// AmountDigitsNEQ applies the NEQ predicate on the "amount_digits" field.
-func AmountDigitsNEQ(v int) predicate.Transaction {
+// AmountFloat64NEQ applies the NEQ predicate on the "amount_float64" field.
+func AmountFloat64NEQ(v float64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAmountDigits), v))
+		s.Where(sql.NEQ(s.C(FieldAmountFloat64), v))
 	})
 }
 
-// AmountDigitsIn applies the In predicate on the "amount_digits" field.
-func AmountDigitsIn(vs ...int) predicate.Transaction {
+// AmountFloat64In applies the In predicate on the "amount_float64" field.
+func AmountFloat64In(vs ...float64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -264,12 +278,12 @@ func AmountDigitsIn(vs ...int) predicate.Transaction {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAmountDigits), v...))
+		s.Where(sql.In(s.C(FieldAmountFloat64), v...))
 	})
 }
 
-// AmountDigitsNotIn applies the NotIn predicate on the "amount_digits" field.
-func AmountDigitsNotIn(vs ...int) predicate.Transaction {
+// AmountFloat64NotIn applies the NotIn predicate on the "amount_float64" field.
+func AmountFloat64NotIn(vs ...float64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -281,35 +295,35 @@ func AmountDigitsNotIn(vs ...int) predicate.Transaction {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAmountDigits), v...))
+		s.Where(sql.NotIn(s.C(FieldAmountFloat64), v...))
 	})
 }
 
-// AmountDigitsGT applies the GT predicate on the "amount_digits" field.
-func AmountDigitsGT(v int) predicate.Transaction {
+// AmountFloat64GT applies the GT predicate on the "amount_float64" field.
+func AmountFloat64GT(v float64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAmountDigits), v))
+		s.Where(sql.GT(s.C(FieldAmountFloat64), v))
 	})
 }
 
-// AmountDigitsGTE applies the GTE predicate on the "amount_digits" field.
-func AmountDigitsGTE(v int) predicate.Transaction {
+// AmountFloat64GTE applies the GTE predicate on the "amount_float64" field.
+func AmountFloat64GTE(v float64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAmountDigits), v))
+		s.Where(sql.GTE(s.C(FieldAmountFloat64), v))
 	})
 }
 
-// AmountDigitsLT applies the LT predicate on the "amount_digits" field.
-func AmountDigitsLT(v int) predicate.Transaction {
+// AmountFloat64LT applies the LT predicate on the "amount_float64" field.
+func AmountFloat64LT(v float64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAmountDigits), v))
+		s.Where(sql.LT(s.C(FieldAmountFloat64), v))
 	})
 }
 
-// AmountDigitsLTE applies the LTE predicate on the "amount_digits" field.
-func AmountDigitsLTE(v int) predicate.Transaction {
+// AmountFloat64LTE applies the LTE predicate on the "amount_float64" field.
+func AmountFloat64LTE(v float64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAmountDigits), v))
+		s.Where(sql.LTE(s.C(FieldAmountFloat64), v))
 	})
 }
 
@@ -881,22 +895,244 @@ func MutexNEQ(v bool) predicate.Transaction {
 	})
 }
 
+// SignatureUserEQ applies the EQ predicate on the "signature_user" field.
+func SignatureUserEQ(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserNEQ applies the NEQ predicate on the "signature_user" field.
+func SignatureUserNEQ(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserIn applies the In predicate on the "signature_user" field.
+func SignatureUserIn(vs ...string) predicate.Transaction {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Transaction(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSignatureUser), v...))
+	})
+}
+
+// SignatureUserNotIn applies the NotIn predicate on the "signature_user" field.
+func SignatureUserNotIn(vs ...string) predicate.Transaction {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Transaction(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSignatureUser), v...))
+	})
+}
+
+// SignatureUserGT applies the GT predicate on the "signature_user" field.
+func SignatureUserGT(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserGTE applies the GTE predicate on the "signature_user" field.
+func SignatureUserGTE(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserLT applies the LT predicate on the "signature_user" field.
+func SignatureUserLT(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserLTE applies the LTE predicate on the "signature_user" field.
+func SignatureUserLTE(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserContains applies the Contains predicate on the "signature_user" field.
+func SignatureUserContains(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserHasPrefix applies the HasPrefix predicate on the "signature_user" field.
+func SignatureUserHasPrefix(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserHasSuffix applies the HasSuffix predicate on the "signature_user" field.
+func SignatureUserHasSuffix(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserEqualFold applies the EqualFold predicate on the "signature_user" field.
+func SignatureUserEqualFold(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignatureUserContainsFold applies the ContainsFold predicate on the "signature_user" field.
+func SignatureUserContainsFold(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSignatureUser), v))
+	})
+}
+
+// SignaturePlatformEQ applies the EQ predicate on the "signature_platform" field.
+func SignaturePlatformEQ(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformNEQ applies the NEQ predicate on the "signature_platform" field.
+func SignaturePlatformNEQ(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformIn applies the In predicate on the "signature_platform" field.
+func SignaturePlatformIn(vs ...string) predicate.Transaction {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Transaction(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSignaturePlatform), v...))
+	})
+}
+
+// SignaturePlatformNotIn applies the NotIn predicate on the "signature_platform" field.
+func SignaturePlatformNotIn(vs ...string) predicate.Transaction {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Transaction(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSignaturePlatform), v...))
+	})
+}
+
+// SignaturePlatformGT applies the GT predicate on the "signature_platform" field.
+func SignaturePlatformGT(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformGTE applies the GTE predicate on the "signature_platform" field.
+func SignaturePlatformGTE(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformLT applies the LT predicate on the "signature_platform" field.
+func SignaturePlatformLT(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformLTE applies the LTE predicate on the "signature_platform" field.
+func SignaturePlatformLTE(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformContains applies the Contains predicate on the "signature_platform" field.
+func SignaturePlatformContains(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformHasPrefix applies the HasPrefix predicate on the "signature_platform" field.
+func SignaturePlatformHasPrefix(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformHasSuffix applies the HasSuffix predicate on the "signature_platform" field.
+func SignaturePlatformHasSuffix(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformEqualFold applies the EqualFold predicate on the "signature_platform" field.
+func SignaturePlatformEqualFold(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSignaturePlatform), v))
+	})
+}
+
+// SignaturePlatformContainsFold applies the ContainsFold predicate on the "signature_platform" field.
+func SignaturePlatformContainsFold(v string) predicate.Transaction {
+	return predicate.Transaction(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSignaturePlatform), v))
+	})
+}
+
 // CreatetimeUtcEQ applies the EQ predicate on the "createtime_utc" field.
-func CreatetimeUtcEQ(v int) predicate.Transaction {
+func CreatetimeUtcEQ(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldCreatetimeUtc), v))
 	})
 }
 
 // CreatetimeUtcNEQ applies the NEQ predicate on the "createtime_utc" field.
-func CreatetimeUtcNEQ(v int) predicate.Transaction {
+func CreatetimeUtcNEQ(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldCreatetimeUtc), v))
 	})
 }
 
 // CreatetimeUtcIn applies the In predicate on the "createtime_utc" field.
-func CreatetimeUtcIn(vs ...int) predicate.Transaction {
+func CreatetimeUtcIn(vs ...int64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -913,7 +1149,7 @@ func CreatetimeUtcIn(vs ...int) predicate.Transaction {
 }
 
 // CreatetimeUtcNotIn applies the NotIn predicate on the "createtime_utc" field.
-func CreatetimeUtcNotIn(vs ...int) predicate.Transaction {
+func CreatetimeUtcNotIn(vs ...int64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -930,49 +1166,49 @@ func CreatetimeUtcNotIn(vs ...int) predicate.Transaction {
 }
 
 // CreatetimeUtcGT applies the GT predicate on the "createtime_utc" field.
-func CreatetimeUtcGT(v int) predicate.Transaction {
+func CreatetimeUtcGT(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldCreatetimeUtc), v))
 	})
 }
 
 // CreatetimeUtcGTE applies the GTE predicate on the "createtime_utc" field.
-func CreatetimeUtcGTE(v int) predicate.Transaction {
+func CreatetimeUtcGTE(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldCreatetimeUtc), v))
 	})
 }
 
 // CreatetimeUtcLT applies the LT predicate on the "createtime_utc" field.
-func CreatetimeUtcLT(v int) predicate.Transaction {
+func CreatetimeUtcLT(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldCreatetimeUtc), v))
 	})
 }
 
 // CreatetimeUtcLTE applies the LTE predicate on the "createtime_utc" field.
-func CreatetimeUtcLTE(v int) predicate.Transaction {
+func CreatetimeUtcLTE(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldCreatetimeUtc), v))
 	})
 }
 
 // UpdatetimeUtcEQ applies the EQ predicate on the "updatetime_utc" field.
-func UpdatetimeUtcEQ(v int) predicate.Transaction {
+func UpdatetimeUtcEQ(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUpdatetimeUtc), v))
 	})
 }
 
 // UpdatetimeUtcNEQ applies the NEQ predicate on the "updatetime_utc" field.
-func UpdatetimeUtcNEQ(v int) predicate.Transaction {
+func UpdatetimeUtcNEQ(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldUpdatetimeUtc), v))
 	})
 }
 
 // UpdatetimeUtcIn applies the In predicate on the "updatetime_utc" field.
-func UpdatetimeUtcIn(vs ...int) predicate.Transaction {
+func UpdatetimeUtcIn(vs ...int64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -989,7 +1225,7 @@ func UpdatetimeUtcIn(vs ...int) predicate.Transaction {
 }
 
 // UpdatetimeUtcNotIn applies the NotIn predicate on the "updatetime_utc" field.
-func UpdatetimeUtcNotIn(vs ...int) predicate.Transaction {
+func UpdatetimeUtcNotIn(vs ...int64) predicate.Transaction {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1006,28 +1242,28 @@ func UpdatetimeUtcNotIn(vs ...int) predicate.Transaction {
 }
 
 // UpdatetimeUtcGT applies the GT predicate on the "updatetime_utc" field.
-func UpdatetimeUtcGT(v int) predicate.Transaction {
+func UpdatetimeUtcGT(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldUpdatetimeUtc), v))
 	})
 }
 
 // UpdatetimeUtcGTE applies the GTE predicate on the "updatetime_utc" field.
-func UpdatetimeUtcGTE(v int) predicate.Transaction {
+func UpdatetimeUtcGTE(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldUpdatetimeUtc), v))
 	})
 }
 
 // UpdatetimeUtcLT applies the LT predicate on the "updatetime_utc" field.
-func UpdatetimeUtcLT(v int) predicate.Transaction {
+func UpdatetimeUtcLT(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldUpdatetimeUtc), v))
 	})
 }
 
 // UpdatetimeUtcLTE applies the LTE predicate on the "updatetime_utc" field.
-func UpdatetimeUtcLTE(v int) predicate.Transaction {
+func UpdatetimeUtcLTE(v int64) predicate.Transaction {
 	return predicate.Transaction(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldUpdatetimeUtc), v))
 	})

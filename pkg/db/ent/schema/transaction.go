@@ -14,8 +14,8 @@ type Transaction struct {
 func (Transaction) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int32("id"),
-		field.Int("amount_int").Positive(),
-		field.Int("amount_digits").NonNegative().Default(9),
+		field.Uint64("amount_uint64"),
+		field.Float("amount_float64"),
 		field.String("address_from").MaxLen(64).NotEmpty(),
 		field.String("address_to").MaxLen(64).NotEmpty(),
 		field.Bool("need_manual_review").Default(true),
@@ -26,11 +26,13 @@ func (Transaction) Fields() []ent.Field {
 		field.String("transaction_id_chain").
 			MaxLen(80),
 		field.Enum("status").
-			Values("pending_review", "pending_process", "pending_signinfo", "pending_signaction", "pending_broadcast", "pending_confirm", "done", "rejected", "error", "error_expected"),
+			Values("pending_review", "pending_process", "pending_signinfo", "pending_sign", "pending_broadcast", "pending_confirm", "done", "rejected", "error", "error_expected"),
 		field.Bool("mutex").
 			Default(false),
-		field.Int("createtime_utc"),
-		field.Int("updatetime_utc"),
+		field.String("signature_user").MaxLen(16),
+		field.String("signature_platform").MaxLen(64),
+		field.Int64("createtime_utc"),
+		field.Int64("updatetime_utc"),
 	}
 }
 

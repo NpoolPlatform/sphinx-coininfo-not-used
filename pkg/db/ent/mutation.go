@@ -1441,10 +1441,10 @@ type ReviewMutation struct {
 	id                 *int32
 	is_approved        *bool
 	operator_note      *string
-	createtime_utc     *int
-	addcreatetime_utc  *int
-	updatetime_utc     *int
-	addupdatetime_utc  *int
+	createtime_utc     *int64
+	addcreatetime_utc  *int64
+	updatetime_utc     *int64
+	addupdatetime_utc  *int64
 	clearedFields      map[string]struct{}
 	transaction        *int32
 	clearedtransaction bool
@@ -1613,13 +1613,13 @@ func (m *ReviewMutation) ResetOperatorNote() {
 }
 
 // SetCreatetimeUtc sets the "createtime_utc" field.
-func (m *ReviewMutation) SetCreatetimeUtc(i int) {
+func (m *ReviewMutation) SetCreatetimeUtc(i int64) {
 	m.createtime_utc = &i
 	m.addcreatetime_utc = nil
 }
 
 // CreatetimeUtc returns the value of the "createtime_utc" field in the mutation.
-func (m *ReviewMutation) CreatetimeUtc() (r int, exists bool) {
+func (m *ReviewMutation) CreatetimeUtc() (r int64, exists bool) {
 	v := m.createtime_utc
 	if v == nil {
 		return
@@ -1630,7 +1630,7 @@ func (m *ReviewMutation) CreatetimeUtc() (r int, exists bool) {
 // OldCreatetimeUtc returns the old "createtime_utc" field's value of the Review entity.
 // If the Review object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ReviewMutation) OldCreatetimeUtc(ctx context.Context) (v int, err error) {
+func (m *ReviewMutation) OldCreatetimeUtc(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldCreatetimeUtc is only allowed on UpdateOne operations")
 	}
@@ -1645,7 +1645,7 @@ func (m *ReviewMutation) OldCreatetimeUtc(ctx context.Context) (v int, err error
 }
 
 // AddCreatetimeUtc adds i to the "createtime_utc" field.
-func (m *ReviewMutation) AddCreatetimeUtc(i int) {
+func (m *ReviewMutation) AddCreatetimeUtc(i int64) {
 	if m.addcreatetime_utc != nil {
 		*m.addcreatetime_utc += i
 	} else {
@@ -1654,7 +1654,7 @@ func (m *ReviewMutation) AddCreatetimeUtc(i int) {
 }
 
 // AddedCreatetimeUtc returns the value that was added to the "createtime_utc" field in this mutation.
-func (m *ReviewMutation) AddedCreatetimeUtc() (r int, exists bool) {
+func (m *ReviewMutation) AddedCreatetimeUtc() (r int64, exists bool) {
 	v := m.addcreatetime_utc
 	if v == nil {
 		return
@@ -1669,13 +1669,13 @@ func (m *ReviewMutation) ResetCreatetimeUtc() {
 }
 
 // SetUpdatetimeUtc sets the "updatetime_utc" field.
-func (m *ReviewMutation) SetUpdatetimeUtc(i int) {
+func (m *ReviewMutation) SetUpdatetimeUtc(i int64) {
 	m.updatetime_utc = &i
 	m.addupdatetime_utc = nil
 }
 
 // UpdatetimeUtc returns the value of the "updatetime_utc" field in the mutation.
-func (m *ReviewMutation) UpdatetimeUtc() (r int, exists bool) {
+func (m *ReviewMutation) UpdatetimeUtc() (r int64, exists bool) {
 	v := m.updatetime_utc
 	if v == nil {
 		return
@@ -1686,7 +1686,7 @@ func (m *ReviewMutation) UpdatetimeUtc() (r int, exists bool) {
 // OldUpdatetimeUtc returns the old "updatetime_utc" field's value of the Review entity.
 // If the Review object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ReviewMutation) OldUpdatetimeUtc(ctx context.Context) (v int, err error) {
+func (m *ReviewMutation) OldUpdatetimeUtc(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldUpdatetimeUtc is only allowed on UpdateOne operations")
 	}
@@ -1701,7 +1701,7 @@ func (m *ReviewMutation) OldUpdatetimeUtc(ctx context.Context) (v int, err error
 }
 
 // AddUpdatetimeUtc adds i to the "updatetime_utc" field.
-func (m *ReviewMutation) AddUpdatetimeUtc(i int) {
+func (m *ReviewMutation) AddUpdatetimeUtc(i int64) {
 	if m.addupdatetime_utc != nil {
 		*m.addupdatetime_utc += i
 	} else {
@@ -1710,7 +1710,7 @@ func (m *ReviewMutation) AddUpdatetimeUtc(i int) {
 }
 
 // AddedUpdatetimeUtc returns the value that was added to the "updatetime_utc" field in this mutation.
-func (m *ReviewMutation) AddedUpdatetimeUtc() (r int, exists bool) {
+func (m *ReviewMutation) AddedUpdatetimeUtc() (r int64, exists bool) {
 	v := m.addupdatetime_utc
 	if v == nil {
 		return
@@ -1891,14 +1891,14 @@ func (m *ReviewMutation) SetField(name string, value ent.Value) error {
 		m.SetOperatorNote(v)
 		return nil
 	case review.FieldCreatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatetimeUtc(v)
 		return nil
 	case review.FieldUpdatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1940,14 +1940,14 @@ func (m *ReviewMutation) AddedField(name string) (ent.Value, bool) {
 func (m *ReviewMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case review.FieldCreatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatetimeUtc(v)
 		return nil
 	case review.FieldUpdatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -2096,10 +2096,10 @@ type TransactionMutation struct {
 	op                    Op
 	typ                   string
 	id                    *int32
-	amount_int            *int
-	addamount_int         *int
-	amount_digits         *int
-	addamount_digits      *int
+	amount_uint64         *uint64
+	addamount_uint64      *uint64
+	amount_float64        *float64
+	addamount_float64     *float64
 	address_from          *string
 	address_to            *string
 	need_manual_review    *bool
@@ -2108,10 +2108,12 @@ type TransactionMutation struct {
 	transaction_id_chain  *string
 	status                *transaction.Status
 	mutex                 *bool
-	createtime_utc        *int
-	addcreatetime_utc     *int
-	updatetime_utc        *int
-	addupdatetime_utc     *int
+	signature_user        *string
+	signature_platform    *string
+	createtime_utc        *int64
+	addcreatetime_utc     *int64
+	updatetime_utc        *int64
+	addupdatetime_utc     *int64
 	clearedFields         map[string]struct{}
 	coin                  *int32
 	clearedcoin           bool
@@ -2208,116 +2210,116 @@ func (m *TransactionMutation) ID() (id int32, exists bool) {
 	return *m.id, true
 }
 
-// SetAmountInt sets the "amount_int" field.
-func (m *TransactionMutation) SetAmountInt(i int) {
-	m.amount_int = &i
-	m.addamount_int = nil
+// SetAmountUint64 sets the "amount_uint64" field.
+func (m *TransactionMutation) SetAmountUint64(u uint64) {
+	m.amount_uint64 = &u
+	m.addamount_uint64 = nil
 }
 
-// AmountInt returns the value of the "amount_int" field in the mutation.
-func (m *TransactionMutation) AmountInt() (r int, exists bool) {
-	v := m.amount_int
+// AmountUint64 returns the value of the "amount_uint64" field in the mutation.
+func (m *TransactionMutation) AmountUint64() (r uint64, exists bool) {
+	v := m.amount_uint64
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAmountInt returns the old "amount_int" field's value of the Transaction entity.
+// OldAmountUint64 returns the old "amount_uint64" field's value of the Transaction entity.
 // If the Transaction object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TransactionMutation) OldAmountInt(ctx context.Context) (v int, err error) {
+func (m *TransactionMutation) OldAmountUint64(ctx context.Context) (v uint64, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAmountInt is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldAmountUint64 is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAmountInt requires an ID field in the mutation")
+		return v, fmt.Errorf("OldAmountUint64 requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAmountInt: %w", err)
+		return v, fmt.Errorf("querying old value for OldAmountUint64: %w", err)
 	}
-	return oldValue.AmountInt, nil
+	return oldValue.AmountUint64, nil
 }
 
-// AddAmountInt adds i to the "amount_int" field.
-func (m *TransactionMutation) AddAmountInt(i int) {
-	if m.addamount_int != nil {
-		*m.addamount_int += i
+// AddAmountUint64 adds u to the "amount_uint64" field.
+func (m *TransactionMutation) AddAmountUint64(u uint64) {
+	if m.addamount_uint64 != nil {
+		*m.addamount_uint64 += u
 	} else {
-		m.addamount_int = &i
+		m.addamount_uint64 = &u
 	}
 }
 
-// AddedAmountInt returns the value that was added to the "amount_int" field in this mutation.
-func (m *TransactionMutation) AddedAmountInt() (r int, exists bool) {
-	v := m.addamount_int
+// AddedAmountUint64 returns the value that was added to the "amount_uint64" field in this mutation.
+func (m *TransactionMutation) AddedAmountUint64() (r uint64, exists bool) {
+	v := m.addamount_uint64
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetAmountInt resets all changes to the "amount_int" field.
-func (m *TransactionMutation) ResetAmountInt() {
-	m.amount_int = nil
-	m.addamount_int = nil
+// ResetAmountUint64 resets all changes to the "amount_uint64" field.
+func (m *TransactionMutation) ResetAmountUint64() {
+	m.amount_uint64 = nil
+	m.addamount_uint64 = nil
 }
 
-// SetAmountDigits sets the "amount_digits" field.
-func (m *TransactionMutation) SetAmountDigits(i int) {
-	m.amount_digits = &i
-	m.addamount_digits = nil
+// SetAmountFloat64 sets the "amount_float64" field.
+func (m *TransactionMutation) SetAmountFloat64(f float64) {
+	m.amount_float64 = &f
+	m.addamount_float64 = nil
 }
 
-// AmountDigits returns the value of the "amount_digits" field in the mutation.
-func (m *TransactionMutation) AmountDigits() (r int, exists bool) {
-	v := m.amount_digits
+// AmountFloat64 returns the value of the "amount_float64" field in the mutation.
+func (m *TransactionMutation) AmountFloat64() (r float64, exists bool) {
+	v := m.amount_float64
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAmountDigits returns the old "amount_digits" field's value of the Transaction entity.
+// OldAmountFloat64 returns the old "amount_float64" field's value of the Transaction entity.
 // If the Transaction object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TransactionMutation) OldAmountDigits(ctx context.Context) (v int, err error) {
+func (m *TransactionMutation) OldAmountFloat64(ctx context.Context) (v float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAmountDigits is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldAmountFloat64 is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAmountDigits requires an ID field in the mutation")
+		return v, fmt.Errorf("OldAmountFloat64 requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAmountDigits: %w", err)
+		return v, fmt.Errorf("querying old value for OldAmountFloat64: %w", err)
 	}
-	return oldValue.AmountDigits, nil
+	return oldValue.AmountFloat64, nil
 }
 
-// AddAmountDigits adds i to the "amount_digits" field.
-func (m *TransactionMutation) AddAmountDigits(i int) {
-	if m.addamount_digits != nil {
-		*m.addamount_digits += i
+// AddAmountFloat64 adds f to the "amount_float64" field.
+func (m *TransactionMutation) AddAmountFloat64(f float64) {
+	if m.addamount_float64 != nil {
+		*m.addamount_float64 += f
 	} else {
-		m.addamount_digits = &i
+		m.addamount_float64 = &f
 	}
 }
 
-// AddedAmountDigits returns the value that was added to the "amount_digits" field in this mutation.
-func (m *TransactionMutation) AddedAmountDigits() (r int, exists bool) {
-	v := m.addamount_digits
+// AddedAmountFloat64 returns the value that was added to the "amount_float64" field in this mutation.
+func (m *TransactionMutation) AddedAmountFloat64() (r float64, exists bool) {
+	v := m.addamount_float64
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetAmountDigits resets all changes to the "amount_digits" field.
-func (m *TransactionMutation) ResetAmountDigits() {
-	m.amount_digits = nil
-	m.addamount_digits = nil
+// ResetAmountFloat64 resets all changes to the "amount_float64" field.
+func (m *TransactionMutation) ResetAmountFloat64() {
+	m.amount_float64 = nil
+	m.addamount_float64 = nil
 }
 
 // SetAddressFrom sets the "address_from" field.
@@ -2608,14 +2610,86 @@ func (m *TransactionMutation) ResetMutex() {
 	m.mutex = nil
 }
 
+// SetSignatureUser sets the "signature_user" field.
+func (m *TransactionMutation) SetSignatureUser(s string) {
+	m.signature_user = &s
+}
+
+// SignatureUser returns the value of the "signature_user" field in the mutation.
+func (m *TransactionMutation) SignatureUser() (r string, exists bool) {
+	v := m.signature_user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSignatureUser returns the old "signature_user" field's value of the Transaction entity.
+// If the Transaction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TransactionMutation) OldSignatureUser(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldSignatureUser is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldSignatureUser requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSignatureUser: %w", err)
+	}
+	return oldValue.SignatureUser, nil
+}
+
+// ResetSignatureUser resets all changes to the "signature_user" field.
+func (m *TransactionMutation) ResetSignatureUser() {
+	m.signature_user = nil
+}
+
+// SetSignaturePlatform sets the "signature_platform" field.
+func (m *TransactionMutation) SetSignaturePlatform(s string) {
+	m.signature_platform = &s
+}
+
+// SignaturePlatform returns the value of the "signature_platform" field in the mutation.
+func (m *TransactionMutation) SignaturePlatform() (r string, exists bool) {
+	v := m.signature_platform
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSignaturePlatform returns the old "signature_platform" field's value of the Transaction entity.
+// If the Transaction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TransactionMutation) OldSignaturePlatform(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldSignaturePlatform is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldSignaturePlatform requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSignaturePlatform: %w", err)
+	}
+	return oldValue.SignaturePlatform, nil
+}
+
+// ResetSignaturePlatform resets all changes to the "signature_platform" field.
+func (m *TransactionMutation) ResetSignaturePlatform() {
+	m.signature_platform = nil
+}
+
 // SetCreatetimeUtc sets the "createtime_utc" field.
-func (m *TransactionMutation) SetCreatetimeUtc(i int) {
+func (m *TransactionMutation) SetCreatetimeUtc(i int64) {
 	m.createtime_utc = &i
 	m.addcreatetime_utc = nil
 }
 
 // CreatetimeUtc returns the value of the "createtime_utc" field in the mutation.
-func (m *TransactionMutation) CreatetimeUtc() (r int, exists bool) {
+func (m *TransactionMutation) CreatetimeUtc() (r int64, exists bool) {
 	v := m.createtime_utc
 	if v == nil {
 		return
@@ -2626,7 +2700,7 @@ func (m *TransactionMutation) CreatetimeUtc() (r int, exists bool) {
 // OldCreatetimeUtc returns the old "createtime_utc" field's value of the Transaction entity.
 // If the Transaction object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TransactionMutation) OldCreatetimeUtc(ctx context.Context) (v int, err error) {
+func (m *TransactionMutation) OldCreatetimeUtc(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldCreatetimeUtc is only allowed on UpdateOne operations")
 	}
@@ -2641,7 +2715,7 @@ func (m *TransactionMutation) OldCreatetimeUtc(ctx context.Context) (v int, err 
 }
 
 // AddCreatetimeUtc adds i to the "createtime_utc" field.
-func (m *TransactionMutation) AddCreatetimeUtc(i int) {
+func (m *TransactionMutation) AddCreatetimeUtc(i int64) {
 	if m.addcreatetime_utc != nil {
 		*m.addcreatetime_utc += i
 	} else {
@@ -2650,7 +2724,7 @@ func (m *TransactionMutation) AddCreatetimeUtc(i int) {
 }
 
 // AddedCreatetimeUtc returns the value that was added to the "createtime_utc" field in this mutation.
-func (m *TransactionMutation) AddedCreatetimeUtc() (r int, exists bool) {
+func (m *TransactionMutation) AddedCreatetimeUtc() (r int64, exists bool) {
 	v := m.addcreatetime_utc
 	if v == nil {
 		return
@@ -2665,13 +2739,13 @@ func (m *TransactionMutation) ResetCreatetimeUtc() {
 }
 
 // SetUpdatetimeUtc sets the "updatetime_utc" field.
-func (m *TransactionMutation) SetUpdatetimeUtc(i int) {
+func (m *TransactionMutation) SetUpdatetimeUtc(i int64) {
 	m.updatetime_utc = &i
 	m.addupdatetime_utc = nil
 }
 
 // UpdatetimeUtc returns the value of the "updatetime_utc" field in the mutation.
-func (m *TransactionMutation) UpdatetimeUtc() (r int, exists bool) {
+func (m *TransactionMutation) UpdatetimeUtc() (r int64, exists bool) {
 	v := m.updatetime_utc
 	if v == nil {
 		return
@@ -2682,7 +2756,7 @@ func (m *TransactionMutation) UpdatetimeUtc() (r int, exists bool) {
 // OldUpdatetimeUtc returns the old "updatetime_utc" field's value of the Transaction entity.
 // If the Transaction object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TransactionMutation) OldUpdatetimeUtc(ctx context.Context) (v int, err error) {
+func (m *TransactionMutation) OldUpdatetimeUtc(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldUpdatetimeUtc is only allowed on UpdateOne operations")
 	}
@@ -2697,7 +2771,7 @@ func (m *TransactionMutation) OldUpdatetimeUtc(ctx context.Context) (v int, err 
 }
 
 // AddUpdatetimeUtc adds i to the "updatetime_utc" field.
-func (m *TransactionMutation) AddUpdatetimeUtc(i int) {
+func (m *TransactionMutation) AddUpdatetimeUtc(i int64) {
 	if m.addupdatetime_utc != nil {
 		*m.addupdatetime_utc += i
 	} else {
@@ -2706,7 +2780,7 @@ func (m *TransactionMutation) AddUpdatetimeUtc(i int) {
 }
 
 // AddedUpdatetimeUtc returns the value that was added to the "updatetime_utc" field in this mutation.
-func (m *TransactionMutation) AddedUpdatetimeUtc() (r int, exists bool) {
+func (m *TransactionMutation) AddedUpdatetimeUtc() (r int64, exists bool) {
 	v := m.addupdatetime_utc
 	if v == nil {
 		return
@@ -2832,12 +2906,12 @@ func (m *TransactionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TransactionMutation) Fields() []string {
-	fields := make([]string, 0, 12)
-	if m.amount_int != nil {
-		fields = append(fields, transaction.FieldAmountInt)
+	fields := make([]string, 0, 14)
+	if m.amount_uint64 != nil {
+		fields = append(fields, transaction.FieldAmountUint64)
 	}
-	if m.amount_digits != nil {
-		fields = append(fields, transaction.FieldAmountDigits)
+	if m.amount_float64 != nil {
+		fields = append(fields, transaction.FieldAmountFloat64)
 	}
 	if m.address_from != nil {
 		fields = append(fields, transaction.FieldAddressFrom)
@@ -2863,6 +2937,12 @@ func (m *TransactionMutation) Fields() []string {
 	if m.mutex != nil {
 		fields = append(fields, transaction.FieldMutex)
 	}
+	if m.signature_user != nil {
+		fields = append(fields, transaction.FieldSignatureUser)
+	}
+	if m.signature_platform != nil {
+		fields = append(fields, transaction.FieldSignaturePlatform)
+	}
 	if m.createtime_utc != nil {
 		fields = append(fields, transaction.FieldCreatetimeUtc)
 	}
@@ -2877,10 +2957,10 @@ func (m *TransactionMutation) Fields() []string {
 // schema.
 func (m *TransactionMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case transaction.FieldAmountInt:
-		return m.AmountInt()
-	case transaction.FieldAmountDigits:
-		return m.AmountDigits()
+	case transaction.FieldAmountUint64:
+		return m.AmountUint64()
+	case transaction.FieldAmountFloat64:
+		return m.AmountFloat64()
 	case transaction.FieldAddressFrom:
 		return m.AddressFrom()
 	case transaction.FieldAddressTo:
@@ -2897,6 +2977,10 @@ func (m *TransactionMutation) Field(name string) (ent.Value, bool) {
 		return m.Status()
 	case transaction.FieldMutex:
 		return m.Mutex()
+	case transaction.FieldSignatureUser:
+		return m.SignatureUser()
+	case transaction.FieldSignaturePlatform:
+		return m.SignaturePlatform()
 	case transaction.FieldCreatetimeUtc:
 		return m.CreatetimeUtc()
 	case transaction.FieldUpdatetimeUtc:
@@ -2910,10 +2994,10 @@ func (m *TransactionMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *TransactionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case transaction.FieldAmountInt:
-		return m.OldAmountInt(ctx)
-	case transaction.FieldAmountDigits:
-		return m.OldAmountDigits(ctx)
+	case transaction.FieldAmountUint64:
+		return m.OldAmountUint64(ctx)
+	case transaction.FieldAmountFloat64:
+		return m.OldAmountFloat64(ctx)
 	case transaction.FieldAddressFrom:
 		return m.OldAddressFrom(ctx)
 	case transaction.FieldAddressTo:
@@ -2930,6 +3014,10 @@ func (m *TransactionMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldStatus(ctx)
 	case transaction.FieldMutex:
 		return m.OldMutex(ctx)
+	case transaction.FieldSignatureUser:
+		return m.OldSignatureUser(ctx)
+	case transaction.FieldSignaturePlatform:
+		return m.OldSignaturePlatform(ctx)
 	case transaction.FieldCreatetimeUtc:
 		return m.OldCreatetimeUtc(ctx)
 	case transaction.FieldUpdatetimeUtc:
@@ -2943,19 +3031,19 @@ func (m *TransactionMutation) OldField(ctx context.Context, name string) (ent.Va
 // type.
 func (m *TransactionMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case transaction.FieldAmountInt:
-		v, ok := value.(int)
+	case transaction.FieldAmountUint64:
+		v, ok := value.(uint64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAmountInt(v)
+		m.SetAmountUint64(v)
 		return nil
-	case transaction.FieldAmountDigits:
-		v, ok := value.(int)
+	case transaction.FieldAmountFloat64:
+		v, ok := value.(float64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAmountDigits(v)
+		m.SetAmountFloat64(v)
 		return nil
 	case transaction.FieldAddressFrom:
 		v, ok := value.(string)
@@ -3013,15 +3101,29 @@ func (m *TransactionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetMutex(v)
 		return nil
+	case transaction.FieldSignatureUser:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSignatureUser(v)
+		return nil
+	case transaction.FieldSignaturePlatform:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSignaturePlatform(v)
+		return nil
 	case transaction.FieldCreatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatetimeUtc(v)
 		return nil
 	case transaction.FieldUpdatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3035,11 +3137,11 @@ func (m *TransactionMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *TransactionMutation) AddedFields() []string {
 	var fields []string
-	if m.addamount_int != nil {
-		fields = append(fields, transaction.FieldAmountInt)
+	if m.addamount_uint64 != nil {
+		fields = append(fields, transaction.FieldAmountUint64)
 	}
-	if m.addamount_digits != nil {
-		fields = append(fields, transaction.FieldAmountDigits)
+	if m.addamount_float64 != nil {
+		fields = append(fields, transaction.FieldAmountFloat64)
 	}
 	if m.addcreatetime_utc != nil {
 		fields = append(fields, transaction.FieldCreatetimeUtc)
@@ -3055,10 +3157,10 @@ func (m *TransactionMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *TransactionMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case transaction.FieldAmountInt:
-		return m.AddedAmountInt()
-	case transaction.FieldAmountDigits:
-		return m.AddedAmountDigits()
+	case transaction.FieldAmountUint64:
+		return m.AddedAmountUint64()
+	case transaction.FieldAmountFloat64:
+		return m.AddedAmountFloat64()
 	case transaction.FieldCreatetimeUtc:
 		return m.AddedCreatetimeUtc()
 	case transaction.FieldUpdatetimeUtc:
@@ -3072,29 +3174,29 @@ func (m *TransactionMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *TransactionMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case transaction.FieldAmountInt:
-		v, ok := value.(int)
+	case transaction.FieldAmountUint64:
+		v, ok := value.(uint64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddAmountInt(v)
+		m.AddAmountUint64(v)
 		return nil
-	case transaction.FieldAmountDigits:
-		v, ok := value.(int)
+	case transaction.FieldAmountFloat64:
+		v, ok := value.(float64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddAmountDigits(v)
+		m.AddAmountFloat64(v)
 		return nil
 	case transaction.FieldCreatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatetimeUtc(v)
 		return nil
 	case transaction.FieldUpdatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3127,11 +3229,11 @@ func (m *TransactionMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *TransactionMutation) ResetField(name string) error {
 	switch name {
-	case transaction.FieldAmountInt:
-		m.ResetAmountInt()
+	case transaction.FieldAmountUint64:
+		m.ResetAmountUint64()
 		return nil
-	case transaction.FieldAmountDigits:
-		m.ResetAmountDigits()
+	case transaction.FieldAmountFloat64:
+		m.ResetAmountFloat64()
 		return nil
 	case transaction.FieldAddressFrom:
 		m.ResetAddressFrom()
@@ -3156,6 +3258,12 @@ func (m *TransactionMutation) ResetField(name string) error {
 		return nil
 	case transaction.FieldMutex:
 		m.ResetMutex()
+		return nil
+	case transaction.FieldSignatureUser:
+		m.ResetSignatureUser()
+		return nil
+	case transaction.FieldSignaturePlatform:
+		m.ResetSignaturePlatform()
 		return nil
 	case transaction.FieldCreatetimeUtc:
 		m.ResetCreatetimeUtc()
@@ -3280,10 +3388,10 @@ type WalletNodeMutation struct {
 	host_vendor             *string
 	public_ip               *string
 	local_ip                *string
-	createtime_utc          *int
-	addcreatetime_utc       *int
-	last_online_time_utc    *int
-	addlast_online_time_utc *int
+	createtime_utc          *int64
+	addcreatetime_utc       *int64
+	last_online_time_utc    *int64
+	addlast_online_time_utc *int64
 	clearedFields           map[string]struct{}
 	coin                    *int32
 	clearedcoin             bool
@@ -3558,13 +3666,13 @@ func (m *WalletNodeMutation) ResetLocalIP() {
 }
 
 // SetCreatetimeUtc sets the "createtime_utc" field.
-func (m *WalletNodeMutation) SetCreatetimeUtc(i int) {
+func (m *WalletNodeMutation) SetCreatetimeUtc(i int64) {
 	m.createtime_utc = &i
 	m.addcreatetime_utc = nil
 }
 
 // CreatetimeUtc returns the value of the "createtime_utc" field in the mutation.
-func (m *WalletNodeMutation) CreatetimeUtc() (r int, exists bool) {
+func (m *WalletNodeMutation) CreatetimeUtc() (r int64, exists bool) {
 	v := m.createtime_utc
 	if v == nil {
 		return
@@ -3575,7 +3683,7 @@ func (m *WalletNodeMutation) CreatetimeUtc() (r int, exists bool) {
 // OldCreatetimeUtc returns the old "createtime_utc" field's value of the WalletNode entity.
 // If the WalletNode object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WalletNodeMutation) OldCreatetimeUtc(ctx context.Context) (v int, err error) {
+func (m *WalletNodeMutation) OldCreatetimeUtc(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldCreatetimeUtc is only allowed on UpdateOne operations")
 	}
@@ -3590,7 +3698,7 @@ func (m *WalletNodeMutation) OldCreatetimeUtc(ctx context.Context) (v int, err e
 }
 
 // AddCreatetimeUtc adds i to the "createtime_utc" field.
-func (m *WalletNodeMutation) AddCreatetimeUtc(i int) {
+func (m *WalletNodeMutation) AddCreatetimeUtc(i int64) {
 	if m.addcreatetime_utc != nil {
 		*m.addcreatetime_utc += i
 	} else {
@@ -3599,7 +3707,7 @@ func (m *WalletNodeMutation) AddCreatetimeUtc(i int) {
 }
 
 // AddedCreatetimeUtc returns the value that was added to the "createtime_utc" field in this mutation.
-func (m *WalletNodeMutation) AddedCreatetimeUtc() (r int, exists bool) {
+func (m *WalletNodeMutation) AddedCreatetimeUtc() (r int64, exists bool) {
 	v := m.addcreatetime_utc
 	if v == nil {
 		return
@@ -3614,13 +3722,13 @@ func (m *WalletNodeMutation) ResetCreatetimeUtc() {
 }
 
 // SetLastOnlineTimeUtc sets the "last_online_time_utc" field.
-func (m *WalletNodeMutation) SetLastOnlineTimeUtc(i int) {
+func (m *WalletNodeMutation) SetLastOnlineTimeUtc(i int64) {
 	m.last_online_time_utc = &i
 	m.addlast_online_time_utc = nil
 }
 
 // LastOnlineTimeUtc returns the value of the "last_online_time_utc" field in the mutation.
-func (m *WalletNodeMutation) LastOnlineTimeUtc() (r int, exists bool) {
+func (m *WalletNodeMutation) LastOnlineTimeUtc() (r int64, exists bool) {
 	v := m.last_online_time_utc
 	if v == nil {
 		return
@@ -3631,7 +3739,7 @@ func (m *WalletNodeMutation) LastOnlineTimeUtc() (r int, exists bool) {
 // OldLastOnlineTimeUtc returns the old "last_online_time_utc" field's value of the WalletNode entity.
 // If the WalletNode object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WalletNodeMutation) OldLastOnlineTimeUtc(ctx context.Context) (v int, err error) {
+func (m *WalletNodeMutation) OldLastOnlineTimeUtc(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldLastOnlineTimeUtc is only allowed on UpdateOne operations")
 	}
@@ -3646,7 +3754,7 @@ func (m *WalletNodeMutation) OldLastOnlineTimeUtc(ctx context.Context) (v int, e
 }
 
 // AddLastOnlineTimeUtc adds i to the "last_online_time_utc" field.
-func (m *WalletNodeMutation) AddLastOnlineTimeUtc(i int) {
+func (m *WalletNodeMutation) AddLastOnlineTimeUtc(i int64) {
 	if m.addlast_online_time_utc != nil {
 		*m.addlast_online_time_utc += i
 	} else {
@@ -3655,7 +3763,7 @@ func (m *WalletNodeMutation) AddLastOnlineTimeUtc(i int) {
 }
 
 // AddedLastOnlineTimeUtc returns the value that was added to the "last_online_time_utc" field in this mutation.
-func (m *WalletNodeMutation) AddedLastOnlineTimeUtc() (r int, exists bool) {
+func (m *WalletNodeMutation) AddedLastOnlineTimeUtc() (r int64, exists bool) {
 	v := m.addlast_online_time_utc
 	if v == nil {
 		return
@@ -3839,14 +3947,14 @@ func (m *WalletNodeMutation) SetField(name string, value ent.Value) error {
 		m.SetLocalIP(v)
 		return nil
 	case walletnode.FieldCreatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatetimeUtc(v)
 		return nil
 	case walletnode.FieldLastOnlineTimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3888,14 +3996,14 @@ func (m *WalletNodeMutation) AddedField(name string) (ent.Value, bool) {
 func (m *WalletNodeMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case walletnode.FieldCreatetimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatetimeUtc(v)
 		return nil
 	case walletnode.FieldLastOnlineTimeUtc:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

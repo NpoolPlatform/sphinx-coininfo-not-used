@@ -1,39 +1,57 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: sphinx-coininfo-npool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: sphinx-coininfo
-    k8s.kuboard.cn/workload: sphinx-coininfo
+    k8s.kuboard.cn/displayName: sphinx-coininfo-npool
+    k8s.kuboard.cn/workload: sphinx-coininfo-npool
     kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-sphinx-coininfo-prefix@kubernetescrd
+
 spec:
   rules:
-  - host: api.npool.top
-    http:
-      paths:
-      - path: /sphinx-coininfo
-        backend:
-          serviceName: sphinx-coininfo
-          servicePort: http
+    - host: api.npool.top
+      http:
+        paths:
+          - path: /sphinx-coininfo
+            backend:
+              serviceName: sphinx-coininfo
+              servicePort: 50150
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: sphinx-coininfo-xpool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: sphinx-coininfo
-    k8s.kuboard.cn/workload: sphinx-coininfo
+    k8s.kuboard.cn/displayName: sphinx-coininfo-xpool
+    k8s.kuboard.cn/workload: sphinx-coininfo-xpool
     kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-sphinx-coininfo-prefix@kubernetescrd
+
 spec:
   rules:
-  - host: api.xpool.top
-    http:
-      paths:
-      - path: /sphinx-coininfo
-        backend:
-          serviceName: sphinx-coininfo
-          servicePort: http
+    - host: api.xpool.top
+      http:
+        paths:
+          - path: /sphinx-coininfo
+            backend:
+              serviceName: sphinx-coininfo
+              servicePort: 50150
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-sphinx-coininfo-prefix
+  namespace: kube-system
+spec:
+  stripPrefix:
+    prefixes:
+      - /sphinx-coininfo

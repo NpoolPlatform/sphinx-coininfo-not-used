@@ -1,10 +1,10 @@
 ---
 config:
   hostname: "sphinx-coininfo.npool.top"
-  http_port: 50130
-  grpc_port: 50131
-  healthz_port: 50132
-  prometheus_port: 50133
+  http_port: 50150
+  grpc_port: 50151
+  healthz_port: 50152
+  prometheus_port: 50153
   appid: "89089012783789789719823798127398"
   logdir: "./"
   apolloAccessKey: "0147fb70b815403790e8634b899fac07"
