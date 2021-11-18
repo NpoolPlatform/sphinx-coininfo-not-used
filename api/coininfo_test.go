@@ -15,6 +15,9 @@ import (
 var tmpCoinInfo npool.CoinInfoRow
 
 func init() {
+	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+		return
+	}
 	err := testinit.Init()
 	if err != nil {
 		panic(err)
@@ -26,8 +29,13 @@ func init() {
 	tmpCoinInfo.Unit = "DK"
 }
 
+func runByGithub() bool {
+	runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION"))
+	return err == nil && runByGithubAction
+}
+
 func TestGetCoinInfo(t *testing.T) {
-	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+	if runByGithub() {
 		return
 	}
 	cli := resty.New()
@@ -42,7 +50,7 @@ func TestGetCoinInfo(t *testing.T) {
 }
 
 func TestGetCoinInfos(t *testing.T) {
-	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+	if runByGithub() {
 		return
 	}
 	cli := resty.New()
@@ -54,7 +62,7 @@ func TestGetCoinInfos(t *testing.T) {
 }
 
 func TestRegisterCoin(t *testing.T) {
-	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+	if runByGithub() {
 		return
 	}
 	cli := resty.New()
@@ -70,7 +78,7 @@ func TestRegisterCoin(t *testing.T) {
 }
 
 func TestSetCoinPresale(t *testing.T) {
-	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+	if runByGithub() {
 		return
 	}
 	cli := resty.New()

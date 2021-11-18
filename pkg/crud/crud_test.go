@@ -20,6 +20,9 @@ var (
 )
 
 func init() {
+	if runByGithub() {
+		return
+	}
 	if testinit.Init() != nil {
 		panic("testinit failed")
 	}
