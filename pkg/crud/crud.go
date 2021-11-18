@@ -4,7 +4,7 @@ import (
 	"context"
 
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
-	"github.com/NpoolPlatform/message/npool/signproxy"
+	"github.com/NpoolPlatform/message/npool/sphinxplugin"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
@@ -14,7 +14,7 @@ import (
 
 func dbRowToCoinInfoRow(row *ent.CoinInfo) *npool.CoinInfoRow {
 	return &npool.CoinInfoRow{
-		CoinType:  signproxy.CoinType(row.ID),
+		CoinType:  sphinxplugin.CoinType(row.ID),
 		Name:      row.Name,
 		Unit:      row.Unit,
 		IsPresale: row.IsPresale,
