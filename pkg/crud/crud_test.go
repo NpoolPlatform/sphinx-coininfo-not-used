@@ -53,10 +53,12 @@ func TestRegisterCoin(t *testing.T) {
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
 	})
-	assert.NotNil(t, resp)
-	assert.Nil(t, err)
-	assert.Equal(t, tmpCoinInfo.CoinType, resp.CoinType)
-	assert.Equal(t, tmpCoinInfo.Unit, resp.Unit)
+	if resp != nil {
+		assert.Equal(t, tmpCoinInfo.Unit, resp.Unit)
+		assert.Equal(t, tmpCoinInfo.CoinType, resp.CoinType)
+	} else {
+		assert.NotNil(t, err)
+	}
 }
 
 func TestGetCoinInfo(t *testing.T) {
