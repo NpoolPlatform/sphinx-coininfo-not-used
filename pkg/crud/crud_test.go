@@ -10,13 +10,15 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
+	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	ctx         context.Context
-	tmpCoinInfo npool.CoinInfoRow
-	FlagDROP    bool // 删库开关
+	ctx             context.Context
+	tmpCoinInfo     npool.CoinInfoRow
+	FlagDROP        bool // 删库开关
+	testInitAlready bool
 )
 
 func init() {
@@ -50,7 +52,17 @@ func init() {
 
 func runByGithub() bool {
 	runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION"))
-	return err == nil && runByGithubAction
+	if err == nil && runByGithubAction {
+		return true
+	}
+	if testInitAlready == false {
+		testInitAlready = true
+		err = testinit.Init()
+		if err != nil {
+			fmt.Printf("test init failed: %v", err)
+		}
+	}
+	return err == nil
 }
 
 func TestGetCoinInfos(t *testing.T) {
