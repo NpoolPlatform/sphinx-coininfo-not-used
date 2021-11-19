@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	ctx             context.Context
+	ctxPublic       context.Context
 	tmpCoinInfo     npool.CoinInfoRow
 	FlagDROP        bool // 删库开关
 	testInitAlready bool
@@ -26,12 +26,12 @@ func init() {
 		return
 	}
 	FlagDROP = true
-	ctx = context.Background()
+	ctxPublic = context.Background()
 	if FlagDROP {
 		// dangerous
 		_, err := db.Client().CoinInfo.Delete().
 			Where(coininfo.NameNEQ("anything")).
-			Exec(ctx)
+			Exec(ctxPublic)
 		if err != nil {
 			fmt.Println("drop database failed, ", err)
 		}
@@ -40,7 +40,7 @@ func init() {
 	tmpCoinInfo.IsPresale = false
 	tmpCoinInfo.Name = "Unknown"
 	tmpCoinInfo.Unit = "DK"
-	_, err := RegisterCoin(ctx, &npool.RegisterCoinRequest{
+	_, err := RegisterCoin(ctxPublic, &npool.RegisterCoinRequest{
 		CoinType: tmpCoinInfo.CoinType,
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
@@ -69,7 +69,7 @@ func TestGetCoinInfos(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := GetCoinInfos(ctx, &npool.GetCoinInfosRequest{})
+	resp, err := GetCoinInfos(ctxPublic, &npool.GetCoinInfosRequest{})
 	assert.Nil(t, err)
 	assert.NotNil(t, resp)
 }
@@ -78,7 +78,7 @@ func TestRegisterCoin(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := RegisterCoin(ctx, &npool.RegisterCoinRequest{
+	resp, err := RegisterCoin(ctxPublic, &npool.RegisterCoinRequest{
 		CoinType: tmpCoinInfo.CoinType,
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
@@ -95,7 +95,7 @@ func TestGetCoinInfo(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := GetCoinInfo(ctx, &npool.GetCoinInfoRequest{
+	resp, err := GetCoinInfo(ctxPublic, &npool.GetCoinInfoRequest{
 		CoinType: tmpCoinInfo.CoinType,
 	})
 	if err != nil {
@@ -110,7 +110,7 @@ func TestSetCoinPresale(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := SetCoinPresale(ctx, &npool.SetCoinPresaleRequest{
+	resp, err := SetCoinPresale(ctxPublic, &npool.SetCoinPresaleRequest{
 		CoinType:  tmpCoinInfo.CoinType,
 		IsPresale: !tmpCoinInfo.IsPresale,
 	})
