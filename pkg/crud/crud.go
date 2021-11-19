@@ -52,21 +52,13 @@ func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool
 
 // 注册币种
 func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.CoinInfoRow, err error) {
-	fmt.Println(in)
 	resp = nil
-	tmpID := int32(in.CoinType.Number())
 	entResp, err := db.Client().CoinInfo.Query().
 		Where(
-			coininfo.ID(tmpID),
-		).First(ctx)
-	if err != nil {
-		fmt.Printf("register err: %v", err)
-	}
-	fmt.Printf("inside crud: %v %v", entResp, err)
-	if entResp != nil {
-		fmt.Printf("inside crud ent: %v %v", *entResp, err)
-		// 记录已存在
-		if in.Unit == entResp.Unit && in.Name == entResp.Name {
+			coininfo.Name(in.Name),
+		).Only(ctx)
+	if err == nil {
+		if in.Unit == entResp.Unit {
 			resp = dbRowToCoinInfoRow(entResp)
 			err = nil
 		} else {
@@ -76,6 +68,7 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 	}
 	fmt.Printf("inside crud: gonna create")
 	// MARK 默认均为在售商品？
+	tmpID := int32(in.CoinType.Number())
 	entResp, err = db.Client().CoinInfo.Create().
 		SetID(tmpID).
 		SetName(in.Name).
