@@ -2,6 +2,7 @@ package crud
 
 import (
 	"context"
+	"fmt"
 
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/message/npool/sphinxplugin"
@@ -51,6 +52,7 @@ func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool
 
 // 注册币种
 func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.CoinInfoRow, err error) {
+	fmt.Println(in)
 	resp = nil
 	tmpID := int32(in.CoinType.Number())
 	entResp, err := db.Client().CoinInfo.Query().
@@ -67,6 +69,7 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 		}
 		return
 	}
+	fmt.Println(*entResp, err)
 	// MARK 默认均为在售商品？
 	entResp, err = db.Client().CoinInfo.Create().
 		SetID(tmpID).
@@ -77,7 +80,8 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 	if err == nil {
 		resp = dbRowToCoinInfoRow(entResp)
 	}
-	return
+	fmt.Print(*entResp, err)
+	return resp, err
 }
 
 // 设置币种权限
