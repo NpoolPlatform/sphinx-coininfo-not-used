@@ -8,15 +8,12 @@ import (
 	"testing"
 
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
 	tmpCoinInfo     npool.CoinInfoRow
-	FlagDROP        bool // 删库开关
 	testInitAlready bool
 )
 
@@ -30,16 +27,6 @@ func initStruct() {
 func init() {
 	if runByGithub() {
 		return
-	}
-	FlagDROP = true
-	if FlagDROP {
-		// dangerous
-		_, err := db.Client().CoinInfo.Delete().
-			Where(coininfo.NameNEQ("anything")).
-			Exec(context.Background())
-		if err != nil {
-			fmt.Println("drop database failed, ", err)
-		}
 	}
 	_, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
 		CoinType: tmpCoinInfo.CoinType,
