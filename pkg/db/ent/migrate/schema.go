@@ -11,8 +11,8 @@ var (
 	// CoinInfosColumns holds the columns for the "coin_infos" table.
 	CoinInfosColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt32, Increment: true},
-		{Name: "name", Type: field.TypeString, Unique: true, Size: 16},
-		{Name: "unit", Type: field.TypeString, Size: 4},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "unit", Type: field.TypeString},
 		{Name: "is_presale", Type: field.TypeBool, Default: false},
 	}
 	// CoinInfosTable holds the schema information for the "coin_infos" table.
