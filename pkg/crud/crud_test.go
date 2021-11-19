@@ -15,7 +15,6 @@ import (
 )
 
 var (
-	ctxPublic       context.Context
 	tmpCoinInfo     npool.CoinInfoRow
 	FlagDROP        bool // 删库开关
 	testInitAlready bool
@@ -26,12 +25,11 @@ func init() {
 		return
 	}
 	FlagDROP = true
-	ctxPublic = context.Background()
 	if FlagDROP {
 		// dangerous
 		_, err := db.Client().CoinInfo.Delete().
 			Where(coininfo.NameNEQ("anything")).
-			Exec(ctxPublic)
+			Exec(context.Background())
 		if err != nil {
 			fmt.Println("drop database failed, ", err)
 		}
@@ -40,7 +38,7 @@ func init() {
 	tmpCoinInfo.IsPresale = false
 	tmpCoinInfo.Name = "Unknown"
 	tmpCoinInfo.Unit = "DK"
-	_, err := RegisterCoin(ctxPublic, &npool.RegisterCoinRequest{
+	_, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
 		CoinType: tmpCoinInfo.CoinType,
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
@@ -69,7 +67,7 @@ func TestGetCoinInfos(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := GetCoinInfos(ctxPublic, &npool.GetCoinInfosRequest{})
+	resp, err := GetCoinInfos(context.Background(), &npool.GetCoinInfosRequest{})
 	assert.Nil(t, err)
 	assert.NotNil(t, resp)
 }
@@ -78,7 +76,7 @@ func TestRegisterCoin(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := RegisterCoin(ctxPublic, &npool.RegisterCoinRequest{
+	resp, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
 		CoinType: tmpCoinInfo.CoinType,
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
@@ -95,7 +93,7 @@ func TestGetCoinInfo(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := GetCoinInfo(ctxPublic, &npool.GetCoinInfoRequest{
+	resp, err := GetCoinInfo(context.Background(), &npool.GetCoinInfoRequest{
 		CoinType: tmpCoinInfo.CoinType,
 	})
 	if err != nil {
@@ -110,7 +108,7 @@ func TestSetCoinPresale(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := SetCoinPresale(ctxPublic, &npool.SetCoinPresaleRequest{
+	resp, err := SetCoinPresale(context.Background(), &npool.SetCoinPresaleRequest{
 		CoinType:  tmpCoinInfo.CoinType,
 		IsPresale: !tmpCoinInfo.IsPresale,
 	})
