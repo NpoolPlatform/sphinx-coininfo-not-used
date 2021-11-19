@@ -55,7 +55,7 @@ func TestGetCoinInfo(t *testing.T) {
 			CoinType:   tmpCoinInfo.CoinType,
 			CoinTypeID: tmpCoinInfo.CoinTypeID,
 		}).
-		Get("http://localhost:50130/v1/coin/single")
+		Get("http://localhost:50150/v1/coin/single")
 	assert.Nil(t, err)
 }
 
@@ -67,7 +67,7 @@ func TestGetCoinInfos(t *testing.T) {
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.GetCoinInfosRequest{}).
-		Get("http://localhost:50130/v1/coin/infos")
+		Get("http://localhost:50150/v1/coin/infos")
 	assert.Nil(t, err)
 }
 
@@ -83,7 +83,7 @@ func TestRegisterCoin(t *testing.T) {
 			Name:     tmpCoinInfo.Name,
 			Unit:     tmpCoinInfo.Unit,
 		}).
-		Post("http://localhost:50130/v1/coin/register")
+		Post("http://localhost:50150/v1/coin/register")
 	assert.Nil(t, err)
 }
 
@@ -99,6 +99,6 @@ func TestSetCoinPresale(t *testing.T) {
 			CoinTypeID: tmpCoinInfo.CoinTypeID,
 			IsPresale:  false,
 		}).
-		Post("http://localhost:50130/v1/coin/presale")
+		Post("http://localhost:50150/v1/coin/presale")
 	assert.Nil(t, err)
 }
