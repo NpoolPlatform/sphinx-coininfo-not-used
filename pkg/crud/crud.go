@@ -59,7 +59,7 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 		Where(
 			coininfo.ID(tmpID),
 		).First(ctx)
-	if entResp != nil && err == nil {
+	if entResp != nil {
 		// 记录已存在
 		if in.Unit == entResp.Unit && in.Name == entResp.Name {
 			resp = dbRowToCoinInfoRow(entResp)

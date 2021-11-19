@@ -14,8 +14,8 @@ type CoinInfo struct {
 func (CoinInfo) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int32("id"),
-		field.String("name").NotEmpty().MaxLen(20).Unique(),
-		field.String("unit").NotEmpty().MaxLen(8),
+		field.String("name").NotEmpty().Unique(),
+		field.String("unit").NotEmpty(),
 		field.Bool("is_presale").Default(false),
 	}
 }

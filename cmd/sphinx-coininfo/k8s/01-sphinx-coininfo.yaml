@@ -49,5 +49,11 @@ spec:
   - name: api
     port: 50150
     targetPort: 50150
+  - name: grpc
+    port: 50151
+    targetPort: 50151
+  - name: prometheus
+    port: 50153
+    targetPort: 50153
   selector:
     app: sphinx-coininfo
