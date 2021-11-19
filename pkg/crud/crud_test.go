@@ -20,6 +20,13 @@ var (
 	testInitAlready bool
 )
 
+func initStruct() {
+	tmpCoinInfo.CoinType = 0
+	tmpCoinInfo.IsPresale = false
+	tmpCoinInfo.Name = "Unknown"
+	tmpCoinInfo.Unit = "DK"
+}
+
 func init() {
 	if runByGithub() {
 		return
@@ -34,10 +41,6 @@ func init() {
 			fmt.Println("drop database failed, ", err)
 		}
 	}
-	tmpCoinInfo.CoinType = 0
-	tmpCoinInfo.IsPresale = false
-	tmpCoinInfo.Name = "Unknown"
-	tmpCoinInfo.Unit = "DK"
 	_, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
 		CoinType: tmpCoinInfo.CoinType,
 		Name:     tmpCoinInfo.Name,
@@ -49,6 +52,7 @@ func init() {
 }
 
 func runByGithub() bool {
+	initStruct()
 	runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION"))
 	if err == nil && runByGithubAction {
 		return true
