@@ -8,7 +8,6 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/go-resty/resty/v2"
-	"github.com/stretchr/testify/assert"
 
 	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 )
@@ -56,7 +55,9 @@ func TestGetCoinInfo(t *testing.T) {
 			CoinTypeID: tmpCoinInfo.CoinTypeID,
 		}).
 		Get("http://localhost:50150/v1/coin/single")
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestGetCoinInfos(t *testing.T) {
@@ -68,7 +69,9 @@ func TestGetCoinInfos(t *testing.T) {
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.GetCoinInfosRequest{}).
 		Get("http://localhost:50150/v1/coin/infos")
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestRegisterCoin(t *testing.T) {
@@ -84,7 +87,9 @@ func TestRegisterCoin(t *testing.T) {
 			Unit:     tmpCoinInfo.Unit,
 		}).
 		Post("http://localhost:50150/v1/coin/register")
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestSetCoinPresale(t *testing.T) {
@@ -100,5 +105,7 @@ func TestSetCoinPresale(t *testing.T) {
 			IsPresale:  false,
 		}).
 		Post("http://localhost:50150/v1/coin/presale")
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 }
