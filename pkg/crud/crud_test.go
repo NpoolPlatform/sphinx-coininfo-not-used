@@ -27,7 +27,9 @@ func init() {
 	ctx = context.Background()
 	if FlagDROP {
 		// dangerous
-		_, err := db.Client().CoinInfo.Delete().Where(coininfo.Not(coininfo.Name("anything"))).Exec(ctx)
+		_, err := db.Client().CoinInfo.Delete().
+			Where(coininfo.NameNEQ("anything")).
+			Exec(ctx)
 		if err != nil {
 			fmt.Println("drop database failed, ", err)
 		}
