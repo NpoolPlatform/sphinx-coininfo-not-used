@@ -81,12 +81,8 @@ func TestRegisterCoin(t *testing.T) {
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
 	})
-	if resp != nil {
-		assert.Equal(t, tmpCoinInfo.Unit, resp.Unit)
-		assert.Equal(t, tmpCoinInfo.CoinType, resp.CoinType)
-	} else {
-		assert.NotNil(t, err)
-	}
+	assert.Nil(t, err)
+	assert.NotNil(t, resp)
 }
 
 func TestGetCoinInfo(t *testing.T) {
@@ -108,7 +104,14 @@ func TestSetCoinPresale(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := SetCoinPresale(context.Background(), &npool.SetCoinPresaleRequest{
+	resp, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
+		CoinType: tmpCoinInfo.CoinType,
+		Name:     tmpCoinInfo.Name,
+		Unit:     tmpCoinInfo.Unit,
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, resp)
+	resp, err = SetCoinPresale(context.Background(), &npool.SetCoinPresaleRequest{
 		CoinType:  tmpCoinInfo.CoinType,
 		IsPresale: !tmpCoinInfo.IsPresale,
 	})
