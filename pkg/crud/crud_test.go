@@ -68,7 +68,9 @@ func TestGetCoinInfos(t *testing.T) {
 		return
 	}
 	resp, err := GetCoinInfos(context.Background(), &npool.GetCoinInfosRequest{})
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 	assert.NotNil(t, resp)
 }
 
@@ -81,7 +83,9 @@ func TestRegisterCoin(t *testing.T) {
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
 	})
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 	assert.NotNil(t, resp)
 }
 
@@ -109,12 +113,16 @@ func TestSetCoinPresale(t *testing.T) {
 		Name:     tmpCoinInfo.Name,
 		Unit:     tmpCoinInfo.Unit,
 	})
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 	assert.NotNil(t, resp)
 	resp, err = SetCoinPresale(context.Background(), &npool.SetCoinPresaleRequest{
 		CoinType:  tmpCoinInfo.CoinType,
 		IsPresale: !tmpCoinInfo.IsPresale,
 	})
-	assert.Nil(t, err)
+	if err != nil {
+		panic(err)
+	}
 	assert.Equal(t, tmpCoinInfo.IsPresale, !resp.IsPresale)
 }
