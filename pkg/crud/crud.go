@@ -52,7 +52,7 @@ func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool
 // 注册币种
 func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.CoinInfoRow, err error) {
 	resp = nil
-	tmpID := int32(in.GetCoinType())
+	tmpID := int32(in.CoinType.Number())
 	entResp, err := db.Client().CoinInfo.Query().
 		Where(
 			coininfo.ID(tmpID),
@@ -69,7 +69,7 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 	}
 	// MARK 默认均为在售商品？
 	entResp, err = db.Client().CoinInfo.Create().
-		SetID(int32(in.CoinType)).
+		SetID(tmpID).
 		SetName(in.Name).
 		SetUnit(in.Unit).
 		SetIsPresale(false).
