@@ -69,7 +69,9 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 		}
 		return
 	}
-	fmt.Println(*entResp, err)
+	if err != nil {
+		fmt.Print(err)
+	}
 	// MARK 默认均为在售商品？
 	entResp, err = db.Client().CoinInfo.Create().
 		SetID(tmpID).
@@ -80,7 +82,6 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 	if err == nil {
 		resp = dbRowToCoinInfoRow(entResp)
 	}
-	fmt.Print(*entResp, err)
 	return resp, err
 }
 
