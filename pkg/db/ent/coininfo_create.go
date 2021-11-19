@@ -14,6 +14,7 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/review"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/transaction"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/walletnode"
+	"github.com/google/uuid"
 )
 
 // CoinInfoCreate is the builder for creating a CoinInfo entity.
@@ -21,6 +22,12 @@ type CoinInfoCreate struct {
 	config
 	mutation *CoinInfoMutation
 	hooks    []Hook
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (cic *CoinInfoCreate) SetCoinTypeID(i int32) *CoinInfoCreate {
+	cic.mutation.SetCoinTypeID(i)
+	return cic
 }
 
 // SetName sets the "name" field.
@@ -50,8 +57,8 @@ func (cic *CoinInfoCreate) SetNillableIsPresale(b *bool) *CoinInfoCreate {
 }
 
 // SetID sets the "id" field.
-func (cic *CoinInfoCreate) SetID(i int32) *CoinInfoCreate {
-	cic.mutation.SetID(i)
+func (cic *CoinInfoCreate) SetID(u uuid.UUID) *CoinInfoCreate {
+	cic.mutation.SetID(u)
 	return cic
 }
 
@@ -190,10 +197,17 @@ func (cic *CoinInfoCreate) defaults() {
 		v := coininfo.DefaultIsPresale
 		cic.mutation.SetIsPresale(v)
 	}
+	if _, ok := cic.mutation.ID(); !ok {
+		v := coininfo.DefaultID()
+		cic.mutation.SetID(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (cic *CoinInfoCreate) check() error {
+	if _, ok := cic.mutation.CoinTypeID(); !ok {
+		return &ValidationError{Name: "coin_type_id", err: errors.New(`ent: missing required field "coin_type_id"`)}
+	}
 	if _, ok := cic.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "name"`)}
 	}
@@ -224,9 +238,8 @@ func (cic *CoinInfoCreate) sqlSave(ctx context.Context) (*CoinInfo, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int32(id)
+	if _spec.ID.Value != nil {
+		_node.ID = _spec.ID.Value.(uuid.UUID)
 	}
 	return _node, nil
 }
@@ -237,7 +250,7 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: coininfo.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt32,
+				Type:   field.TypeUUID,
 				Column: coininfo.FieldID,
 			},
 		}
@@ -245,6 +258,14 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 	if id, ok := cic.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := cic.mutation.CoinTypeID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: coininfo.FieldCoinTypeID,
+		})
+		_node.CoinTypeID = value
 	}
 	if value, ok := cic.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -391,10 +412,6 @@ func (cicb *CoinInfoCreateBulk) Save(ctx context.Context) ([]*CoinInfo, error) {
 				}
 				mutation.id = &nodes[i].ID
 				mutation.done = true
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int32(id)
-				}
 				return nodes[i], nil
 			})
 			for i := len(builder.hooks) - 1; i >= 0; i-- {

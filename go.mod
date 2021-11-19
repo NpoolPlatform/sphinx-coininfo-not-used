@@ -8,6 +8,7 @@ require (
 	github.com/NpoolPlatform/message v0.0.0-20211118160618-f5338b34954a
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/gogo/status v1.1.0
+	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.0

@@ -30,6 +30,19 @@ func (ciu *CoinInfoUpdate) Where(ps ...predicate.CoinInfo) *CoinInfoUpdate {
 	return ciu
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (ciu *CoinInfoUpdate) SetCoinTypeID(i int32) *CoinInfoUpdate {
+	ciu.mutation.ResetCoinTypeID()
+	ciu.mutation.SetCoinTypeID(i)
+	return ciu
+}
+
+// AddCoinTypeID adds i to the "coin_type_id" field.
+func (ciu *CoinInfoUpdate) AddCoinTypeID(i int32) *CoinInfoUpdate {
+	ciu.mutation.AddCoinTypeID(i)
+	return ciu
+}
+
 // SetName sets the "name" field.
 func (ciu *CoinInfoUpdate) SetName(s string) *CoinInfoUpdate {
 	ciu.mutation.SetName(s)
@@ -286,7 +299,7 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   coininfo.Table,
 			Columns: coininfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt32,
+				Type:   field.TypeUUID,
 				Column: coininfo.FieldID,
 			},
 		},
@@ -297,6 +310,20 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ciu.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: coininfo.FieldCoinTypeID,
+		})
+	}
+	if value, ok := ciu.mutation.AddedCoinTypeID(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: coininfo.FieldCoinTypeID,
+		})
 	}
 	if value, ok := ciu.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -552,6 +579,19 @@ type CoinInfoUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *CoinInfoMutation
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (ciuo *CoinInfoUpdateOne) SetCoinTypeID(i int32) *CoinInfoUpdateOne {
+	ciuo.mutation.ResetCoinTypeID()
+	ciuo.mutation.SetCoinTypeID(i)
+	return ciuo
+}
+
+// AddCoinTypeID adds i to the "coin_type_id" field.
+func (ciuo *CoinInfoUpdateOne) AddCoinTypeID(i int32) *CoinInfoUpdateOne {
+	ciuo.mutation.AddCoinTypeID(i)
+	return ciuo
 }
 
 // SetName sets the "name" field.
@@ -817,7 +857,7 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			Table:   coininfo.Table,
 			Columns: coininfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt32,
+				Type:   field.TypeUUID,
 				Column: coininfo.FieldID,
 			},
 		},
@@ -845,6 +885,20 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ciuo.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: coininfo.FieldCoinTypeID,
+		})
+	}
+	if value, ok := ciuo.mutation.AddedCoinTypeID(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: coininfo.FieldCoinTypeID,
+		})
 	}
 	if value, ok := ciuo.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{

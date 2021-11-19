@@ -2,11 +2,17 @@
 
 package coininfo
 
+import (
+	"github.com/google/uuid"
+)
+
 const (
 	// Label holds the string label denoting the coininfo type in the database.
 	Label = "coin_info"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
+	FieldCoinTypeID = "coin_type_id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldUnit holds the string denoting the unit field in the database.
@@ -56,6 +62,7 @@ const (
 // Columns holds all SQL columns for coininfo fields.
 var Columns = []string{
 	FieldID,
+	FieldCoinTypeID,
 	FieldName,
 	FieldUnit,
 	FieldIsPresale,
@@ -78,4 +85,6 @@ var (
 	UnitValidator func(string) error
 	// DefaultIsPresale holds the default value on creation for the "is_presale" field.
 	DefaultIsPresale bool
+	// DefaultID holds the default value on creation for the "id" field.
+	DefaultID func() uuid.UUID
 )

@@ -15,7 +15,7 @@ import (
 
 func dbRowToCoinInfoRow(row *ent.CoinInfo) *npool.CoinInfoRow {
 	return &npool.CoinInfoRow{
-		CoinType:  sphinxplugin.CoinType(row.ID),
+		CoinType:  sphinxplugin.CoinType(row.CoinTypeID),
 		Name:      row.Name,
 		Unit:      row.Unit,
 		IsPresale: row.IsPresale,
@@ -39,7 +39,7 @@ func GetCoinInfos(ctx context.Context, _ *npool.GetCoinInfosRequest) (resp *npoo
 func GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.CoinInfoRow, err error) {
 	tmpID := int32(in.GetCoinType())
 	entResp, err := db.Client().CoinInfo.Query().Where(
-		coininfo.ID(tmpID),
+		coininfo.CoinTypeID(tmpID),
 	).First(ctx)
 	if entResp == nil || err != nil {
 		err = status.Errorf(codes.NotFound, "record not found, err: %v", err)
@@ -70,7 +70,7 @@ func RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npo
 	// MARK 默认均为在售商品？
 	tmpID := int32(in.CoinType.Number())
 	entResp, err = db.Client().CoinInfo.Create().
-		SetID(tmpID).
+		SetCoinTypeID(tmpID).
 		SetName(in.Name).
 		SetUnit(in.Unit).
 		SetIsPresale(false).
@@ -86,7 +86,7 @@ func SetCoinPresale(ctx context.Context, in *npool.SetCoinPresaleRequest) (resp 
 	ci, err := db.Client().CoinInfo.Query().
 		Where(
 			coininfo.And(
-				coininfo.ID(int32(in.CoinType)),
+				coininfo.CoinTypeID(int32(in.CoinType.Number())),
 			),
 		).First(ctx)
 	if ci == nil || err != nil {

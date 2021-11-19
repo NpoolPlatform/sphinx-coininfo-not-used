@@ -8,13 +8,16 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
+	"github.com/google/uuid"
 )
 
 // CoinInfo is the model entity for the CoinInfo schema.
 type CoinInfo struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int32 `json:"id,omitempty"`
+	ID uuid.UUID `json:"id,omitempty"`
+	// CoinTypeID holds the value of the "coin_type_id" field.
+	CoinTypeID int32 `json:"coin_type_id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Unit holds the value of the "unit" field.
@@ -84,10 +87,12 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case coininfo.FieldIsPresale:
 			values[i] = new(sql.NullBool)
-		case coininfo.FieldID:
+		case coininfo.FieldCoinTypeID:
 			values[i] = new(sql.NullInt64)
 		case coininfo.FieldName, coininfo.FieldUnit:
 			values[i] = new(sql.NullString)
+		case coininfo.FieldID:
+			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type CoinInfo", columns[i])
 		}
@@ -104,11 +109,17 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 	for i := range columns {
 		switch columns[i] {
 		case coininfo.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value != nil {
+				ci.ID = *value
 			}
-			ci.ID = int32(value.Int64)
+		case coininfo.FieldCoinTypeID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
+			} else if value.Valid {
+				ci.CoinTypeID = int32(value.Int64)
+			}
 		case coininfo.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
@@ -175,6 +186,8 @@ func (ci *CoinInfo) String() string {
 	var builder strings.Builder
 	builder.WriteString("CoinInfo(")
 	builder.WriteString(fmt.Sprintf("id=%v", ci.ID))
+	builder.WriteString(", coin_type_id=")
+	builder.WriteString(fmt.Sprintf("%v", ci.CoinTypeID))
 	builder.WriteString(", name=")
 	builder.WriteString(ci.Name)
 	builder.WriteString(", unit=")
