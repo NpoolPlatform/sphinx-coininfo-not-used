@@ -23,7 +23,7 @@ fi
 #fi
 
 if [ ! -f bin/golangci-lint ]; then
-    curl -sfL $URL | sh -s $VERSION                                            
+    curl -sfL $URL | sh -s $VERSION
 fi
 
 PATH=$PATH:bin
