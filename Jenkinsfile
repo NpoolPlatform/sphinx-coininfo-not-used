@@ -84,7 +84,7 @@ pipeline {
 
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name sphinx_coininfo
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name sphinx_service
             cd -
           done
 
@@ -138,7 +138,7 @@ pipeline {
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl set_permissions -p $vhost $username ".*" ".*" ".*"
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name sphinx_coininfo
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name sphinx_service
           done
         '''.stripIndent())
       }
