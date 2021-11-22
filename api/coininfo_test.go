@@ -53,7 +53,7 @@ func TestGetCoinInfo(t *testing.T) {
 		SetBody(npool.GetCoinInfoRequest{
 			ID: tmpCoinInfo.ID,
 		}).
-		Get("http://localhost:50150/v1/coin/single")
+		Post("http://localhost:50150/v1/get/coin/info")
 	if err != nil {
 		panic(err)
 	}
@@ -66,8 +66,13 @@ func TestGetCoinInfos(t *testing.T) {
 	cli := resty.New()
 	_, err := cli.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(npool.GetCoinInfosRequest{}).
-		Get("http://localhost:50150/v1/coin/infos")
+		SetBody(npool.GetCoinInfosRequest{
+			PageInfo: &npool.PageInfo{
+				PageIndex: 0,
+				PageSize:  10,
+			},
+		}).
+		Post("http://localhost:50150/v1/get/coin/infos")
 	if err != nil {
 		panic(err)
 	}
@@ -88,7 +93,7 @@ func TestRegisterCoin(t *testing.T) {
 				Unit: tmpCoinInfo.Unit,
 			},
 		}).
-		Post("http://localhost:50150/v1/coin/register")
+		Post("http://localhost:50150/v1/create/coin/info")
 	if err != nil {
 		panic(err)
 	}
@@ -108,7 +113,7 @@ func TestSetCoinPresale(t *testing.T) {
 				PreSale: false,
 			},
 		}).
-		Post("http://localhost:50150/v1/coin/presale")
+		Post("http://localhost:50150/v1/update/coin/info")
 	if err != nil {
 		panic(err)
 	}
