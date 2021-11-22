@@ -13,25 +13,29 @@ import (
 )
 
 var (
-	tmpCoinInfo     npool.CoinInfoRow
+	tmpCoinInfo     npool.CoinInfo
 	testInitAlready bool
 )
 
 func initStruct() {
-	tmpCoinInfo.CoinType = 0
-	tmpCoinInfo.IsPresale = false
+	tmpCoinInfo.Enum = 0
+	tmpCoinInfo.PreSale = false
 	tmpCoinInfo.Name = "Unknown"
 	tmpCoinInfo.Unit = "DK"
+	tmpCoinInfo.ID = "6ba7b812-9dad-11d1-80b4-00c04fd430c8"
 }
 
 func init() {
 	if runByGithub() {
 		return
 	}
-	_, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
-		CoinType: tmpCoinInfo.CoinType,
-		Name:     tmpCoinInfo.Name,
-		Unit:     tmpCoinInfo.Unit,
+	_, err := RegisterCoin(context.Background(), &npool.CreateCoinInfoRequest{
+		Info: &npool.CoinInfo{
+			ID:   tmpCoinInfo.ID,
+			Enum: tmpCoinInfo.Enum,
+			Name: tmpCoinInfo.Name,
+			Unit: tmpCoinInfo.Unit,
+		},
 	})
 	if err != nil {
 		panic("create test coin failed")
@@ -69,10 +73,13 @@ func TestRegisterCoin(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
-		CoinType: tmpCoinInfo.CoinType,
-		Name:     tmpCoinInfo.Name,
-		Unit:     tmpCoinInfo.Unit,
+	resp, err := RegisterCoin(context.Background(), &npool.CreateCoinInfoRequest{
+		Info: &npool.CoinInfo{
+			ID:   tmpCoinInfo.ID,
+			Enum: tmpCoinInfo.Enum,
+			Name: tmpCoinInfo.Name,
+			Unit: tmpCoinInfo.Unit,
+		},
 	})
 	if err != nil {
 		panic(err)
@@ -85,13 +92,13 @@ func TestGetCoinInfo(t *testing.T) {
 		return
 	}
 	resp, err := GetCoinInfo(context.Background(), &npool.GetCoinInfoRequest{
-		CoinType: tmpCoinInfo.CoinType,
+		ID: tmpCoinInfo.ID,
 	})
 	if err != nil {
 		assert.Nil(t, resp)
 	} else {
 		assert.NotNil(t, resp)
-		assert.Equal(t, tmpCoinInfo.Name, resp.Name)
+		assert.Equal(t, tmpCoinInfo.Name, resp.Info.Name)
 	}
 }
 
@@ -99,21 +106,30 @@ func TestSetCoinPresale(t *testing.T) {
 	if runByGithub() {
 		return
 	}
-	resp, err := RegisterCoin(context.Background(), &npool.RegisterCoinRequest{
-		CoinType: tmpCoinInfo.CoinType,
-		Name:     tmpCoinInfo.Name,
-		Unit:     tmpCoinInfo.Unit,
+	resp, err := RegisterCoin(context.Background(), &npool.CreateCoinInfoRequest{
+		Info: &npool.CoinInfo{
+			ID:   tmpCoinInfo.ID,
+			Enum: tmpCoinInfo.Enum,
+			Name: tmpCoinInfo.Name,
+			Unit: tmpCoinInfo.Unit,
+		},
 	})
 	if err != nil {
 		panic(err)
 	}
 	assert.NotNil(t, resp)
-	resp, err = SetCoinPresale(context.Background(), &npool.SetCoinPresaleRequest{
-		CoinType:  tmpCoinInfo.CoinType,
-		IsPresale: !tmpCoinInfo.IsPresale,
+	assert.Equal(t, tmpCoinInfo.Unit, resp.Info.Unit)
+	respNew, err := SetCoinPresale(context.Background(), &npool.UpdateCoinInfoRequest{
+		Info: &npool.CoinInfo{
+			ID:      tmpCoinInfo.ID,
+			Enum:    tmpCoinInfo.Enum,
+			Name:    tmpCoinInfo.Name,
+			Unit:    tmpCoinInfo.Unit,
+			PreSale: false,
+		},
 	})
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(t, tmpCoinInfo.IsPresale, !resp.IsPresale)
+	assert.Equal(t, false, !respNew.Info.PreSale)
 }

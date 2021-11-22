@@ -13,13 +13,13 @@ var DebugFlag bool
 // https://github.com/grpc/grpc-go/issues/3794
 // require_unimplemented_servers=false
 type Server struct {
-	npool.UnimplementedSphinxCoininfoServer
+	npool.UnimplementedSphinxCoinInfoServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	npool.RegisterSphinxCoininfoServer(server, &Server{})
+	npool.RegisterSphinxCoinInfoServer(server, &Server{})
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	return npool.RegisterSphinxCoininfoHandlerFromEndpoint(context.Background(), mux, endpoint, opts)
+	return npool.RegisterSphinxCoinInfoHandlerFromEndpoint(context.Background(), mux, endpoint, opts)
 }

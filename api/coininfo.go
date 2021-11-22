@@ -8,13 +8,14 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest) (resp *npool.GetCoinInfosResponse, err error) {
-	return crud.GetCoinInfos(ctx, in)
+func (Server) GetCoinInfos(ctx context.Context, in *emptypb.Empty) (resp *npool.GetCoinInfosResponse, err error) {
+	return crud.GetCoinInfos(ctx, &npool.GetCoinInfosRequest{})
 }
 
-func (Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.CoinInfoRow, err error) {
+func (Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.GetCoinInfoResponse, err error) {
 	resp, err = crud.GetCoinInfo(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorf("get coininfo error: %w", err)
@@ -25,7 +26,7 @@ func (Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (re
 	return
 }
 
-func (Server) RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (resp *npool.CoinInfoRow, err error) {
+func (Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoRequest) (resp *npool.CreateCoinInfoResponse, err error) {
 	resp, err = crud.RegisterCoin(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorf("register coin error: %w", err)
@@ -36,7 +37,7 @@ func (Server) RegisterCoin(ctx context.Context, in *npool.RegisterCoinRequest) (
 	return
 }
 
-func (Server) SetCoinPresale(ctx context.Context, in *npool.SetCoinPresaleRequest) (resp *npool.CoinInfoRow, err error) {
+func (Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoRequest) (resp *npool.UpdateCoinInfoResponse, err error) {
 	resp, err = crud.SetCoinPresale(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorf("set coinpresale error: %w", err)
