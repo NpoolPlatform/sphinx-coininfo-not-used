@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	npool "github.com/NpoolPlatform/message/npool/coininfo"
+	npool "github.com/NpoolPlatform/message/npool/coininfo" //nolint
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"

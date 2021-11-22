@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/coininfo"
+	npool "github.com/NpoolPlatform/message/npool/coininfo" //nolint
 	"github.com/go-resty/resty/v2"
 
 	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"

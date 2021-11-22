@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	npool "github.com/NpoolPlatform/message/npool/coininfo"
+	npool "github.com/NpoolPlatform/message/npool/coininfo" //nolint
 	testinit "github.com/NpoolPlatform/sphinx-coininfo/pkg/test-init"
 	"github.com/stretchr/testify/assert"
 )
