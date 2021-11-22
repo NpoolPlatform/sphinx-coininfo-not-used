@@ -10,7 +10,6 @@ import (
 	mysqlconst "github.com/NpoolPlatform/go-service-framework/pkg/mysql/const"
 	rabbitmqconst "github.com/NpoolPlatform/go-service-framework/pkg/rabbitmq/const"
 	redisconst "github.com/NpoolPlatform/go-service-framework/pkg/redis/const"
-	servicename "github.com/NpoolPlatform/sphinx-coininfo/pkg/service-name"
 	cli "github.com/urfave/cli/v2"
 )
 
@@ -24,7 +23,6 @@ func main() {
 	description := fmt.Sprintf("my %v service cli\nFor help on any individual command run <%v COMMAND -h>\n",
 		serviceName, serviceName)
 	err := app.Init(serviceName, description, "", "", "./", nil, commands,
-		config.ServiceNameToNamespace(servicename.ServiceName),
 		config.ServiceNameToNamespace(mysqlconst.MysqlServiceName),
 		config.ServiceNameToNamespace(redisconst.RedisServiceName),
 		config.ServiceNameToNamespace(rabbitmqconst.RabbitMQServiceName))

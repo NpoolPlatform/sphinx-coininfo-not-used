@@ -25,7 +25,6 @@ func Init() error {
 	configPath := fmt.Sprintf("%s/../../cmd/%v", path.Dir(myPath), appName)
 
 	err := app.Init(servicename.ServiceName, "", "", "", configPath, nil, nil,
-		config.ServiceNameToNamespace(servicename.ServiceName),
 		config.ServiceNameToNamespace(mysqlconst.MysqlServiceName),
 		config.ServiceNameToNamespace(redisconst.RedisServiceName),
 		config.ServiceNameToNamespace(rabbitmqconst.RabbitMQServiceName))
