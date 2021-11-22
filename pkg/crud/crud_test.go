@@ -131,5 +131,5 @@ func TestSetCoinPresale(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(t, false, !respNew.Info.PreSale)
+	assert.Equal(t, false, respNew.Info.PreSale)
 }
