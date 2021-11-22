@@ -24,6 +24,8 @@ type CoinInfo struct {
 	Unit string `json:"unit,omitempty"`
 	// IsPresale holds the value of the "is_presale" field.
 	IsPresale bool `json:"is_presale,omitempty"`
+	// LogoImage holds the value of the "logo_image" field.
+	LogoImage string `json:"logo_image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the CoinInfoQuery when eager-loading is set.
 	Edges CoinInfoEdges `json:"edges"`
@@ -31,8 +33,6 @@ type CoinInfo struct {
 
 // CoinInfoEdges holds the relations/edges for other nodes in the graph.
 type CoinInfoEdges struct {
-	// Keys holds the value of the keys edge.
-	Keys []*KeyStore `json:"keys,omitempty"`
 	// Transactions holds the value of the transactions edge.
 	Transactions []*Transaction `json:"transactions,omitempty"`
 	// Reviews holds the value of the reviews edge.
@@ -41,22 +41,13 @@ type CoinInfoEdges struct {
 	WalletNodes []*WalletNode `json:"wallet_nodes,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
-}
-
-// KeysOrErr returns the Keys value or an error if the edge
-// was not loaded in eager-loading.
-func (e CoinInfoEdges) KeysOrErr() ([]*KeyStore, error) {
-	if e.loadedTypes[0] {
-		return e.Keys, nil
-	}
-	return nil, &NotLoadedError{edge: "keys"}
+	loadedTypes [3]bool
 }
 
 // TransactionsOrErr returns the Transactions value or an error if the edge
 // was not loaded in eager-loading.
 func (e CoinInfoEdges) TransactionsOrErr() ([]*Transaction, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[0] {
 		return e.Transactions, nil
 	}
 	return nil, &NotLoadedError{edge: "transactions"}
@@ -65,7 +56,7 @@ func (e CoinInfoEdges) TransactionsOrErr() ([]*Transaction, error) {
 // ReviewsOrErr returns the Reviews value or an error if the edge
 // was not loaded in eager-loading.
 func (e CoinInfoEdges) ReviewsOrErr() ([]*Review, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		return e.Reviews, nil
 	}
 	return nil, &NotLoadedError{edge: "reviews"}
@@ -74,7 +65,7 @@ func (e CoinInfoEdges) ReviewsOrErr() ([]*Review, error) {
 // WalletNodesOrErr returns the WalletNodes value or an error if the edge
 // was not loaded in eager-loading.
 func (e CoinInfoEdges) WalletNodesOrErr() ([]*WalletNode, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.WalletNodes, nil
 	}
 	return nil, &NotLoadedError{edge: "wallet_nodes"}
@@ -89,7 +80,7 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case coininfo.FieldCoinTypeID:
 			values[i] = new(sql.NullInt64)
-		case coininfo.FieldName, coininfo.FieldUnit:
+		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogoImage:
 			values[i] = new(sql.NullString)
 		case coininfo.FieldID:
 			values[i] = new(uuid.UUID)
@@ -138,14 +129,15 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ci.IsPresale = value.Bool
 			}
+		case coininfo.FieldLogoImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field logo_image", values[i])
+			} else if value.Valid {
+				ci.LogoImage = value.String
+			}
 		}
 	}
 	return nil
-}
-
-// QueryKeys queries the "keys" edge of the CoinInfo entity.
-func (ci *CoinInfo) QueryKeys() *KeyStoreQuery {
-	return (&CoinInfoClient{config: ci.config}).QueryKeys(ci)
 }
 
 // QueryTransactions queries the "transactions" edge of the CoinInfo entity.
@@ -194,6 +186,8 @@ func (ci *CoinInfo) String() string {
 	builder.WriteString(ci.Unit)
 	builder.WriteString(", is_presale=")
 	builder.WriteString(fmt.Sprintf("%v", ci.IsPresale))
+	builder.WriteString(", logo_image=")
+	builder.WriteString(ci.LogoImage)
 	builder.WriteByte(')')
 	return builder.String()
 }

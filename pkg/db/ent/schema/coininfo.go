@@ -21,12 +21,12 @@ func (CoinInfo) Fields() []ent.Field {
 		field.String("name").NotEmpty().Unique(),
 		field.String("unit").NotEmpty(),
 		field.Bool("is_presale").Default(false),
+		field.String("logo_image"),
 	}
 }
 
 func (CoinInfo) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("keys", KeyStore.Type),
 		edge.To("transactions", Transaction.Type),
 		edge.To("reviews", Review.Type),
 		edge.To("wallet_nodes", WalletNode.Type),

@@ -10,7 +10,6 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/keystore"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/review"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/transaction"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/walletnode"
@@ -56,25 +55,16 @@ func (cic *CoinInfoCreate) SetNillableIsPresale(b *bool) *CoinInfoCreate {
 	return cic
 }
 
+// SetLogoImage sets the "logo_image" field.
+func (cic *CoinInfoCreate) SetLogoImage(s string) *CoinInfoCreate {
+	cic.mutation.SetLogoImage(s)
+	return cic
+}
+
 // SetID sets the "id" field.
 func (cic *CoinInfoCreate) SetID(u uuid.UUID) *CoinInfoCreate {
 	cic.mutation.SetID(u)
 	return cic
-}
-
-// AddKeyIDs adds the "keys" edge to the KeyStore entity by IDs.
-func (cic *CoinInfoCreate) AddKeyIDs(ids ...int32) *CoinInfoCreate {
-	cic.mutation.AddKeyIDs(ids...)
-	return cic
-}
-
-// AddKeys adds the "keys" edges to the KeyStore entity.
-func (cic *CoinInfoCreate) AddKeys(k ...*KeyStore) *CoinInfoCreate {
-	ids := make([]int32, len(k))
-	for i := range k {
-		ids[i] = k[i].ID
-	}
-	return cic.AddKeyIDs(ids...)
 }
 
 // AddTransactionIDs adds the "transactions" edge to the Transaction entity by IDs.
@@ -227,6 +217,9 @@ func (cic *CoinInfoCreate) check() error {
 	if _, ok := cic.mutation.IsPresale(); !ok {
 		return &ValidationError{Name: "is_presale", err: errors.New(`ent: missing required field "is_presale"`)}
 	}
+	if _, ok := cic.mutation.LogoImage(); !ok {
+		return &ValidationError{Name: "logo_image", err: errors.New(`ent: missing required field "logo_image"`)}
+	}
 	return nil
 }
 
@@ -291,24 +284,13 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.IsPresale = value
 	}
-	if nodes := cic.mutation.KeysIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.KeysTable,
-			Columns: []string{coininfo.KeysColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: keystore.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
+	if value, ok := cic.mutation.LogoImage(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldLogoImage,
+		})
+		_node.LogoImage = value
 	}
 	if nodes := cic.mutation.TransactionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

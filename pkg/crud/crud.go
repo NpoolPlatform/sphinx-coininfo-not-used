@@ -15,11 +15,12 @@ import (
 
 func dbRowToCoinInfo(row *ent.CoinInfo) *npool.CoinInfo {
 	return &npool.CoinInfo{
-		ID:      row.ID.String(),
-		Enum:    row.CoinTypeID,
-		Name:    row.Name,
-		Unit:    row.Unit,
-		PreSale: row.IsPresale,
+		ID:        row.ID.String(),
+		Enum:      row.CoinTypeID,
+		Name:      row.Name,
+		Unit:      row.Unit,
+		PreSale:   row.IsPresale,
+		LogoImage: row.LogoImage,
 	}
 }
 

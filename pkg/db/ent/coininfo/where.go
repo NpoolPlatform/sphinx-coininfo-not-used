@@ -120,6 +120,13 @@ func IsPresale(v bool) predicate.CoinInfo {
 	})
 }
 
+// LogoImage applies equality check predicate on the "logo_image" field. It's identical to LogoImageEQ.
+func LogoImage(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLogoImage), v))
+	})
+}
+
 // CoinTypeIDEQ applies the EQ predicate on the "coin_type_id" field.
 func CoinTypeIDEQ(v int32) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
@@ -432,31 +439,114 @@ func IsPresaleNEQ(v bool) predicate.CoinInfo {
 	})
 }
 
-// HasKeys applies the HasEdge predicate on the "keys" edge.
-func HasKeys() predicate.CoinInfo {
+// LogoImageEQ applies the EQ predicate on the "logo_image" field.
+func LogoImageEQ(v string) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(KeysTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, KeysTable, KeysColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
+		s.Where(sql.EQ(s.C(FieldLogoImage), v))
 	})
 }
 
-// HasKeysWith applies the HasEdge predicate on the "keys" edge with a given conditions (other predicates).
-func HasKeysWith(preds ...predicate.KeyStore) predicate.CoinInfo {
+// LogoImageNEQ applies the NEQ predicate on the "logo_image" field.
+func LogoImageNEQ(v string) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(KeysInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, KeysTable, KeysColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
+		s.Where(sql.NEQ(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageIn applies the In predicate on the "logo_image" field.
+func LogoImageIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldLogoImage), v...))
+	})
+}
+
+// LogoImageNotIn applies the NotIn predicate on the "logo_image" field.
+func LogoImageNotIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldLogoImage), v...))
+	})
+}
+
+// LogoImageGT applies the GT predicate on the "logo_image" field.
+func LogoImageGT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageGTE applies the GTE predicate on the "logo_image" field.
+func LogoImageGTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageLT applies the LT predicate on the "logo_image" field.
+func LogoImageLT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageLTE applies the LTE predicate on the "logo_image" field.
+func LogoImageLTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageContains applies the Contains predicate on the "logo_image" field.
+func LogoImageContains(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageHasPrefix applies the HasPrefix predicate on the "logo_image" field.
+func LogoImageHasPrefix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageHasSuffix applies the HasSuffix predicate on the "logo_image" field.
+func LogoImageHasSuffix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageEqualFold applies the EqualFold predicate on the "logo_image" field.
+func LogoImageEqualFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldLogoImage), v))
+	})
+}
+
+// LogoImageContainsFold applies the ContainsFold predicate on the "logo_image" field.
+func LogoImageContainsFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldLogoImage), v))
 	})
 }
 
