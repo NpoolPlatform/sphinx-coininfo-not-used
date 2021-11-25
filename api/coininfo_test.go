@@ -57,7 +57,7 @@ func TestGetCoinInfo(t *testing.T) {
 		}).
 		Post(testHost + "/v1/get/coin/info")
 	if err != nil {
-		logger.Sugar().Error(err)
+		panic(err)
 	}
 }
 
@@ -76,7 +76,7 @@ func TestGetCoinInfos(t *testing.T) {
 		}).
 		Post(testHost + "/v1/get/coin/infos")
 	if err != nil {
-		logger.Sugar().Error(err)
+		panic(err)
 	}
 }
 
@@ -97,7 +97,7 @@ func TestRegisterCoin(t *testing.T) {
 		}).
 		Post(testHost + "/v1/create/coin/info")
 	if err != nil {
-		logger.Sugar().Error(err)
+		panic(err)
 	}
 }
 
@@ -117,6 +117,6 @@ func TestSetCoinPresale(t *testing.T) {
 		}).
 		Post(testHost + "/v1/update/coin/info")
 	if err != nil {
-		logger.Sugar().Error(err)
+		panic(err)
 	}
 }

@@ -76,10 +76,28 @@ func protoCoinInfoToDBRow(in *npool.CoinInfo) (coinInfo *ent.CoinInfo) {
 	var err error
 	if in.Name != "" {
 		coinInfo, err = crud.GetInfoByName(context.Background(), in.Name)
-	} else {
+	} else if in.ID != "" {
 		coinInfo, err = crud.GetInfo(context.Background(), in.ID)
 	}
-	if err == nil {
+	if coinInfo == nil { // create
+		coinInfo = &ent.CoinInfo{
+			ID:         uuid.New(),
+			CoinTypeID: in.Enum,
+			Name:       in.Name,
+			Unit:       in.Unit,
+			IsPresale:  in.PreSale,
+			LogoImage:  in.LogoImage,
+		}
+	} else if err == nil { // update
+		coinInfo = &ent.CoinInfo{
+			ID:         coinInfo.ID,
+			CoinTypeID: in.Enum,
+			Name:       in.Name,
+			Unit:       in.Unit,
+			IsPresale:  in.PreSale,
+			LogoImage:  in.LogoImage,
+		}
+	} else { // not possible
 		coinInfo = &ent.CoinInfo{
 			ID:         uuid.MustParse(in.ID),
 			CoinTypeID: in.Enum,
@@ -89,5 +107,5 @@ func protoCoinInfoToDBRow(in *npool.CoinInfo) (coinInfo *ent.CoinInfo) {
 			LogoImage:  in.LogoImage,
 		}
 	}
-	return
+	return coinInfo
 }
