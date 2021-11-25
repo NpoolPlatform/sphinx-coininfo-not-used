@@ -10,6 +10,13 @@ import (
 	"github.com/google/uuid"
 )
 
+func GetInfoByName(ctx context.Context, coinName string) (coinInfo *ent.CoinInfo, err error) {
+	coinInfo, err = db.Client().CoinInfo.Query().
+		Where(coininfo.Name(coinName)).
+		Only(ctx)
+	return
+}
+
 func GetInfo(ctx context.Context, id string) (coinInfo *ent.CoinInfo, err error) {
 	tmpID := uuid.MustParse(id)
 	coinInfo, err = db.Client().CoinInfo.Query().

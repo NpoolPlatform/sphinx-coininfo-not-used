@@ -73,13 +73,21 @@ func dbRowsToCoinInfos(entResp []*ent.CoinInfo) (coinInfos []*npool.CoinInfo) {
 }
 
 func protoCoinInfoToDBRow(in *npool.CoinInfo) (coinInfo *ent.CoinInfo) {
-	coinInfo = &ent.CoinInfo{
-		ID:         uuid.MustParse(in.ID),
-		CoinTypeID: in.Enum,
-		Name:       in.Name,
-		Unit:       in.Unit,
-		IsPresale:  in.PreSale,
-		LogoImage:  in.LogoImage,
+	var err error
+	if in.Name != "" {
+		coinInfo, err = crud.GetInfoByName(context.Background(), in.Name)
+	} else {
+		coinInfo, err = crud.GetInfo(context.Background(), in.ID)
+	}
+	if err == nil {
+		coinInfo = &ent.CoinInfo{
+			ID:         uuid.MustParse(in.ID),
+			CoinTypeID: in.Enum,
+			Name:       in.Name,
+			Unit:       in.Unit,
+			IsPresale:  in.PreSale,
+			LogoImage:  in.LogoImage,
+		}
 	}
 	return
 }
