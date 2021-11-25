@@ -15,9 +15,11 @@ import (
 var (
 	tmpCoinInfo     npool.CoinInfo
 	testInitAlready bool
+	testHost        string
 )
 
 func init() {
+	testHost = "http://localhost:50150"
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
@@ -53,9 +55,9 @@ func TestGetCoinInfo(t *testing.T) {
 		SetBody(npool.GetCoinInfoRequest{
 			ID: tmpCoinInfo.ID,
 		}).
-		Post("http://localhost:50150/v1/get/coin/info")
+		Post(testHost + "/v1/get/coin/info")
 	if err != nil {
-		panic(err)
+		logger.Sugar().Error(err)
 	}
 }
 
@@ -72,9 +74,9 @@ func TestGetCoinInfos(t *testing.T) {
 				PageSize:  10,
 			},
 		}).
-		Post("http://localhost:50150/v1/get/coin/infos")
+		Post(testHost + "/v1/get/coin/infos")
 	if err != nil {
-		panic(err)
+		logger.Sugar().Error(err)
 	}
 }
 
@@ -93,9 +95,9 @@ func TestRegisterCoin(t *testing.T) {
 				Unit: tmpCoinInfo.Unit,
 			},
 		}).
-		Post("http://localhost:50150/v1/create/coin/info")
+		Post(testHost + "/v1/create/coin/info")
 	if err != nil {
-		panic(err)
+		logger.Sugar().Error(err)
 	}
 }
 
@@ -113,8 +115,8 @@ func TestSetCoinPresale(t *testing.T) {
 				PreSale: false,
 			},
 		}).
-		Post("http://localhost:50150/v1/update/coin/info")
+		Post(testHost + "/v1/update/coin/info")
 	if err != nil {
-		panic(err)
+		logger.Sugar().Error(err)
 	}
 }
