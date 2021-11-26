@@ -49,6 +49,7 @@ func CreateCoin(ctx context.Context, coinInfo *ent.CoinInfo) (coinInfoCreated *e
 			SetUnit(coinInfo.Unit).
 			SetIsPresale(coinInfo.IsPresale).
 			SetLogoImage(coinInfo.LogoImage).
+			SetCoinTypeID(coinInfo.CoinTypeID).
 			Save(ctx)
 	}
 	return coinInfoCreated, err
