@@ -23,11 +23,11 @@ func init() {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
-	tmpCoinInfo.Enum = 0
+	tmpCoinInfo.Enum = 1
 	tmpCoinInfo.ID = "6ba7b812-9dad-11d1-80b4-00c04fd430c8"
 	tmpCoinInfo.PreSale = false
-	tmpCoinInfo.Name = "Unknown"
-	tmpCoinInfo.Unit = "DK"
+	tmpCoinInfo.Name = "FIL"
+	tmpCoinInfo.Unit = "FIL"
 }
 
 func runByGithub() bool {
