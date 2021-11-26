@@ -24,13 +24,14 @@ func TestCRUD(t *testing.T) {
 	coinInfo, err := CreateCoin(ctx, entCoinInfo)
 	logger.Sugar().Infof("CreateCoin result: %v", coinInfo)
 	AbortWhenError(t, err)
-	coinInfo, err = GetInfo(ctx, entCoinInfo.ID.String())
+	coinInfo, err = GetInfo(ctx, coinInfo.ID.String())
 	logger.Sugar().Infof("GetInfo result: %v", coinInfo)
 	AbortWhenError(t, err)
 	coinInfos, err := GetInfos(ctx)
 	logger.Sugar().Infof("GetInfos result: %v", coinInfos)
 	AbortWhenError(t, err)
-	coinInfo, err = UpdatePreSale(ctx, entCoinInfo)
+	coinInfo.IsPresale = !coinInfo.IsPresale
+	coinInfo, err = UpdatePreSale(ctx, coinInfo)
 	logger.Sugar().Infof("UpdatePreSale result: %v", coinInfo)
 	AbortWhenError(t, err)
 }
