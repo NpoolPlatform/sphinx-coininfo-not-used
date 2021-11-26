@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/coininfo" //nolint
@@ -24,7 +25,7 @@ func init() {
 func (s *Server) GetCoinInfos(ctx context.Context, in *emptypb.Empty) (resp *npool.GetCoinInfosResponse, err error) {
 	resp, err = app.GetCoinInfos(ctx, &npool.GetCoinInfosRequest{})
 	if err != nil {
-		err = LogWhenError(err, "getcoininfos error")
+		err = LogWhenError(err, fmt.Sprintf("getcoininfos error when: %+v", in))
 	}
 	return
 }
@@ -32,7 +33,7 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *emptypb.Empty) (resp *npo
 func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (resp *npool.GetCoinInfoResponse, err error) {
 	resp, err = app.GetCoinInfo(ctx, in)
 	if err != nil {
-		err = LogWhenError(err, "getcoininfo error")
+		err = LogWhenError(err, fmt.Sprintf("getcoininfo error when: %+v", in))
 	}
 	return
 }
@@ -40,7 +41,7 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoRequest) (resp *npool.CreateCoinInfoResponse, err error) {
 	resp, err = app.CreateCoinInfo(ctx, in)
 	if err != nil {
-		err = LogWhenError(err, "createcoininfo error")
+		err = LogWhenError(err, fmt.Sprintf("createcoininfo error when: %+v", in))
 	}
 	return
 }
@@ -48,7 +49,7 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoRequest) (resp *npool.UpdateCoinInfoResponse, err error) {
 	resp, err = app.UpdateCoinInfo(ctx, in)
 	if err != nil {
-		err = LogWhenError(err, "updatecoininfo error")
+		err = LogWhenError(err, fmt.Sprintf("updatecoininfo error when: %+v", in))
 	}
 	return
 }
@@ -59,7 +60,7 @@ func LogWhenError(err error, msg string) (errNew error) {
 		if FlagOutputError {
 			errNew = errDefault
 		} else {
-			errNew = status.Errorf(codes.Internal, msg+" grpc error: %v", err)
+			errNew = status.Errorf(codes.Internal, msg+" %v", err)
 		}
 	}
 	return
