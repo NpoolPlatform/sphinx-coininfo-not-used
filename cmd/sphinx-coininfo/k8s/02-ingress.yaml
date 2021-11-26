@@ -15,7 +15,7 @@ spec:
     - host: api.npool.top
       http:
         paths:
-          - path: /sphinx-coininfo
+          - path: /api/sphinx-coininfo
             backend:
               serviceName: sphinx-coininfo
               servicePort: 50150
@@ -39,7 +39,7 @@ spec:
     - host: api.xpool.top
       http:
         paths:
-          - path: /sphinx-coininfo
+          - path: /api/sphinx-coininfo
             backend:
               serviceName: sphinx-coininfo
               servicePort: 50150
@@ -54,4 +54,4 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-      - /sphinx-coininfo
+      - /api/sphinx-coininfo
