@@ -34,12 +34,12 @@ func TestCRUD(t *testing.T) {
 	coinInfo, err := UpsertCoinInfoByName(ctx, entCoinInfo, entCoinInfo.Name)
 	assert.Nil(t, err)
 	logger.Sugar().Infof("CreateCoin result: %v", coinInfo)
-	assert.False(t, assertCoinInfoEqual(entCoinInfo, coinInfo))
+	assert.True(t, assertCoinInfoEqual(entCoinInfo, coinInfo))
 
 	coinInfo, err = GetCoinInfoByID(ctx, coinInfo.ID.String())
 	assert.Nil(t, err)
 	logger.Sugar().Infof("GetInfo result: %v", coinInfo)
-	assert.False(t, assertCoinInfoEqual(entCoinInfo, coinInfo))
+	assert.True(t, assertCoinInfoEqual(entCoinInfo, coinInfo))
 
 	coinInfos, err := GetAllCoinInfos(ctx)
 	assert.Nil(t, err)
