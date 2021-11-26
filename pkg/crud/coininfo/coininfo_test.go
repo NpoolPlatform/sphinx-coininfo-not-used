@@ -36,7 +36,7 @@ func TestCRUD(t *testing.T) {
 	logger.Sugar().Infof("CreateCoin result: %v", coinInfo)
 	assert.False(t, assertCoinInfoEqual(entCoinInfo, coinInfo))
 
-	coinInfo, err = GetCoinInfoByID(ctx, entCoinInfo.ID.String())
+	coinInfo, err = GetCoinInfoByID(ctx, coinInfo.ID.String())
 	assert.Nil(t, err)
 	logger.Sugar().Infof("GetInfo result: %v", coinInfo)
 	assert.False(t, assertCoinInfoEqual(entCoinInfo, coinInfo))
@@ -53,6 +53,9 @@ func TestCRUD(t *testing.T) {
 }
 
 func assertCoinInfoEqual(coinInfoA, coinInfoB *ent.CoinInfo) bool {
+	if coinInfoA == nil || coinInfoB == nil {
+		return false
+	}
 	return coinInfoA.Name == coinInfoB.Name &&
 		coinInfoA.Unit == coinInfoB.Unit &&
 		coinInfoA.LogoImage == coinInfoB.LogoImage &&
