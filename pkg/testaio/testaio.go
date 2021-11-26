@@ -19,7 +19,7 @@ var (
 	AddressTo     = "t13cjqm4dlj26huz4y7bobaqh2m542stvunznmiqa"
 	AmountFloat64 = 0.01
 	InsiteTxType  = "payment"
-	CoinInfo      = coininfo.CoinInfo{
+	CoinInfo      = &coininfo.CoinInfo{
 		ID:        "8fbcbdc2-25ea-4ff0-b049-9d2f4c8ab646",
 		Enum:      1,
 		PreSale:   false,
@@ -31,12 +31,11 @@ var (
 	TransactionIDInsite = "test-tx-6ba7b812-80b4-9dad-11d1"
 )
 
-func UnifyRestyQuery(path string, body interface{}) (resp *resty.Response) {
-	resp, err := RestyClient.R().
+func UnifyRestyQuery(path string, body interface{}) (resp *resty.Response, err error) {
+	resp, err = RestyClient.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(body).
 		Post(Host + path)
-	LogWhenError(err)
 	return
 }
 
