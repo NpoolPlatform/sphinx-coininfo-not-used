@@ -10,9 +10,6 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/review"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/transaction"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/walletnode"
 	"github.com/google/uuid"
 )
 
@@ -73,51 +70,6 @@ func (cic *CoinInfoCreate) SetNillableLogoImage(s *string) *CoinInfoCreate {
 func (cic *CoinInfoCreate) SetID(u uuid.UUID) *CoinInfoCreate {
 	cic.mutation.SetID(u)
 	return cic
-}
-
-// AddTransactionIDs adds the "transactions" edge to the Transaction entity by IDs.
-func (cic *CoinInfoCreate) AddTransactionIDs(ids ...int32) *CoinInfoCreate {
-	cic.mutation.AddTransactionIDs(ids...)
-	return cic
-}
-
-// AddTransactions adds the "transactions" edges to the Transaction entity.
-func (cic *CoinInfoCreate) AddTransactions(t ...*Transaction) *CoinInfoCreate {
-	ids := make([]int32, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return cic.AddTransactionIDs(ids...)
-}
-
-// AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
-func (cic *CoinInfoCreate) AddReviewIDs(ids ...int32) *CoinInfoCreate {
-	cic.mutation.AddReviewIDs(ids...)
-	return cic
-}
-
-// AddReviews adds the "reviews" edges to the Review entity.
-func (cic *CoinInfoCreate) AddReviews(r ...*Review) *CoinInfoCreate {
-	ids := make([]int32, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return cic.AddReviewIDs(ids...)
-}
-
-// AddWalletNodeIDs adds the "wallet_nodes" edge to the WalletNode entity by IDs.
-func (cic *CoinInfoCreate) AddWalletNodeIDs(ids ...int32) *CoinInfoCreate {
-	cic.mutation.AddWalletNodeIDs(ids...)
-	return cic
-}
-
-// AddWalletNodes adds the "wallet_nodes" edges to the WalletNode entity.
-func (cic *CoinInfoCreate) AddWalletNodes(w ...*WalletNode) *CoinInfoCreate {
-	ids := make([]int32, len(w))
-	for i := range w {
-		ids[i] = w[i].ID
-	}
-	return cic.AddWalletNodeIDs(ids...)
 }
 
 // Mutation returns the CoinInfoMutation object of the builder.
@@ -303,63 +255,6 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 			Column: coininfo.FieldLogoImage,
 		})
 		_node.LogoImage = value
-	}
-	if nodes := cic.mutation.TransactionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := cic.mutation.ReviewsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := cic.mutation.WalletNodesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

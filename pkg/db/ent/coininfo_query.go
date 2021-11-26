@@ -4,7 +4,6 @@ package ent
 
 import (
 	"context"
-	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -14,9 +13,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/predicate"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/review"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/transaction"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/walletnode"
 	"github.com/google/uuid"
 )
 
@@ -29,10 +25,6 @@ type CoinInfoQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.CoinInfo
-	// eager-loading edges.
-	withTransactions *TransactionQuery
-	withReviews      *ReviewQuery
-	withWalletNodes  *WalletNodeQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,72 +59,6 @@ func (ciq *CoinInfoQuery) Unique(unique bool) *CoinInfoQuery {
 func (ciq *CoinInfoQuery) Order(o ...OrderFunc) *CoinInfoQuery {
 	ciq.order = append(ciq.order, o...)
 	return ciq
-}
-
-// QueryTransactions chains the current query on the "transactions" edge.
-func (ciq *CoinInfoQuery) QueryTransactions() *TransactionQuery {
-	query := &TransactionQuery{config: ciq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := ciq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := ciq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(coininfo.Table, coininfo.FieldID, selector),
-			sqlgraph.To(transaction.Table, transaction.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, coininfo.TransactionsTable, coininfo.TransactionsColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(ciq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryReviews chains the current query on the "reviews" edge.
-func (ciq *CoinInfoQuery) QueryReviews() *ReviewQuery {
-	query := &ReviewQuery{config: ciq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := ciq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := ciq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(coininfo.Table, coininfo.FieldID, selector),
-			sqlgraph.To(review.Table, review.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, coininfo.ReviewsTable, coininfo.ReviewsPrimaryKey...),
-		)
-		fromU = sqlgraph.SetNeighbors(ciq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryWalletNodes chains the current query on the "wallet_nodes" edge.
-func (ciq *CoinInfoQuery) QueryWalletNodes() *WalletNodeQuery {
-	query := &WalletNodeQuery{config: ciq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := ciq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := ciq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(coininfo.Table, coininfo.FieldID, selector),
-			sqlgraph.To(walletnode.Table, walletnode.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, coininfo.WalletNodesTable, coininfo.WalletNodesPrimaryKey...),
-		)
-		fromU = sqlgraph.SetNeighbors(ciq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // First returns the first CoinInfo entity from the query.
@@ -311,51 +237,15 @@ func (ciq *CoinInfoQuery) Clone() *CoinInfoQuery {
 		return nil
 	}
 	return &CoinInfoQuery{
-		config:           ciq.config,
-		limit:            ciq.limit,
-		offset:           ciq.offset,
-		order:            append([]OrderFunc{}, ciq.order...),
-		predicates:       append([]predicate.CoinInfo{}, ciq.predicates...),
-		withTransactions: ciq.withTransactions.Clone(),
-		withReviews:      ciq.withReviews.Clone(),
-		withWalletNodes:  ciq.withWalletNodes.Clone(),
+		config:     ciq.config,
+		limit:      ciq.limit,
+		offset:     ciq.offset,
+		order:      append([]OrderFunc{}, ciq.order...),
+		predicates: append([]predicate.CoinInfo{}, ciq.predicates...),
 		// clone intermediate query.
 		sql:  ciq.sql.Clone(),
 		path: ciq.path,
 	}
-}
-
-// WithTransactions tells the query-builder to eager-load the nodes that are connected to
-// the "transactions" edge. The optional arguments are used to configure the query builder of the edge.
-func (ciq *CoinInfoQuery) WithTransactions(opts ...func(*TransactionQuery)) *CoinInfoQuery {
-	query := &TransactionQuery{config: ciq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	ciq.withTransactions = query
-	return ciq
-}
-
-// WithReviews tells the query-builder to eager-load the nodes that are connected to
-// the "reviews" edge. The optional arguments are used to configure the query builder of the edge.
-func (ciq *CoinInfoQuery) WithReviews(opts ...func(*ReviewQuery)) *CoinInfoQuery {
-	query := &ReviewQuery{config: ciq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	ciq.withReviews = query
-	return ciq
-}
-
-// WithWalletNodes tells the query-builder to eager-load the nodes that are connected to
-// the "wallet_nodes" edge. The optional arguments are used to configure the query builder of the edge.
-func (ciq *CoinInfoQuery) WithWalletNodes(opts ...func(*WalletNodeQuery)) *CoinInfoQuery {
-	query := &WalletNodeQuery{config: ciq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	ciq.withWalletNodes = query
-	return ciq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -421,13 +311,8 @@ func (ciq *CoinInfoQuery) prepareQuery(ctx context.Context) error {
 
 func (ciq *CoinInfoQuery) sqlAll(ctx context.Context) ([]*CoinInfo, error) {
 	var (
-		nodes       = []*CoinInfo{}
-		_spec       = ciq.querySpec()
-		loadedTypes = [3]bool{
-			ciq.withTransactions != nil,
-			ciq.withReviews != nil,
-			ciq.withWalletNodes != nil,
-		}
+		nodes = []*CoinInfo{}
+		_spec = ciq.querySpec()
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		node := &CoinInfo{config: ciq.config}
@@ -439,7 +324,6 @@ func (ciq *CoinInfoQuery) sqlAll(ctx context.Context) ([]*CoinInfo, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
-		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	if err := sqlgraph.QueryNodes(ctx, ciq.driver, _spec); err != nil {
@@ -448,166 +332,6 @@ func (ciq *CoinInfoQuery) sqlAll(ctx context.Context) ([]*CoinInfo, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-
-	if query := ciq.withTransactions; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[uuid.UUID]*CoinInfo)
-		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.Transactions = []*Transaction{}
-		}
-		query.withFKs = true
-		query.Where(predicate.Transaction(func(s *sql.Selector) {
-			s.Where(sql.InValues(coininfo.TransactionsColumn, fks...))
-		}))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			fk := n.coin_info_transactions
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "coin_info_transactions" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "coin_info_transactions" returned %v for node %v`, *fk, n.ID)
-			}
-			node.Edges.Transactions = append(node.Edges.Transactions, n)
-		}
-	}
-
-	if query := ciq.withReviews; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		ids := make(map[uuid.UUID]*CoinInfo, len(nodes))
-		for _, node := range nodes {
-			ids[node.ID] = node
-			fks = append(fks, node.ID)
-			node.Edges.Reviews = []*Review{}
-		}
-		var (
-			edgeids []int32
-			edges   = make(map[int32][]*CoinInfo)
-		)
-		_spec := &sqlgraph.EdgeQuerySpec{
-			Edge: &sqlgraph.EdgeSpec{
-				Inverse: false,
-				Table:   coininfo.ReviewsTable,
-				Columns: coininfo.ReviewsPrimaryKey,
-			},
-			Predicate: func(s *sql.Selector) {
-				s.Where(sql.InValues(coininfo.ReviewsPrimaryKey[0], fks...))
-			},
-			ScanValues: func() [2]interface{} {
-				return [2]interface{}{new(uuid.UUID), new(sql.NullInt64)}
-			},
-			Assign: func(out, in interface{}) error {
-				eout, ok := out.(*uuid.UUID)
-				if !ok || eout == nil {
-					return fmt.Errorf("unexpected id value for edge-out")
-				}
-				ein, ok := in.(*sql.NullInt64)
-				if !ok || ein == nil {
-					return fmt.Errorf("unexpected id value for edge-in")
-				}
-				outValue := *eout
-				inValue := int32(ein.Int64)
-				node, ok := ids[outValue]
-				if !ok {
-					return fmt.Errorf("unexpected node id in edges: %v", outValue)
-				}
-				if _, ok := edges[inValue]; !ok {
-					edgeids = append(edgeids, inValue)
-				}
-				edges[inValue] = append(edges[inValue], node)
-				return nil
-			},
-		}
-		if err := sqlgraph.QueryEdges(ctx, ciq.driver, _spec); err != nil {
-			return nil, fmt.Errorf(`query edges "reviews": %w`, err)
-		}
-		query.Where(review.IDIn(edgeids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := edges[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected "reviews" node returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Reviews = append(nodes[i].Edges.Reviews, n)
-			}
-		}
-	}
-
-	if query := ciq.withWalletNodes; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		ids := make(map[uuid.UUID]*CoinInfo, len(nodes))
-		for _, node := range nodes {
-			ids[node.ID] = node
-			fks = append(fks, node.ID)
-			node.Edges.WalletNodes = []*WalletNode{}
-		}
-		var (
-			edgeids []int32
-			edges   = make(map[int32][]*CoinInfo)
-		)
-		_spec := &sqlgraph.EdgeQuerySpec{
-			Edge: &sqlgraph.EdgeSpec{
-				Inverse: false,
-				Table:   coininfo.WalletNodesTable,
-				Columns: coininfo.WalletNodesPrimaryKey,
-			},
-			Predicate: func(s *sql.Selector) {
-				s.Where(sql.InValues(coininfo.WalletNodesPrimaryKey[0], fks...))
-			},
-			ScanValues: func() [2]interface{} {
-				return [2]interface{}{new(uuid.UUID), new(sql.NullInt64)}
-			},
-			Assign: func(out, in interface{}) error {
-				eout, ok := out.(*uuid.UUID)
-				if !ok || eout == nil {
-					return fmt.Errorf("unexpected id value for edge-out")
-				}
-				ein, ok := in.(*sql.NullInt64)
-				if !ok || ein == nil {
-					return fmt.Errorf("unexpected id value for edge-in")
-				}
-				outValue := *eout
-				inValue := int32(ein.Int64)
-				node, ok := ids[outValue]
-				if !ok {
-					return fmt.Errorf("unexpected node id in edges: %v", outValue)
-				}
-				if _, ok := edges[inValue]; !ok {
-					edgeids = append(edgeids, inValue)
-				}
-				edges[inValue] = append(edges[inValue], node)
-				return nil
-			},
-		}
-		if err := sqlgraph.QueryEdges(ctx, ciq.driver, _spec); err != nil {
-			return nil, fmt.Errorf(`query edges "wallet_nodes": %w`, err)
-		}
-		query.Where(walletnode.IDIn(edgeids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := edges[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected "wallet_nodes" node returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.WalletNodes = append(nodes[i].Edges.WalletNodes, n)
-			}
-		}
-	}
-
 	return nodes, nil
 }
 

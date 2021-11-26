@@ -4,7 +4,6 @@ package coininfo
 
 import (
 	"entgo.io/ent/dialect/sql"
-	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/predicate"
 	"github.com/google/uuid"
 )
@@ -547,90 +546,6 @@ func LogoImageEqualFold(v string) predicate.CoinInfo {
 func LogoImageContainsFold(v string) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldLogoImage), v))
-	})
-}
-
-// HasTransactions applies the HasEdge predicate on the "transactions" edge.
-func HasTransactions() predicate.CoinInfo {
-	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(TransactionsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, TransactionsTable, TransactionsColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasTransactionsWith applies the HasEdge predicate on the "transactions" edge with a given conditions (other predicates).
-func HasTransactionsWith(preds ...predicate.Transaction) predicate.CoinInfo {
-	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(TransactionsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, TransactionsTable, TransactionsColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasReviews applies the HasEdge predicate on the "reviews" edge.
-func HasReviews() predicate.CoinInfo {
-	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReviewsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, ReviewsTable, ReviewsPrimaryKey...),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasReviewsWith applies the HasEdge predicate on the "reviews" edge with a given conditions (other predicates).
-func HasReviewsWith(preds ...predicate.Review) predicate.CoinInfo {
-	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReviewsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, ReviewsTable, ReviewsPrimaryKey...),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasWalletNodes applies the HasEdge predicate on the "wallet_nodes" edge.
-func HasWalletNodes() predicate.CoinInfo {
-	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WalletNodesTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, WalletNodesTable, WalletNodesPrimaryKey...),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasWalletNodesWith applies the HasEdge predicate on the "wallet_nodes" edge with a given conditions (other predicates).
-func HasWalletNodesWith(preds ...predicate.WalletNode) predicate.CoinInfo {
-	return predicate.CoinInfo(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WalletNodesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, WalletNodesTable, WalletNodesPrimaryKey...),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
 	})
 }
 

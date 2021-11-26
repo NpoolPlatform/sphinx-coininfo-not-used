@@ -2,7 +2,6 @@ package schema
 
 import (
 	"entgo.io/ent"
-	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
@@ -22,14 +21,6 @@ func (CoinInfo) Fields() []ent.Field {
 		field.String("unit").NotEmpty(),
 		field.Bool("is_presale").Default(false),
 		field.String("logo_image").Default(""),
-	}
-}
-
-func (CoinInfo) Edges() []ent.Edge {
-	return []ent.Edge{
-		edge.To("transactions", Transaction.Type),
-		edge.To("reviews", Review.Type),
-		edge.To("wallet_nodes", WalletNode.Type),
 	}
 }
 
