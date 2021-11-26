@@ -32,6 +32,9 @@ var (
 )
 
 func UnifyRestyQuery(path string, body interface{}) (resp *resty.Response, err error) {
+	if RestyClient == nil {
+		RestyClient = resty.New()
+	}
 	resp, err = RestyClient.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(body).
