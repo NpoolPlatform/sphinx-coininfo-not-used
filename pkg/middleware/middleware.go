@@ -4,7 +4,7 @@ import (
 	"context"
 
 	npool "github.com/NpoolPlatform/message/npool/coininfo" //nolint
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
+	coininfo "github.com/NpoolPlatform/sphinx-coininfo/pkg/crud"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	"github.com/google/uuid"
 )
@@ -24,9 +24,9 @@ func GetCoinInfos(ctx context.Context, _ *npool.GetCoinInfosRequest) (resp *npoo
 	var coinInfos []*npool.CoinInfo
 	if err == nil {
 		coinInfos = dbRowsToCoinInfos(entResp)
-	}
-	resp = &npool.GetCoinInfosResponse{
-		Infos: coinInfos,
+		resp = &npool.GetCoinInfosResponse{
+			Infos: coinInfos,
+		}
 	}
 	return
 }
