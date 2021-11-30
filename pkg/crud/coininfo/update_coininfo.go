@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func UpdateCoinInfoByID(ctx context.Context, preSale bool, logo string, id string) (coinInfo *ent.CoinInfo, err error) {
+func UpdateCoinInfoByID(ctx context.Context, preSale bool, logo, id string) (coinInfo *ent.CoinInfo, err error) {
 	stmt := db.Client().
 		CoinInfo.
 		UpdateOneID(uuid.MustParse(id))

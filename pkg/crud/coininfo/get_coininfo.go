@@ -30,7 +30,7 @@ type GetAllCoinInfosParams struct {
 	offset, limit int
 }
 
-func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) (coinInfos []*ent.CoinInfo, total int, err error) {
+func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.CoinInfo, int, error) {
 	if params.limit == 0 {
 		params.limit = constant.PageSize
 	}
@@ -41,23 +41,24 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) (coinInf
 
 	if params.name != "" {
 		stm.Where(coininfo.NameEQ(params.name))
-
 	}
+
 	if params.preSale {
 		stm.Where(coininfo.PreSaleEQ(params.preSale))
 	}
 
 	// total
-	total, err = stm.GroupBy(coininfo.FieldID).Aggregate(ent.Count()).Int(ctx)
+	total, err := stm.GroupBy(coininfo.FieldID).Aggregate(ent.Count()).Int(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
 
 	// infos
-	coinInfos, err = stm.
+	coinInfos, err := stm.
 		Order(ent.Desc(coininfo.FieldID)).
 		Offset(params.offset).
 		Limit(params.limit).
 		All(ctx)
-	return
+
+	return coinInfos, total, err
 }

@@ -18,7 +18,9 @@ var runCmd = &cli.Command{
 	Aliases: []string{"s"},
 	Usage:   "Run Sphinx CoinInfo daemon",
 	After: func(c *cli.Context) error {
-		grpc2.HShutdown()
+		if err := grpc2.HShutdown(); err != nil {
+			return err
+		}
 		grpc2.GShutdown()
 		return logger.Sync()
 	},
