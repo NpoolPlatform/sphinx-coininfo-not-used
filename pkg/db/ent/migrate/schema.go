@@ -21,6 +21,13 @@ var (
 		Name:       "coin_infos",
 		Columns:    CoinInfosColumns,
 		PrimaryKey: []*schema.Column{CoinInfosColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "coininfo_name",
+				Unique:  true,
+				Columns: []*schema.Column{CoinInfosColumns[1]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
