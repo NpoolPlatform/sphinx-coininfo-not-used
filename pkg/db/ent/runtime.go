@@ -15,21 +15,23 @@ func init() {
 	coininfoFields := schema.CoinInfo{}.Fields()
 	_ = coininfoFields
 	// coininfoDescName is the schema descriptor for name field.
-	coininfoDescName := coininfoFields[2].Descriptor()
+	coininfoDescName := coininfoFields[1].Descriptor()
 	// coininfo.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	coininfo.NameValidator = coininfoDescName.Validators[0].(func(string) error)
 	// coininfoDescUnit is the schema descriptor for unit field.
-	coininfoDescUnit := coininfoFields[3].Descriptor()
+	coininfoDescUnit := coininfoFields[2].Descriptor()
+	// coininfo.DefaultUnit holds the default value on creation for the unit field.
+	coininfo.DefaultUnit = coininfoDescUnit.Default.(string)
 	// coininfo.UnitValidator is a validator for the "unit" field. It is called by the builders before save.
 	coininfo.UnitValidator = coininfoDescUnit.Validators[0].(func(string) error)
-	// coininfoDescIsPresale is the schema descriptor for is_presale field.
-	coininfoDescIsPresale := coininfoFields[4].Descriptor()
-	// coininfo.DefaultIsPresale holds the default value on creation for the is_presale field.
-	coininfo.DefaultIsPresale = coininfoDescIsPresale.Default.(bool)
-	// coininfoDescLogoImage is the schema descriptor for logo_image field.
-	coininfoDescLogoImage := coininfoFields[5].Descriptor()
-	// coininfo.DefaultLogoImage holds the default value on creation for the logo_image field.
-	coininfo.DefaultLogoImage = coininfoDescLogoImage.Default.(string)
+	// coininfoDescPreSale is the schema descriptor for pre_sale field.
+	coininfoDescPreSale := coininfoFields[3].Descriptor()
+	// coininfo.DefaultPreSale holds the default value on creation for the pre_sale field.
+	coininfo.DefaultPreSale = coininfoDescPreSale.Default.(bool)
+	// coininfoDescLogo is the schema descriptor for logo field.
+	coininfoDescLogo := coininfoFields[4].Descriptor()
+	// coininfo.DefaultLogo holds the default value on creation for the logo field.
+	coininfo.DefaultLogo = coininfoDescLogo.Default.(string)
 	// coininfoDescID is the schema descriptor for id field.
 	coininfoDescID := coininfoFields[0].Descriptor()
 	// coininfo.DefaultID holds the default value on creation for the id field.

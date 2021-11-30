@@ -16,28 +16,21 @@ import (
 var runCmd = &cli.Command{
 	Name:    "run",
 	Aliases: []string{"s"},
-	Usage:   "Run the daemon",
+	Usage:   "Run Sphinx CoinInfo daemon",
+	After: func(c *cli.Context) error {
+		grpc2.HShutdown()
+		grpc2.GShutdown()
+		return logger.Sync()
+	},
 	Action: func(c *cli.Context) error {
 		if err := db.Init(); err != nil {
 			return err
 		}
-
 		go func() {
 			if err := grpc2.RunGRPC(rpcRegister); err != nil {
 				logger.Sugar().Errorf("fail to run grpc server: %v", err)
 			}
 		}()
-
-		// 消息队列监听逻辑
-		// if err := msgsrv.Init(); err != nil {
-		// 	return err
-		// }
-		// if err := msgcli.Init(); err != nil {
-		// 	return err
-		// }
-		// go msglistener.Listen()
-		// go msgSender()
-
 		return grpc2.RunGRPCGateWay(rpcGatewayRegister)
 	},
 }

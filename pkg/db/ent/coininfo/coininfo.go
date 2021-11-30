@@ -11,16 +11,14 @@ const (
 	Label = "coin_info"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
-	FieldCoinTypeID = "coin_type_id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldUnit holds the string denoting the unit field in the database.
 	FieldUnit = "unit"
-	// FieldIsPresale holds the string denoting the is_presale field in the database.
-	FieldIsPresale = "is_presale"
-	// FieldLogoImage holds the string denoting the logo_image field in the database.
-	FieldLogoImage = "logo_image"
+	// FieldPreSale holds the string denoting the pre_sale field in the database.
+	FieldPreSale = "pre_sale"
+	// FieldLogo holds the string denoting the logo field in the database.
+	FieldLogo = "logo"
 	// Table holds the table name of the coininfo in the database.
 	Table = "coin_infos"
 )
@@ -28,11 +26,10 @@ const (
 // Columns holds all SQL columns for coininfo fields.
 var Columns = []string{
 	FieldID,
-	FieldCoinTypeID,
 	FieldName,
 	FieldUnit,
-	FieldIsPresale,
-	FieldLogoImage,
+	FieldPreSale,
+	FieldLogo,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -48,12 +45,14 @@ func ValidColumn(column string) bool {
 var (
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultUnit holds the default value on creation for the "unit" field.
+	DefaultUnit string
 	// UnitValidator is a validator for the "unit" field. It is called by the builders before save.
 	UnitValidator func(string) error
-	// DefaultIsPresale holds the default value on creation for the "is_presale" field.
-	DefaultIsPresale bool
-	// DefaultLogoImage holds the default value on creation for the "logo_image" field.
-	DefaultLogoImage string
+	// DefaultPreSale holds the default value on creation for the "pre_sale" field.
+	DefaultPreSale bool
+	// DefaultLogo holds the default value on creation for the "logo" field.
+	DefaultLogo string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

@@ -11,44 +11,20 @@ var (
 	// CoinInfosColumns holds the columns for the "coin_infos" table.
 	CoinInfosColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "coin_type_id", Type: field.TypeInt32},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "unit", Type: field.TypeString},
-		{Name: "is_presale", Type: field.TypeBool, Default: false},
-		{Name: "logo_image", Type: field.TypeString, Default: ""},
+		{Name: "unit", Type: field.TypeString, Default: ""},
+		{Name: "pre_sale", Type: field.TypeBool, Default: false},
+		{Name: "logo", Type: field.TypeString, Default: ""},
 	}
 	// CoinInfosTable holds the schema information for the "coin_infos" table.
 	CoinInfosTable = &schema.Table{
 		Name:       "coin_infos",
 		Columns:    CoinInfosColumns,
 		PrimaryKey: []*schema.Column{CoinInfosColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "coininfo_name",
-				Unique:  true,
-				Columns: []*schema.Column{CoinInfosColumns[2]},
-			},
-			{
-				Name:    "coininfo_unit",
-				Unique:  false,
-				Columns: []*schema.Column{CoinInfosColumns[3]},
-			},
-		},
-	}
-	// EmptiesColumns holds the columns for the "empties" table.
-	EmptiesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-	}
-	// EmptiesTable holds the schema information for the "empties" table.
-	EmptiesTable = &schema.Table{
-		Name:       "empties",
-		Columns:    EmptiesColumns,
-		PrimaryKey: []*schema.Column{EmptiesColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CoinInfosTable,
-		EmptiesTable,
 	}
 )
 

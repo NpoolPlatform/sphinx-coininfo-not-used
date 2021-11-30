@@ -24,25 +24,22 @@ const (
 
 	// Node types.
 	TypeCoinInfo = "CoinInfo"
-	TypeEmpty    = "Empty"
 )
 
 // CoinInfoMutation represents an operation that mutates the CoinInfo nodes in the graph.
 type CoinInfoMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *uuid.UUID
-	coin_type_id    *int32
-	addcoin_type_id *int32
-	name            *string
-	unit            *string
-	is_presale      *bool
-	logo_image      *string
-	clearedFields   map[string]struct{}
-	done            bool
-	oldValue        func(context.Context) (*CoinInfo, error)
-	predicates      []predicate.CoinInfo
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	name          *string
+	unit          *string
+	pre_sale      *bool
+	logo          *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*CoinInfo, error)
+	predicates    []predicate.CoinInfo
 }
 
 var _ ent.Mutation = (*CoinInfoMutation)(nil)
@@ -130,62 +127,6 @@ func (m *CoinInfoMutation) ID() (id uuid.UUID, exists bool) {
 	return *m.id, true
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (m *CoinInfoMutation) SetCoinTypeID(i int32) {
-	m.coin_type_id = &i
-	m.addcoin_type_id = nil
-}
-
-// CoinTypeID returns the value of the "coin_type_id" field in the mutation.
-func (m *CoinInfoMutation) CoinTypeID() (r int32, exists bool) {
-	v := m.coin_type_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCoinTypeID returns the old "coin_type_id" field's value of the CoinInfo entity.
-// If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CoinInfoMutation) OldCoinTypeID(ctx context.Context) (v int32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldCoinTypeID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldCoinTypeID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCoinTypeID: %w", err)
-	}
-	return oldValue.CoinTypeID, nil
-}
-
-// AddCoinTypeID adds i to the "coin_type_id" field.
-func (m *CoinInfoMutation) AddCoinTypeID(i int32) {
-	if m.addcoin_type_id != nil {
-		*m.addcoin_type_id += i
-	} else {
-		m.addcoin_type_id = &i
-	}
-}
-
-// AddedCoinTypeID returns the value that was added to the "coin_type_id" field in this mutation.
-func (m *CoinInfoMutation) AddedCoinTypeID() (r int32, exists bool) {
-	v := m.addcoin_type_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetCoinTypeID resets all changes to the "coin_type_id" field.
-func (m *CoinInfoMutation) ResetCoinTypeID() {
-	m.coin_type_id = nil
-	m.addcoin_type_id = nil
-}
-
 // SetName sets the "name" field.
 func (m *CoinInfoMutation) SetName(s string) {
 	m.name = &s
@@ -258,76 +199,76 @@ func (m *CoinInfoMutation) ResetUnit() {
 	m.unit = nil
 }
 
-// SetIsPresale sets the "is_presale" field.
-func (m *CoinInfoMutation) SetIsPresale(b bool) {
-	m.is_presale = &b
+// SetPreSale sets the "pre_sale" field.
+func (m *CoinInfoMutation) SetPreSale(b bool) {
+	m.pre_sale = &b
 }
 
-// IsPresale returns the value of the "is_presale" field in the mutation.
-func (m *CoinInfoMutation) IsPresale() (r bool, exists bool) {
-	v := m.is_presale
+// PreSale returns the value of the "pre_sale" field in the mutation.
+func (m *CoinInfoMutation) PreSale() (r bool, exists bool) {
+	v := m.pre_sale
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldIsPresale returns the old "is_presale" field's value of the CoinInfo entity.
+// OldPreSale returns the old "pre_sale" field's value of the CoinInfo entity.
 // If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CoinInfoMutation) OldIsPresale(ctx context.Context) (v bool, err error) {
+func (m *CoinInfoMutation) OldPreSale(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldIsPresale is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldPreSale is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldIsPresale requires an ID field in the mutation")
+		return v, fmt.Errorf("OldPreSale requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIsPresale: %w", err)
+		return v, fmt.Errorf("querying old value for OldPreSale: %w", err)
 	}
-	return oldValue.IsPresale, nil
+	return oldValue.PreSale, nil
 }
 
-// ResetIsPresale resets all changes to the "is_presale" field.
-func (m *CoinInfoMutation) ResetIsPresale() {
-	m.is_presale = nil
+// ResetPreSale resets all changes to the "pre_sale" field.
+func (m *CoinInfoMutation) ResetPreSale() {
+	m.pre_sale = nil
 }
 
-// SetLogoImage sets the "logo_image" field.
-func (m *CoinInfoMutation) SetLogoImage(s string) {
-	m.logo_image = &s
+// SetLogo sets the "logo" field.
+func (m *CoinInfoMutation) SetLogo(s string) {
+	m.logo = &s
 }
 
-// LogoImage returns the value of the "logo_image" field in the mutation.
-func (m *CoinInfoMutation) LogoImage() (r string, exists bool) {
-	v := m.logo_image
+// Logo returns the value of the "logo" field in the mutation.
+func (m *CoinInfoMutation) Logo() (r string, exists bool) {
+	v := m.logo
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLogoImage returns the old "logo_image" field's value of the CoinInfo entity.
+// OldLogo returns the old "logo" field's value of the CoinInfo entity.
 // If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CoinInfoMutation) OldLogoImage(ctx context.Context) (v string, err error) {
+func (m *CoinInfoMutation) OldLogo(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldLogoImage is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldLogo is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldLogoImage requires an ID field in the mutation")
+		return v, fmt.Errorf("OldLogo requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLogoImage: %w", err)
+		return v, fmt.Errorf("querying old value for OldLogo: %w", err)
 	}
-	return oldValue.LogoImage, nil
+	return oldValue.Logo, nil
 }
 
-// ResetLogoImage resets all changes to the "logo_image" field.
-func (m *CoinInfoMutation) ResetLogoImage() {
-	m.logo_image = nil
+// ResetLogo resets all changes to the "logo" field.
+func (m *CoinInfoMutation) ResetLogo() {
+	m.logo = nil
 }
 
 // Where appends a list predicates to the CoinInfoMutation builder.
@@ -349,21 +290,18 @@ func (m *CoinInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CoinInfoMutation) Fields() []string {
-	fields := make([]string, 0, 5)
-	if m.coin_type_id != nil {
-		fields = append(fields, coininfo.FieldCoinTypeID)
-	}
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, coininfo.FieldName)
 	}
 	if m.unit != nil {
 		fields = append(fields, coininfo.FieldUnit)
 	}
-	if m.is_presale != nil {
-		fields = append(fields, coininfo.FieldIsPresale)
+	if m.pre_sale != nil {
+		fields = append(fields, coininfo.FieldPreSale)
 	}
-	if m.logo_image != nil {
-		fields = append(fields, coininfo.FieldLogoImage)
+	if m.logo != nil {
+		fields = append(fields, coininfo.FieldLogo)
 	}
 	return fields
 }
@@ -373,16 +311,14 @@ func (m *CoinInfoMutation) Fields() []string {
 // schema.
 func (m *CoinInfoMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case coininfo.FieldCoinTypeID:
-		return m.CoinTypeID()
 	case coininfo.FieldName:
 		return m.Name()
 	case coininfo.FieldUnit:
 		return m.Unit()
-	case coininfo.FieldIsPresale:
-		return m.IsPresale()
-	case coininfo.FieldLogoImage:
-		return m.LogoImage()
+	case coininfo.FieldPreSale:
+		return m.PreSale()
+	case coininfo.FieldLogo:
+		return m.Logo()
 	}
 	return nil, false
 }
@@ -392,16 +328,14 @@ func (m *CoinInfoMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *CoinInfoMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case coininfo.FieldCoinTypeID:
-		return m.OldCoinTypeID(ctx)
 	case coininfo.FieldName:
 		return m.OldName(ctx)
 	case coininfo.FieldUnit:
 		return m.OldUnit(ctx)
-	case coininfo.FieldIsPresale:
-		return m.OldIsPresale(ctx)
-	case coininfo.FieldLogoImage:
-		return m.OldLogoImage(ctx)
+	case coininfo.FieldPreSale:
+		return m.OldPreSale(ctx)
+	case coininfo.FieldLogo:
+		return m.OldLogo(ctx)
 	}
 	return nil, fmt.Errorf("unknown CoinInfo field %s", name)
 }
@@ -411,13 +345,6 @@ func (m *CoinInfoMutation) OldField(ctx context.Context, name string) (ent.Value
 // type.
 func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case coininfo.FieldCoinTypeID:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCoinTypeID(v)
-		return nil
 	case coininfo.FieldName:
 		v, ok := value.(string)
 		if !ok {
@@ -432,19 +359,19 @@ func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnit(v)
 		return nil
-	case coininfo.FieldIsPresale:
+	case coininfo.FieldPreSale:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetIsPresale(v)
+		m.SetPreSale(v)
 		return nil
-	case coininfo.FieldLogoImage:
+	case coininfo.FieldLogo:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLogoImage(v)
+		m.SetLogo(v)
 		return nil
 	}
 	return fmt.Errorf("unknown CoinInfo field %s", name)
@@ -453,21 +380,13 @@ func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *CoinInfoMutation) AddedFields() []string {
-	var fields []string
-	if m.addcoin_type_id != nil {
-		fields = append(fields, coininfo.FieldCoinTypeID)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *CoinInfoMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case coininfo.FieldCoinTypeID:
-		return m.AddedCoinTypeID()
-	}
 	return nil, false
 }
 
@@ -476,13 +395,6 @@ func (m *CoinInfoMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *CoinInfoMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case coininfo.FieldCoinTypeID:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCoinTypeID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown CoinInfo numeric field %s", name)
 }
@@ -510,20 +422,17 @@ func (m *CoinInfoMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *CoinInfoMutation) ResetField(name string) error {
 	switch name {
-	case coininfo.FieldCoinTypeID:
-		m.ResetCoinTypeID()
-		return nil
 	case coininfo.FieldName:
 		m.ResetName()
 		return nil
 	case coininfo.FieldUnit:
 		m.ResetUnit()
 		return nil
-	case coininfo.FieldIsPresale:
-		m.ResetIsPresale()
+	case coininfo.FieldPreSale:
+		m.ResetPreSale()
 		return nil
-	case coininfo.FieldLogoImage:
-		m.ResetLogoImage()
+	case coininfo.FieldLogo:
+		m.ResetLogo()
 		return nil
 	}
 	return fmt.Errorf("unknown CoinInfo field %s", name)
@@ -575,234 +484,4 @@ func (m *CoinInfoMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *CoinInfoMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown CoinInfo edge %s", name)
-}
-
-// EmptyMutation represents an operation that mutates the Empty nodes in the graph.
-type EmptyMutation struct {
-	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Empty, error)
-	predicates    []predicate.Empty
-}
-
-var _ ent.Mutation = (*EmptyMutation)(nil)
-
-// emptyOption allows management of the mutation configuration using functional options.
-type emptyOption func(*EmptyMutation)
-
-// newEmptyMutation creates new mutation for the Empty entity.
-func newEmptyMutation(c config, op Op, opts ...emptyOption) *EmptyMutation {
-	m := &EmptyMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeEmpty,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withEmptyID sets the ID field of the mutation.
-func withEmptyID(id int) emptyOption {
-	return func(m *EmptyMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Empty
-		)
-		m.oldValue = func(ctx context.Context) (*Empty, error) {
-			once.Do(func() {
-				if m.done {
-					err = fmt.Errorf("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Empty.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withEmpty sets the old Empty of the mutation.
-func withEmpty(node *Empty) emptyOption {
-	return func(m *EmptyMutation) {
-		m.oldValue = func(context.Context) (*Empty, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m EmptyMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m EmptyMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *EmptyMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// Where appends a list predicates to the EmptyMutation builder.
-func (m *EmptyMutation) Where(ps ...predicate.Empty) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// Op returns the operation name.
-func (m *EmptyMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (Empty).
-func (m *EmptyMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *EmptyMutation) Fields() []string {
-	fields := make([]string, 0, 0)
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *EmptyMutation) Field(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *EmptyMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	return nil, fmt.Errorf("unknown Empty field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *EmptyMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Empty field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *EmptyMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *EmptyMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *EmptyMutation) AddField(name string, value ent.Value) error {
-	return fmt.Errorf("unknown Empty numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *EmptyMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *EmptyMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *EmptyMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Empty nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *EmptyMutation) ResetField(name string) error {
-	return fmt.Errorf("unknown Empty field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *EmptyMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *EmptyMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *EmptyMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *EmptyMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *EmptyMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *EmptyMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *EmptyMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown Empty unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *EmptyMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown Empty edge %s", name)
 }

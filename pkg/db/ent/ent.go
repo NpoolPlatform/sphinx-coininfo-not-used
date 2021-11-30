@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/empty"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -31,7 +30,6 @@ type OrderFunc func(*sql.Selector)
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		coininfo.Table: coininfo.ValidColumn,
-		empty.Table:    empty.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

@@ -8,6 +8,3 @@ import (
 
 // CoinInfo is the predicate function for coininfo builders.
 type CoinInfo func(*sql.Selector)
-
-// Empty is the predicate function for empty builders.
-type Empty func(*sql.Selector)

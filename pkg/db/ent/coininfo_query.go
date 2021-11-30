@@ -254,12 +254,12 @@ func (ciq *CoinInfoQuery) Clone() *CoinInfoQuery {
 // Example:
 //
 //	var v []struct {
-//		CoinTypeID int32 `json:"coin_type_id,omitempty"`
+//		Name string `json:"name,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.CoinInfo.Query().
-//		GroupBy(coininfo.FieldCoinTypeID).
+//		GroupBy(coininfo.FieldName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -281,11 +281,11 @@ func (ciq *CoinInfoQuery) GroupBy(field string, fields ...string) *CoinInfoGroup
 // Example:
 //
 //	var v []struct {
-//		CoinTypeID int32 `json:"coin_type_id,omitempty"`
+//		Name string `json:"name,omitempty"`
 //	}
 //
 //	client.CoinInfo.Query().
-//		Select(coininfo.FieldCoinTypeID).
+//		Select(coininfo.FieldName).
 //		Scan(ctx, &v)
 //
 func (ciq *CoinInfoQuery) Select(fields ...string) *CoinInfoSelect {

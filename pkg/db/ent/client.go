@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/empty"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -24,8 +23,6 @@ type Client struct {
 	Schema *migrate.Schema
 	// CoinInfo is the client for interacting with the CoinInfo builders.
 	CoinInfo *CoinInfoClient
-	// Empty is the client for interacting with the Empty builders.
-	Empty *EmptyClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -40,7 +37,6 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.CoinInfo = NewCoinInfoClient(c.config)
-	c.Empty = NewEmptyClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -75,7 +71,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:      ctx,
 		config:   cfg,
 		CoinInfo: NewCoinInfoClient(cfg),
-		Empty:    NewEmptyClient(cfg),
 	}, nil
 }
 
@@ -95,7 +90,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		config:   cfg,
 		CoinInfo: NewCoinInfoClient(cfg),
-		Empty:    NewEmptyClient(cfg),
 	}, nil
 }
 
@@ -126,7 +120,6 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.CoinInfo.Use(hooks...)
-	c.Empty.Use(hooks...)
 }
 
 // CoinInfoClient is a client for the CoinInfo schema.
@@ -217,94 +210,4 @@ func (c *CoinInfoClient) GetX(ctx context.Context, id uuid.UUID) *CoinInfo {
 // Hooks returns the client hooks.
 func (c *CoinInfoClient) Hooks() []Hook {
 	return c.hooks.CoinInfo
-}
-
-// EmptyClient is a client for the Empty schema.
-type EmptyClient struct {
-	config
-}
-
-// NewEmptyClient returns a client for the Empty from the given config.
-func NewEmptyClient(c config) *EmptyClient {
-	return &EmptyClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `empty.Hooks(f(g(h())))`.
-func (c *EmptyClient) Use(hooks ...Hook) {
-	c.hooks.Empty = append(c.hooks.Empty, hooks...)
-}
-
-// Create returns a create builder for Empty.
-func (c *EmptyClient) Create() *EmptyCreate {
-	mutation := newEmptyMutation(c.config, OpCreate)
-	return &EmptyCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of Empty entities.
-func (c *EmptyClient) CreateBulk(builders ...*EmptyCreate) *EmptyCreateBulk {
-	return &EmptyCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Empty.
-func (c *EmptyClient) Update() *EmptyUpdate {
-	mutation := newEmptyMutation(c.config, OpUpdate)
-	return &EmptyUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *EmptyClient) UpdateOne(e *Empty) *EmptyUpdateOne {
-	mutation := newEmptyMutation(c.config, OpUpdateOne, withEmpty(e))
-	return &EmptyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *EmptyClient) UpdateOneID(id int) *EmptyUpdateOne {
-	mutation := newEmptyMutation(c.config, OpUpdateOne, withEmptyID(id))
-	return &EmptyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Empty.
-func (c *EmptyClient) Delete() *EmptyDelete {
-	mutation := newEmptyMutation(c.config, OpDelete)
-	return &EmptyDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *EmptyClient) DeleteOne(e *Empty) *EmptyDeleteOne {
-	return c.DeleteOneID(e.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *EmptyClient) DeleteOneID(id int) *EmptyDeleteOne {
-	builder := c.Delete().Where(empty.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &EmptyDeleteOne{builder}
-}
-
-// Query returns a query builder for Empty.
-func (c *EmptyClient) Query() *EmptyQuery {
-	return &EmptyQuery{
-		config: c.config,
-	}
-}
-
-// Get returns a Empty entity by its id.
-func (c *EmptyClient) Get(ctx context.Context, id int) (*Empty, error) {
-	return c.Query().Where(empty.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *EmptyClient) GetX(ctx context.Context, id int) *Empty {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *EmptyClient) Hooks() []Hook {
-	return c.hooks.Empty
 }

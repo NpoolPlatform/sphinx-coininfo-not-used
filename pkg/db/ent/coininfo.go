@@ -16,16 +16,14 @@ type CoinInfo struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// CoinTypeID holds the value of the "coin_type_id" field.
-	CoinTypeID int32 `json:"coin_type_id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Unit holds the value of the "unit" field.
 	Unit string `json:"unit,omitempty"`
-	// IsPresale holds the value of the "is_presale" field.
-	IsPresale bool `json:"is_presale,omitempty"`
-	// LogoImage holds the value of the "logo_image" field.
-	LogoImage string `json:"logo_image,omitempty"`
+	// PreSale holds the value of the "pre_sale" field.
+	PreSale bool `json:"pre_sale,omitempty"`
+	// Logo holds the value of the "logo" field.
+	Logo string `json:"logo,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -33,11 +31,9 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case coininfo.FieldIsPresale:
+		case coininfo.FieldPreSale:
 			values[i] = new(sql.NullBool)
-		case coininfo.FieldCoinTypeID:
-			values[i] = new(sql.NullInt64)
-		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogoImage:
+		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo:
 			values[i] = new(sql.NullString)
 		case coininfo.FieldID:
 			values[i] = new(uuid.UUID)
@@ -62,12 +58,6 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				ci.ID = *value
 			}
-		case coininfo.FieldCoinTypeID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
-			} else if value.Valid {
-				ci.CoinTypeID = int32(value.Int64)
-			}
 		case coininfo.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
@@ -80,17 +70,17 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ci.Unit = value.String
 			}
-		case coininfo.FieldIsPresale:
+		case coininfo.FieldPreSale:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field is_presale", values[i])
+				return fmt.Errorf("unexpected type %T for field pre_sale", values[i])
 			} else if value.Valid {
-				ci.IsPresale = value.Bool
+				ci.PreSale = value.Bool
 			}
-		case coininfo.FieldLogoImage:
+		case coininfo.FieldLogo:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field logo_image", values[i])
+				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value.Valid {
-				ci.LogoImage = value.String
+				ci.Logo = value.String
 			}
 		}
 	}
@@ -120,16 +110,14 @@ func (ci *CoinInfo) String() string {
 	var builder strings.Builder
 	builder.WriteString("CoinInfo(")
 	builder.WriteString(fmt.Sprintf("id=%v", ci.ID))
-	builder.WriteString(", coin_type_id=")
-	builder.WriteString(fmt.Sprintf("%v", ci.CoinTypeID))
 	builder.WriteString(", name=")
 	builder.WriteString(ci.Name)
 	builder.WriteString(", unit=")
 	builder.WriteString(ci.Unit)
-	builder.WriteString(", is_presale=")
-	builder.WriteString(fmt.Sprintf("%v", ci.IsPresale))
-	builder.WriteString(", logo_image=")
-	builder.WriteString(ci.LogoImage)
+	builder.WriteString(", pre_sale=")
+	builder.WriteString(fmt.Sprintf("%v", ci.PreSale))
+	builder.WriteString(", logo=")
+	builder.WriteString(ci.Logo)
 	builder.WriteByte(')')
 	return builder.String()
 }
