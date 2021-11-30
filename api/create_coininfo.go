@@ -33,6 +33,6 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 	}
 
 	return &npool.CreateCoinInfoResponse{
-		ID: resp.ID.String(),
+		ID: resp.String(),
 	}, nil
 }

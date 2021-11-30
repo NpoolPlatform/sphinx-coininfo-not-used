@@ -5,20 +5,16 @@ import (
 
 	"github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
+	dcoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 	"github.com/google/uuid"
 )
 
-func CreateCoinInfo(ctx context.Context, info *coininfo.CoinInfo) (*ent.CoinInfo, error) {
-	uid, err := uuid.NewUUID()
-	if err != nil {
-		return nil, err
-	}
+func CreateCoinInfo(ctx context.Context, info *coininfo.CoinInfo) (uuid.UUID, error) {
 	return db.Client().CoinInfo.Create().
-		SetID(uid).
 		SetName(info.GetName()).
 		SetUnit(info.GetUnit()).
 		SetLogo(info.GetLogo()).
 		SetPreSale(info.GetPreSale()).
-		Save(ctx)
+		OnConflictColumns(dcoin.FieldName).DoNothing().
+		ID(ctx)
 }
