@@ -7,12 +7,11 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/review"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/transaction"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/walletnode"
 	"github.com/google/uuid"
 )
 
@@ -21,12 +20,7 @@ type CoinInfoCreate struct {
 	config
 	mutation *CoinInfoMutation
 	hooks    []Hook
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (cic *CoinInfoCreate) SetCoinTypeID(i int32) *CoinInfoCreate {
-	cic.mutation.SetCoinTypeID(i)
-	return cic
+	conflict []sql.ConflictOption
 }
 
 // SetName sets the "name" field.
@@ -41,30 +35,38 @@ func (cic *CoinInfoCreate) SetUnit(s string) *CoinInfoCreate {
 	return cic
 }
 
-// SetIsPresale sets the "is_presale" field.
-func (cic *CoinInfoCreate) SetIsPresale(b bool) *CoinInfoCreate {
-	cic.mutation.SetIsPresale(b)
-	return cic
-}
-
-// SetNillableIsPresale sets the "is_presale" field if the given value is not nil.
-func (cic *CoinInfoCreate) SetNillableIsPresale(b *bool) *CoinInfoCreate {
-	if b != nil {
-		cic.SetIsPresale(*b)
+// SetNillableUnit sets the "unit" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableUnit(s *string) *CoinInfoCreate {
+	if s != nil {
+		cic.SetUnit(*s)
 	}
 	return cic
 }
 
-// SetLogoImage sets the "logo_image" field.
-func (cic *CoinInfoCreate) SetLogoImage(s string) *CoinInfoCreate {
-	cic.mutation.SetLogoImage(s)
+// SetPreSale sets the "pre_sale" field.
+func (cic *CoinInfoCreate) SetPreSale(b bool) *CoinInfoCreate {
+	cic.mutation.SetPreSale(b)
 	return cic
 }
 
-// SetNillableLogoImage sets the "logo_image" field if the given value is not nil.
-func (cic *CoinInfoCreate) SetNillableLogoImage(s *string) *CoinInfoCreate {
+// SetNillablePreSale sets the "pre_sale" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillablePreSale(b *bool) *CoinInfoCreate {
+	if b != nil {
+		cic.SetPreSale(*b)
+	}
+	return cic
+}
+
+// SetLogo sets the "logo" field.
+func (cic *CoinInfoCreate) SetLogo(s string) *CoinInfoCreate {
+	cic.mutation.SetLogo(s)
+	return cic
+}
+
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableLogo(s *string) *CoinInfoCreate {
 	if s != nil {
-		cic.SetLogoImage(*s)
+		cic.SetLogo(*s)
 	}
 	return cic
 }
@@ -73,51 +75,6 @@ func (cic *CoinInfoCreate) SetNillableLogoImage(s *string) *CoinInfoCreate {
 func (cic *CoinInfoCreate) SetID(u uuid.UUID) *CoinInfoCreate {
 	cic.mutation.SetID(u)
 	return cic
-}
-
-// AddTransactionIDs adds the "transactions" edge to the Transaction entity by IDs.
-func (cic *CoinInfoCreate) AddTransactionIDs(ids ...int32) *CoinInfoCreate {
-	cic.mutation.AddTransactionIDs(ids...)
-	return cic
-}
-
-// AddTransactions adds the "transactions" edges to the Transaction entity.
-func (cic *CoinInfoCreate) AddTransactions(t ...*Transaction) *CoinInfoCreate {
-	ids := make([]int32, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return cic.AddTransactionIDs(ids...)
-}
-
-// AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
-func (cic *CoinInfoCreate) AddReviewIDs(ids ...int32) *CoinInfoCreate {
-	cic.mutation.AddReviewIDs(ids...)
-	return cic
-}
-
-// AddReviews adds the "reviews" edges to the Review entity.
-func (cic *CoinInfoCreate) AddReviews(r ...*Review) *CoinInfoCreate {
-	ids := make([]int32, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return cic.AddReviewIDs(ids...)
-}
-
-// AddWalletNodeIDs adds the "wallet_nodes" edge to the WalletNode entity by IDs.
-func (cic *CoinInfoCreate) AddWalletNodeIDs(ids ...int32) *CoinInfoCreate {
-	cic.mutation.AddWalletNodeIDs(ids...)
-	return cic
-}
-
-// AddWalletNodes adds the "wallet_nodes" edges to the WalletNode entity.
-func (cic *CoinInfoCreate) AddWalletNodes(w ...*WalletNode) *CoinInfoCreate {
-	ids := make([]int32, len(w))
-	for i := range w {
-		ids[i] = w[i].ID
-	}
-	return cic.AddWalletNodeIDs(ids...)
 }
 
 // Mutation returns the CoinInfoMutation object of the builder.
@@ -191,13 +148,17 @@ func (cic *CoinInfoCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (cic *CoinInfoCreate) defaults() {
-	if _, ok := cic.mutation.IsPresale(); !ok {
-		v := coininfo.DefaultIsPresale
-		cic.mutation.SetIsPresale(v)
+	if _, ok := cic.mutation.Unit(); !ok {
+		v := coininfo.DefaultUnit
+		cic.mutation.SetUnit(v)
 	}
-	if _, ok := cic.mutation.LogoImage(); !ok {
-		v := coininfo.DefaultLogoImage
-		cic.mutation.SetLogoImage(v)
+	if _, ok := cic.mutation.PreSale(); !ok {
+		v := coininfo.DefaultPreSale
+		cic.mutation.SetPreSale(v)
+	}
+	if _, ok := cic.mutation.Logo(); !ok {
+		v := coininfo.DefaultLogo
+		cic.mutation.SetLogo(v)
 	}
 	if _, ok := cic.mutation.ID(); !ok {
 		v := coininfo.DefaultID()
@@ -207,9 +168,6 @@ func (cic *CoinInfoCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (cic *CoinInfoCreate) check() error {
-	if _, ok := cic.mutation.CoinTypeID(); !ok {
-		return &ValidationError{Name: "coin_type_id", err: errors.New(`ent: missing required field "coin_type_id"`)}
-	}
 	if _, ok := cic.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "name"`)}
 	}
@@ -226,11 +184,11 @@ func (cic *CoinInfoCreate) check() error {
 			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "unit": %w`, err)}
 		}
 	}
-	if _, ok := cic.mutation.IsPresale(); !ok {
-		return &ValidationError{Name: "is_presale", err: errors.New(`ent: missing required field "is_presale"`)}
+	if _, ok := cic.mutation.PreSale(); !ok {
+		return &ValidationError{Name: "pre_sale", err: errors.New(`ent: missing required field "pre_sale"`)}
 	}
-	if _, ok := cic.mutation.LogoImage(); !ok {
-		return &ValidationError{Name: "logo_image", err: errors.New(`ent: missing required field "logo_image"`)}
+	if _, ok := cic.mutation.Logo(); !ok {
+		return &ValidationError{Name: "logo", err: errors.New(`ent: missing required field "logo"`)}
 	}
 	return nil
 }
@@ -260,17 +218,10 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.OnConflict = cic.conflict
 	if id, ok := cic.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
-	}
-	if value, ok := cic.mutation.CoinTypeID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: coininfo.FieldCoinTypeID,
-		})
-		_node.CoinTypeID = value
 	}
 	if value, ok := cic.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -288,86 +239,273 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.Unit = value
 	}
-	if value, ok := cic.mutation.IsPresale(); ok {
+	if value, ok := cic.mutation.PreSale(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: coininfo.FieldIsPresale,
+			Column: coininfo.FieldPreSale,
 		})
-		_node.IsPresale = value
+		_node.PreSale = value
 	}
-	if value, ok := cic.mutation.LogoImage(); ok {
+	if value, ok := cic.mutation.Logo(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: coininfo.FieldLogoImage,
+			Column: coininfo.FieldLogo,
 		})
-		_node.LogoImage = value
-	}
-	if nodes := cic.mutation.TransactionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := cic.mutation.ReviewsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := cic.mutation.WalletNodesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
+		_node.Logo = value
 	}
 	return _node, _spec
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.CoinInfo.Create().
+//		SetName(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.CoinInfoUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (cic *CoinInfoCreate) OnConflict(opts ...sql.ConflictOption) *CoinInfoUpsertOne {
+	cic.conflict = opts
+	return &CoinInfoUpsertOne{
+		create: cic,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.CoinInfo.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (cic *CoinInfoCreate) OnConflictColumns(columns ...string) *CoinInfoUpsertOne {
+	cic.conflict = append(cic.conflict, sql.ConflictColumns(columns...))
+	return &CoinInfoUpsertOne{
+		create: cic,
+	}
+}
+
+type (
+	// CoinInfoUpsertOne is the builder for "upsert"-ing
+	//  one CoinInfo node.
+	CoinInfoUpsertOne struct {
+		create *CoinInfoCreate
+	}
+
+	// CoinInfoUpsert is the "OnConflict" setter.
+	CoinInfoUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetName sets the "name" field.
+func (u *CoinInfoUpsert) SetName(v string) *CoinInfoUpsert {
+	u.Set(coininfo.FieldName, v)
+	return u
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateName() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldName)
+	return u
+}
+
+// SetUnit sets the "unit" field.
+func (u *CoinInfoUpsert) SetUnit(v string) *CoinInfoUpsert {
+	u.Set(coininfo.FieldUnit, v)
+	return u
+}
+
+// UpdateUnit sets the "unit" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateUnit() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldUnit)
+	return u
+}
+
+// SetPreSale sets the "pre_sale" field.
+func (u *CoinInfoUpsert) SetPreSale(v bool) *CoinInfoUpsert {
+	u.Set(coininfo.FieldPreSale, v)
+	return u
+}
+
+// UpdatePreSale sets the "pre_sale" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdatePreSale() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldPreSale)
+	return u
+}
+
+// SetLogo sets the "logo" field.
+func (u *CoinInfoUpsert) SetLogo(v string) *CoinInfoUpsert {
+	u.Set(coininfo.FieldLogo, v)
+	return u
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateLogo() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldLogo)
+	return u
+}
+
+// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.CoinInfo.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(coininfo.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *CoinInfoUpsertOne) UpdateNewValues() *CoinInfoUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(coininfo.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//  client.CoinInfo.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
+func (u *CoinInfoUpsertOne) Ignore() *CoinInfoUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *CoinInfoUpsertOne) DoNothing() *CoinInfoUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the CoinInfoCreate.OnConflict
+// documentation for more info.
+func (u *CoinInfoUpsertOne) Update(set func(*CoinInfoUpsert)) *CoinInfoUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&CoinInfoUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *CoinInfoUpsertOne) SetName(v string) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateName() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetUnit sets the "unit" field.
+func (u *CoinInfoUpsertOne) SetUnit(v string) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetUnit(v)
+	})
+}
+
+// UpdateUnit sets the "unit" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateUnit() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateUnit()
+	})
+}
+
+// SetPreSale sets the "pre_sale" field.
+func (u *CoinInfoUpsertOne) SetPreSale(v bool) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetPreSale(v)
+	})
+}
+
+// UpdatePreSale sets the "pre_sale" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdatePreSale() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdatePreSale()
+	})
+}
+
+// SetLogo sets the "logo" field.
+func (u *CoinInfoUpsertOne) SetLogo(v string) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetLogo(v)
+	})
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateLogo() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateLogo()
+	})
+}
+
+// Exec executes the query.
+func (u *CoinInfoUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for CoinInfoCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *CoinInfoUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *CoinInfoUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: CoinInfoUpsertOne.ID is not supported by MySQL driver. Use CoinInfoUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *CoinInfoUpsertOne) IDX(ctx context.Context) uuid.UUID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
 }
 
 // CoinInfoCreateBulk is the builder for creating many CoinInfo entities in bulk.
 type CoinInfoCreateBulk struct {
 	config
 	builders []*CoinInfoCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the CoinInfo entities in the database.
@@ -394,6 +532,7 @@ func (cicb *CoinInfoCreateBulk) Save(ctx context.Context) ([]*CoinInfo, error) {
 					_, err = mutators[i+1].Mutate(root, cicb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = cicb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, cicb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -440,6 +579,178 @@ func (cicb *CoinInfoCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (cicb *CoinInfoCreateBulk) ExecX(ctx context.Context) {
 	if err := cicb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.CoinInfo.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.CoinInfoUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (cicb *CoinInfoCreateBulk) OnConflict(opts ...sql.ConflictOption) *CoinInfoUpsertBulk {
+	cicb.conflict = opts
+	return &CoinInfoUpsertBulk{
+		create: cicb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.CoinInfo.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (cicb *CoinInfoCreateBulk) OnConflictColumns(columns ...string) *CoinInfoUpsertBulk {
+	cicb.conflict = append(cicb.conflict, sql.ConflictColumns(columns...))
+	return &CoinInfoUpsertBulk{
+		create: cicb,
+	}
+}
+
+// CoinInfoUpsertBulk is the builder for "upsert"-ing
+// a bulk of CoinInfo nodes.
+type CoinInfoUpsertBulk struct {
+	create *CoinInfoCreateBulk
+}
+
+// UpdateNewValues updates the fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.CoinInfo.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(coininfo.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *CoinInfoUpsertBulk) UpdateNewValues() *CoinInfoUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(coininfo.FieldID)
+				return
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.CoinInfo.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+//
+func (u *CoinInfoUpsertBulk) Ignore() *CoinInfoUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *CoinInfoUpsertBulk) DoNothing() *CoinInfoUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the CoinInfoCreateBulk.OnConflict
+// documentation for more info.
+func (u *CoinInfoUpsertBulk) Update(set func(*CoinInfoUpsert)) *CoinInfoUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&CoinInfoUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *CoinInfoUpsertBulk) SetName(v string) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateName() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetUnit sets the "unit" field.
+func (u *CoinInfoUpsertBulk) SetUnit(v string) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetUnit(v)
+	})
+}
+
+// UpdateUnit sets the "unit" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateUnit() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateUnit()
+	})
+}
+
+// SetPreSale sets the "pre_sale" field.
+func (u *CoinInfoUpsertBulk) SetPreSale(v bool) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetPreSale(v)
+	})
+}
+
+// UpdatePreSale sets the "pre_sale" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdatePreSale() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdatePreSale()
+	})
+}
+
+// SetLogo sets the "logo" field.
+func (u *CoinInfoUpsertBulk) SetLogo(v string) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetLogo(v)
+	})
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateLogo() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateLogo()
+	})
+}
+
+// Exec executes the query.
+func (u *CoinInfoUpsertBulk) Exec(ctx context.Context) error {
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the CoinInfoCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for CoinInfoCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *CoinInfoUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

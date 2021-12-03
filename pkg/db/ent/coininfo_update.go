@@ -11,9 +11,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/predicate"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/review"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/transaction"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/walletnode"
 )
 
 // CoinInfoUpdate is the builder for updating CoinInfo entities.
@@ -29,19 +26,6 @@ func (ciu *CoinInfoUpdate) Where(ps ...predicate.CoinInfo) *CoinInfoUpdate {
 	return ciu
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (ciu *CoinInfoUpdate) SetCoinTypeID(i int32) *CoinInfoUpdate {
-	ciu.mutation.ResetCoinTypeID()
-	ciu.mutation.SetCoinTypeID(i)
-	return ciu
-}
-
-// AddCoinTypeID adds i to the "coin_type_id" field.
-func (ciu *CoinInfoUpdate) AddCoinTypeID(i int32) *CoinInfoUpdate {
-	ciu.mutation.AddCoinTypeID(i)
-	return ciu
-}
-
 // SetName sets the "name" field.
 func (ciu *CoinInfoUpdate) SetName(s string) *CoinInfoUpdate {
 	ciu.mutation.SetName(s)
@@ -54,145 +38,45 @@ func (ciu *CoinInfoUpdate) SetUnit(s string) *CoinInfoUpdate {
 	return ciu
 }
 
-// SetIsPresale sets the "is_presale" field.
-func (ciu *CoinInfoUpdate) SetIsPresale(b bool) *CoinInfoUpdate {
-	ciu.mutation.SetIsPresale(b)
-	return ciu
-}
-
-// SetNillableIsPresale sets the "is_presale" field if the given value is not nil.
-func (ciu *CoinInfoUpdate) SetNillableIsPresale(b *bool) *CoinInfoUpdate {
-	if b != nil {
-		ciu.SetIsPresale(*b)
-	}
-	return ciu
-}
-
-// SetLogoImage sets the "logo_image" field.
-func (ciu *CoinInfoUpdate) SetLogoImage(s string) *CoinInfoUpdate {
-	ciu.mutation.SetLogoImage(s)
-	return ciu
-}
-
-// SetNillableLogoImage sets the "logo_image" field if the given value is not nil.
-func (ciu *CoinInfoUpdate) SetNillableLogoImage(s *string) *CoinInfoUpdate {
+// SetNillableUnit sets the "unit" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableUnit(s *string) *CoinInfoUpdate {
 	if s != nil {
-		ciu.SetLogoImage(*s)
+		ciu.SetUnit(*s)
 	}
 	return ciu
 }
 
-// AddTransactionIDs adds the "transactions" edge to the Transaction entity by IDs.
-func (ciu *CoinInfoUpdate) AddTransactionIDs(ids ...int32) *CoinInfoUpdate {
-	ciu.mutation.AddTransactionIDs(ids...)
+// SetPreSale sets the "pre_sale" field.
+func (ciu *CoinInfoUpdate) SetPreSale(b bool) *CoinInfoUpdate {
+	ciu.mutation.SetPreSale(b)
 	return ciu
 }
 
-// AddTransactions adds the "transactions" edges to the Transaction entity.
-func (ciu *CoinInfoUpdate) AddTransactions(t ...*Transaction) *CoinInfoUpdate {
-	ids := make([]int32, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
+// SetNillablePreSale sets the "pre_sale" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillablePreSale(b *bool) *CoinInfoUpdate {
+	if b != nil {
+		ciu.SetPreSale(*b)
 	}
-	return ciu.AddTransactionIDs(ids...)
-}
-
-// AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
-func (ciu *CoinInfoUpdate) AddReviewIDs(ids ...int32) *CoinInfoUpdate {
-	ciu.mutation.AddReviewIDs(ids...)
 	return ciu
 }
 
-// AddReviews adds the "reviews" edges to the Review entity.
-func (ciu *CoinInfoUpdate) AddReviews(r ...*Review) *CoinInfoUpdate {
-	ids := make([]int32, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return ciu.AddReviewIDs(ids...)
-}
-
-// AddWalletNodeIDs adds the "wallet_nodes" edge to the WalletNode entity by IDs.
-func (ciu *CoinInfoUpdate) AddWalletNodeIDs(ids ...int32) *CoinInfoUpdate {
-	ciu.mutation.AddWalletNodeIDs(ids...)
+// SetLogo sets the "logo" field.
+func (ciu *CoinInfoUpdate) SetLogo(s string) *CoinInfoUpdate {
+	ciu.mutation.SetLogo(s)
 	return ciu
 }
 
-// AddWalletNodes adds the "wallet_nodes" edges to the WalletNode entity.
-func (ciu *CoinInfoUpdate) AddWalletNodes(w ...*WalletNode) *CoinInfoUpdate {
-	ids := make([]int32, len(w))
-	for i := range w {
-		ids[i] = w[i].ID
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableLogo(s *string) *CoinInfoUpdate {
+	if s != nil {
+		ciu.SetLogo(*s)
 	}
-	return ciu.AddWalletNodeIDs(ids...)
+	return ciu
 }
 
 // Mutation returns the CoinInfoMutation object of the builder.
 func (ciu *CoinInfoUpdate) Mutation() *CoinInfoMutation {
 	return ciu.mutation
-}
-
-// ClearTransactions clears all "transactions" edges to the Transaction entity.
-func (ciu *CoinInfoUpdate) ClearTransactions() *CoinInfoUpdate {
-	ciu.mutation.ClearTransactions()
-	return ciu
-}
-
-// RemoveTransactionIDs removes the "transactions" edge to Transaction entities by IDs.
-func (ciu *CoinInfoUpdate) RemoveTransactionIDs(ids ...int32) *CoinInfoUpdate {
-	ciu.mutation.RemoveTransactionIDs(ids...)
-	return ciu
-}
-
-// RemoveTransactions removes "transactions" edges to Transaction entities.
-func (ciu *CoinInfoUpdate) RemoveTransactions(t ...*Transaction) *CoinInfoUpdate {
-	ids := make([]int32, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return ciu.RemoveTransactionIDs(ids...)
-}
-
-// ClearReviews clears all "reviews" edges to the Review entity.
-func (ciu *CoinInfoUpdate) ClearReviews() *CoinInfoUpdate {
-	ciu.mutation.ClearReviews()
-	return ciu
-}
-
-// RemoveReviewIDs removes the "reviews" edge to Review entities by IDs.
-func (ciu *CoinInfoUpdate) RemoveReviewIDs(ids ...int32) *CoinInfoUpdate {
-	ciu.mutation.RemoveReviewIDs(ids...)
-	return ciu
-}
-
-// RemoveReviews removes "reviews" edges to Review entities.
-func (ciu *CoinInfoUpdate) RemoveReviews(r ...*Review) *CoinInfoUpdate {
-	ids := make([]int32, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return ciu.RemoveReviewIDs(ids...)
-}
-
-// ClearWalletNodes clears all "wallet_nodes" edges to the WalletNode entity.
-func (ciu *CoinInfoUpdate) ClearWalletNodes() *CoinInfoUpdate {
-	ciu.mutation.ClearWalletNodes()
-	return ciu
-}
-
-// RemoveWalletNodeIDs removes the "wallet_nodes" edge to WalletNode entities by IDs.
-func (ciu *CoinInfoUpdate) RemoveWalletNodeIDs(ids ...int32) *CoinInfoUpdate {
-	ciu.mutation.RemoveWalletNodeIDs(ids...)
-	return ciu
-}
-
-// RemoveWalletNodes removes "wallet_nodes" edges to WalletNode entities.
-func (ciu *CoinInfoUpdate) RemoveWalletNodes(w ...*WalletNode) *CoinInfoUpdate {
-	ids := make([]int32, len(w))
-	for i := range w {
-		ids[i] = w[i].ID
-	}
-	return ciu.RemoveWalletNodeIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -288,20 +172,6 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := ciu.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: coininfo.FieldCoinTypeID,
-		})
-	}
-	if value, ok := ciu.mutation.AddedCoinTypeID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: coininfo.FieldCoinTypeID,
-		})
-	}
 	if value, ok := ciu.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -316,181 +186,19 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: coininfo.FieldUnit,
 		})
 	}
-	if value, ok := ciu.mutation.IsPresale(); ok {
+	if value, ok := ciu.mutation.PreSale(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: coininfo.FieldIsPresale,
+			Column: coininfo.FieldPreSale,
 		})
 	}
-	if value, ok := ciu.mutation.LogoImage(); ok {
+	if value, ok := ciu.mutation.Logo(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: coininfo.FieldLogoImage,
+			Column: coininfo.FieldLogo,
 		})
-	}
-	if ciu.mutation.TransactionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciu.mutation.RemovedTransactionsIDs(); len(nodes) > 0 && !ciu.mutation.TransactionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciu.mutation.TransactionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ciu.mutation.ReviewsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciu.mutation.RemovedReviewsIDs(); len(nodes) > 0 && !ciu.mutation.ReviewsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciu.mutation.ReviewsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ciu.mutation.WalletNodesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciu.mutation.RemovedWalletNodesIDs(); len(nodes) > 0 && !ciu.mutation.WalletNodesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciu.mutation.WalletNodesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ciu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -511,19 +219,6 @@ type CoinInfoUpdateOne struct {
 	mutation *CoinInfoMutation
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (ciuo *CoinInfoUpdateOne) SetCoinTypeID(i int32) *CoinInfoUpdateOne {
-	ciuo.mutation.ResetCoinTypeID()
-	ciuo.mutation.SetCoinTypeID(i)
-	return ciuo
-}
-
-// AddCoinTypeID adds i to the "coin_type_id" field.
-func (ciuo *CoinInfoUpdateOne) AddCoinTypeID(i int32) *CoinInfoUpdateOne {
-	ciuo.mutation.AddCoinTypeID(i)
-	return ciuo
-}
-
 // SetName sets the "name" field.
 func (ciuo *CoinInfoUpdateOne) SetName(s string) *CoinInfoUpdateOne {
 	ciuo.mutation.SetName(s)
@@ -536,145 +231,45 @@ func (ciuo *CoinInfoUpdateOne) SetUnit(s string) *CoinInfoUpdateOne {
 	return ciuo
 }
 
-// SetIsPresale sets the "is_presale" field.
-func (ciuo *CoinInfoUpdateOne) SetIsPresale(b bool) *CoinInfoUpdateOne {
-	ciuo.mutation.SetIsPresale(b)
-	return ciuo
-}
-
-// SetNillableIsPresale sets the "is_presale" field if the given value is not nil.
-func (ciuo *CoinInfoUpdateOne) SetNillableIsPresale(b *bool) *CoinInfoUpdateOne {
-	if b != nil {
-		ciuo.SetIsPresale(*b)
-	}
-	return ciuo
-}
-
-// SetLogoImage sets the "logo_image" field.
-func (ciuo *CoinInfoUpdateOne) SetLogoImage(s string) *CoinInfoUpdateOne {
-	ciuo.mutation.SetLogoImage(s)
-	return ciuo
-}
-
-// SetNillableLogoImage sets the "logo_image" field if the given value is not nil.
-func (ciuo *CoinInfoUpdateOne) SetNillableLogoImage(s *string) *CoinInfoUpdateOne {
+// SetNillableUnit sets the "unit" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableUnit(s *string) *CoinInfoUpdateOne {
 	if s != nil {
-		ciuo.SetLogoImage(*s)
+		ciuo.SetUnit(*s)
 	}
 	return ciuo
 }
 
-// AddTransactionIDs adds the "transactions" edge to the Transaction entity by IDs.
-func (ciuo *CoinInfoUpdateOne) AddTransactionIDs(ids ...int32) *CoinInfoUpdateOne {
-	ciuo.mutation.AddTransactionIDs(ids...)
+// SetPreSale sets the "pre_sale" field.
+func (ciuo *CoinInfoUpdateOne) SetPreSale(b bool) *CoinInfoUpdateOne {
+	ciuo.mutation.SetPreSale(b)
 	return ciuo
 }
 
-// AddTransactions adds the "transactions" edges to the Transaction entity.
-func (ciuo *CoinInfoUpdateOne) AddTransactions(t ...*Transaction) *CoinInfoUpdateOne {
-	ids := make([]int32, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
+// SetNillablePreSale sets the "pre_sale" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillablePreSale(b *bool) *CoinInfoUpdateOne {
+	if b != nil {
+		ciuo.SetPreSale(*b)
 	}
-	return ciuo.AddTransactionIDs(ids...)
-}
-
-// AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
-func (ciuo *CoinInfoUpdateOne) AddReviewIDs(ids ...int32) *CoinInfoUpdateOne {
-	ciuo.mutation.AddReviewIDs(ids...)
 	return ciuo
 }
 
-// AddReviews adds the "reviews" edges to the Review entity.
-func (ciuo *CoinInfoUpdateOne) AddReviews(r ...*Review) *CoinInfoUpdateOne {
-	ids := make([]int32, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return ciuo.AddReviewIDs(ids...)
-}
-
-// AddWalletNodeIDs adds the "wallet_nodes" edge to the WalletNode entity by IDs.
-func (ciuo *CoinInfoUpdateOne) AddWalletNodeIDs(ids ...int32) *CoinInfoUpdateOne {
-	ciuo.mutation.AddWalletNodeIDs(ids...)
+// SetLogo sets the "logo" field.
+func (ciuo *CoinInfoUpdateOne) SetLogo(s string) *CoinInfoUpdateOne {
+	ciuo.mutation.SetLogo(s)
 	return ciuo
 }
 
-// AddWalletNodes adds the "wallet_nodes" edges to the WalletNode entity.
-func (ciuo *CoinInfoUpdateOne) AddWalletNodes(w ...*WalletNode) *CoinInfoUpdateOne {
-	ids := make([]int32, len(w))
-	for i := range w {
-		ids[i] = w[i].ID
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableLogo(s *string) *CoinInfoUpdateOne {
+	if s != nil {
+		ciuo.SetLogo(*s)
 	}
-	return ciuo.AddWalletNodeIDs(ids...)
+	return ciuo
 }
 
 // Mutation returns the CoinInfoMutation object of the builder.
 func (ciuo *CoinInfoUpdateOne) Mutation() *CoinInfoMutation {
 	return ciuo.mutation
-}
-
-// ClearTransactions clears all "transactions" edges to the Transaction entity.
-func (ciuo *CoinInfoUpdateOne) ClearTransactions() *CoinInfoUpdateOne {
-	ciuo.mutation.ClearTransactions()
-	return ciuo
-}
-
-// RemoveTransactionIDs removes the "transactions" edge to Transaction entities by IDs.
-func (ciuo *CoinInfoUpdateOne) RemoveTransactionIDs(ids ...int32) *CoinInfoUpdateOne {
-	ciuo.mutation.RemoveTransactionIDs(ids...)
-	return ciuo
-}
-
-// RemoveTransactions removes "transactions" edges to Transaction entities.
-func (ciuo *CoinInfoUpdateOne) RemoveTransactions(t ...*Transaction) *CoinInfoUpdateOne {
-	ids := make([]int32, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return ciuo.RemoveTransactionIDs(ids...)
-}
-
-// ClearReviews clears all "reviews" edges to the Review entity.
-func (ciuo *CoinInfoUpdateOne) ClearReviews() *CoinInfoUpdateOne {
-	ciuo.mutation.ClearReviews()
-	return ciuo
-}
-
-// RemoveReviewIDs removes the "reviews" edge to Review entities by IDs.
-func (ciuo *CoinInfoUpdateOne) RemoveReviewIDs(ids ...int32) *CoinInfoUpdateOne {
-	ciuo.mutation.RemoveReviewIDs(ids...)
-	return ciuo
-}
-
-// RemoveReviews removes "reviews" edges to Review entities.
-func (ciuo *CoinInfoUpdateOne) RemoveReviews(r ...*Review) *CoinInfoUpdateOne {
-	ids := make([]int32, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return ciuo.RemoveReviewIDs(ids...)
-}
-
-// ClearWalletNodes clears all "wallet_nodes" edges to the WalletNode entity.
-func (ciuo *CoinInfoUpdateOne) ClearWalletNodes() *CoinInfoUpdateOne {
-	ciuo.mutation.ClearWalletNodes()
-	return ciuo
-}
-
-// RemoveWalletNodeIDs removes the "wallet_nodes" edge to WalletNode entities by IDs.
-func (ciuo *CoinInfoUpdateOne) RemoveWalletNodeIDs(ids ...int32) *CoinInfoUpdateOne {
-	ciuo.mutation.RemoveWalletNodeIDs(ids...)
-	return ciuo
-}
-
-// RemoveWalletNodes removes "wallet_nodes" edges to WalletNode entities.
-func (ciuo *CoinInfoUpdateOne) RemoveWalletNodes(w ...*WalletNode) *CoinInfoUpdateOne {
-	ids := make([]int32, len(w))
-	for i := range w {
-		ids[i] = w[i].ID
-	}
-	return ciuo.RemoveWalletNodeIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -794,20 +389,6 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			}
 		}
 	}
-	if value, ok := ciuo.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: coininfo.FieldCoinTypeID,
-		})
-	}
-	if value, ok := ciuo.mutation.AddedCoinTypeID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: coininfo.FieldCoinTypeID,
-		})
-	}
 	if value, ok := ciuo.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -822,181 +403,19 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			Column: coininfo.FieldUnit,
 		})
 	}
-	if value, ok := ciuo.mutation.IsPresale(); ok {
+	if value, ok := ciuo.mutation.PreSale(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: coininfo.FieldIsPresale,
+			Column: coininfo.FieldPreSale,
 		})
 	}
-	if value, ok := ciuo.mutation.LogoImage(); ok {
+	if value, ok := ciuo.mutation.Logo(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: coininfo.FieldLogoImage,
+			Column: coininfo.FieldLogo,
 		})
-	}
-	if ciuo.mutation.TransactionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciuo.mutation.RemovedTransactionsIDs(); len(nodes) > 0 && !ciuo.mutation.TransactionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciuo.mutation.TransactionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   coininfo.TransactionsTable,
-			Columns: []string{coininfo.TransactionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: transaction.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ciuo.mutation.ReviewsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciuo.mutation.RemovedReviewsIDs(); len(nodes) > 0 && !ciuo.mutation.ReviewsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciuo.mutation.ReviewsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.ReviewsTable,
-			Columns: coininfo.ReviewsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: review.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ciuo.mutation.WalletNodesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciuo.mutation.RemovedWalletNodesIDs(); len(nodes) > 0 && !ciuo.mutation.WalletNodesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ciuo.mutation.WalletNodesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   coininfo.WalletNodesTable,
-			Columns: coininfo.WalletNodesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt32,
-					Column: walletnode.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &CoinInfo{config: ciuo.config}
 	_spec.Assign = _node.assignValues

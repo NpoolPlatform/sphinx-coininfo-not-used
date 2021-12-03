@@ -11,61 +11,26 @@ const (
 	Label = "coin_info"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
-	FieldCoinTypeID = "coin_type_id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldUnit holds the string denoting the unit field in the database.
 	FieldUnit = "unit"
-	// FieldIsPresale holds the string denoting the is_presale field in the database.
-	FieldIsPresale = "is_presale"
-	// FieldLogoImage holds the string denoting the logo_image field in the database.
-	FieldLogoImage = "logo_image"
-	// EdgeTransactions holds the string denoting the transactions edge name in mutations.
-	EdgeTransactions = "transactions"
-	// EdgeReviews holds the string denoting the reviews edge name in mutations.
-	EdgeReviews = "reviews"
-	// EdgeWalletNodes holds the string denoting the wallet_nodes edge name in mutations.
-	EdgeWalletNodes = "wallet_nodes"
+	// FieldPreSale holds the string denoting the pre_sale field in the database.
+	FieldPreSale = "pre_sale"
+	// FieldLogo holds the string denoting the logo field in the database.
+	FieldLogo = "logo"
 	// Table holds the table name of the coininfo in the database.
 	Table = "coin_infos"
-	// TransactionsTable is the table that holds the transactions relation/edge.
-	TransactionsTable = "transactions"
-	// TransactionsInverseTable is the table name for the Transaction entity.
-	// It exists in this package in order to avoid circular dependency with the "transaction" package.
-	TransactionsInverseTable = "transactions"
-	// TransactionsColumn is the table column denoting the transactions relation/edge.
-	TransactionsColumn = "coin_info_transactions"
-	// ReviewsTable is the table that holds the reviews relation/edge. The primary key declared below.
-	ReviewsTable = "coin_info_reviews"
-	// ReviewsInverseTable is the table name for the Review entity.
-	// It exists in this package in order to avoid circular dependency with the "review" package.
-	ReviewsInverseTable = "reviews"
-	// WalletNodesTable is the table that holds the wallet_nodes relation/edge. The primary key declared below.
-	WalletNodesTable = "coin_info_wallet_nodes"
-	// WalletNodesInverseTable is the table name for the WalletNode entity.
-	// It exists in this package in order to avoid circular dependency with the "walletnode" package.
-	WalletNodesInverseTable = "wallet_nodes"
 )
 
 // Columns holds all SQL columns for coininfo fields.
 var Columns = []string{
 	FieldID,
-	FieldCoinTypeID,
 	FieldName,
 	FieldUnit,
-	FieldIsPresale,
-	FieldLogoImage,
+	FieldPreSale,
+	FieldLogo,
 }
-
-var (
-	// ReviewsPrimaryKey and ReviewsColumn2 are the table columns denoting the
-	// primary key for the reviews relation (M2M).
-	ReviewsPrimaryKey = []string{"coin_info_id", "review_id"}
-	// WalletNodesPrimaryKey and WalletNodesColumn2 are the table columns denoting the
-	// primary key for the wallet_nodes relation (M2M).
-	WalletNodesPrimaryKey = []string{"coin_info_id", "wallet_node_id"}
-)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -80,12 +45,14 @@ func ValidColumn(column string) bool {
 var (
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultUnit holds the default value on creation for the "unit" field.
+	DefaultUnit string
 	// UnitValidator is a validator for the "unit" field. It is called by the builders before save.
 	UnitValidator func(string) error
-	// DefaultIsPresale holds the default value on creation for the "is_presale" field.
-	DefaultIsPresale bool
-	// DefaultLogoImage holds the default value on creation for the "logo_image" field.
-	DefaultLogoImage string
+	// DefaultPreSale holds the default value on creation for the "pre_sale" field.
+	DefaultPreSale bool
+	// DefaultLogo holds the default value on creation for the "logo" field.
+	DefaultLogo string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

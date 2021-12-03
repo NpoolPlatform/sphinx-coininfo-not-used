@@ -14,14 +14,6 @@ type Tx struct {
 	config
 	// CoinInfo is the client for interacting with the CoinInfo builders.
 	CoinInfo *CoinInfoClient
-	// Empty is the client for interacting with the Empty builders.
-	Empty *EmptyClient
-	// Review is the client for interacting with the Review builders.
-	Review *ReviewClient
-	// Transaction is the client for interacting with the Transaction builders.
-	Transaction *TransactionClient
-	// WalletNode is the client for interacting with the WalletNode builders.
-	WalletNode *WalletNodeClient
 
 	// lazily loaded.
 	client     *Client
@@ -158,10 +150,6 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.CoinInfo = NewCoinInfoClient(tx.config)
-	tx.Empty = NewEmptyClient(tx.config)
-	tx.Review = NewReviewClient(tx.config)
-	tx.Transaction = NewTransactionClient(tx.config)
-	tx.WalletNode = NewWalletNodeClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
