@@ -15,6 +15,6 @@ func CreateCoinInfo(ctx context.Context, info *coininfo.CoinInfo) (uuid.UUID, er
 		SetUnit(info.GetUnit()).
 		SetLogo(info.GetLogo()).
 		SetPreSale(info.GetPreSale()).
-		OnConflictColumns(dcoin.FieldName).DoNothing().
+		OnConflictColumns(dcoin.FieldName).
 		ID(ctx)
 }

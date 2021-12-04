@@ -48,7 +48,7 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.
 	}
 
 	// total
-	total, err := stm.GroupBy(coininfo.FieldID).Aggregate(ent.Count()).Int(ctx)
+	total, err := stm.Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}

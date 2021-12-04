@@ -27,5 +27,6 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		logger.Sugar().Errorf("UpdateCoinInfo call UpdateCoinInfoByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
+
 	return &npool.UpdateCoinInfoResponse{}, nil
 }
