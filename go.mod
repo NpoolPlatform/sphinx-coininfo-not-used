@@ -5,7 +5,7 @@ go 1.16
 require (
 	entgo.io/ent v0.9.1
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20211124111341-7f1b2f908552
-	github.com/NpoolPlatform/message v0.0.0-20211130132303-b2efae431e30
+	github.com/NpoolPlatform/message v0.0.0-20211204095120-d48a7c636167
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0
