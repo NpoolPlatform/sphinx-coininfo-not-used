@@ -21,7 +21,7 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		return nil, status.Error(codes.InvalidArgument, "Unit empty")
 	}
 
-	resp, err := coininfo.CreateCoinInfo(ctx, &npool.CoinInfo{
+	err := coininfo.CreateCoinInfo(ctx, &npool.CoinInfo{
 		PreSale: in.GetPreSale(),
 		Name:    in.GetName(),
 		Unit:    in.GetUnit(),
@@ -32,7 +32,5 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	return &npool.CreateCoinInfoResponse{
-		ID: resp.String(),
-	}, nil
+	return &npool.CreateCoinInfoResponse{}, nil
 }
