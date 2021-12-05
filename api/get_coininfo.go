@@ -20,8 +20,8 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 	}
 
 	var (
-		coinInfo *ent.CoinInfo
 		err      error
+		coinInfo *ent.CoinInfo
 	)
 
 	if in.GetID() != "" {
@@ -45,11 +45,13 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 
 	return &npool.GetCoinInfoResponse{
 		Info: &npool.CoinInfo{
-			ID:      coinInfo.ID.String(),
-			PreSale: coinInfo.PreSale,
-			Name:    coinInfo.Name,
-			Unit:    coinInfo.Unit,
-			Logo:    coinInfo.Logo,
+			ID:        coinInfo.ID.String(),
+			PreSale:   coinInfo.PreSale,
+			Name:      coinInfo.Name,
+			Unit:      coinInfo.Unit,
+			Logo:      coinInfo.Logo,
+			CreatedAt: coinInfo.CreatedAt,
+			UpdatedAt: coinInfo.UpdatedAt,
 		},
 	}, nil
 }

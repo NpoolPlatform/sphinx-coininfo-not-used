@@ -24,6 +24,12 @@ type CoinInfo struct {
 	PreSale bool `json:"pre_sale,omitempty"`
 	// Logo holds the value of the "logo" field.
 	Logo string `json:"logo,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -33,6 +39,8 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case coininfo.FieldPreSale:
 			values[i] = new(sql.NullBool)
+		case coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt:
+			values[i] = new(sql.NullInt64)
 		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo:
 			values[i] = new(sql.NullString)
 		case coininfo.FieldID:
@@ -82,6 +90,24 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ci.Logo = value.String
 			}
+		case coininfo.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				ci.CreatedAt = uint32(value.Int64)
+			}
+		case coininfo.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				ci.UpdatedAt = uint32(value.Int64)
+			}
+		case coininfo.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				ci.DeletedAt = uint32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -118,6 +144,12 @@ func (ci *CoinInfo) String() string {
 	builder.WriteString(fmt.Sprintf("%v", ci.PreSale))
 	builder.WriteString(", logo=")
 	builder.WriteString(ci.Logo)
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", ci.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", ci.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", ci.DeletedAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

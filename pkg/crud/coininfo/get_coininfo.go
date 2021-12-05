@@ -55,7 +55,7 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.
 
 	// infos
 	coinInfos, err := stm.
-		Order(ent.Desc(coininfo.FieldID)).
+		Order(ent.Desc(coininfo.FieldCreatedAt)).
 		Offset(params.offset).
 		Limit(params.limit).
 		All(ctx)

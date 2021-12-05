@@ -32,6 +32,20 @@ func init() {
 	coininfoDescLogo := coininfoFields[4].Descriptor()
 	// coininfo.DefaultLogo holds the default value on creation for the logo field.
 	coininfo.DefaultLogo = coininfoDescLogo.Default.(string)
+	// coininfoDescCreatedAt is the schema descriptor for created_at field.
+	coininfoDescCreatedAt := coininfoFields[5].Descriptor()
+	// coininfo.DefaultCreatedAt holds the default value on creation for the created_at field.
+	coininfo.DefaultCreatedAt = coininfoDescCreatedAt.Default.(func() uint32)
+	// coininfoDescUpdatedAt is the schema descriptor for updated_at field.
+	coininfoDescUpdatedAt := coininfoFields[6].Descriptor()
+	// coininfo.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	coininfo.DefaultUpdatedAt = coininfoDescUpdatedAt.Default.(func() uint32)
+	// coininfo.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	coininfo.UpdateDefaultUpdatedAt = coininfoDescUpdatedAt.UpdateDefault.(func() uint32)
+	// coininfoDescDeletedAt is the schema descriptor for deleted_at field.
+	coininfoDescDeletedAt := coininfoFields[7].Descriptor()
+	// coininfo.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	coininfo.DefaultDeletedAt = coininfoDescDeletedAt.Default.(func() uint32)
 	// coininfoDescID is the schema descriptor for id field.
 	coininfoDescID := coininfoFields[0].Descriptor()
 	// coininfo.DefaultID holds the default value on creation for the id field.

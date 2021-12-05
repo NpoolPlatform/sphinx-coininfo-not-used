@@ -15,6 +15,9 @@ var (
 		{Name: "unit", Type: field.TypeString, Default: ""},
 		{Name: "pre_sale", Type: field.TypeBool, Default: false},
 		{Name: "logo", Type: field.TypeString, Default: ""},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 	}
 	// CoinInfosTable holds the schema information for the "coin_infos" table.
 	CoinInfosTable = &schema.Table{

@@ -21,11 +21,13 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest
 	infos := make([]*npool.CoinInfo, len(resp))
 	for i, info := range resp {
 		infos[i] = &npool.CoinInfo{
-			ID:      info.ID.String(),
-			PreSale: info.PreSale,
-			Name:    info.Name,
-			Unit:    info.Unit,
-			Logo:    info.Logo,
+			ID:        info.ID.String(),
+			PreSale:   info.PreSale,
+			Name:      info.Name,
+			Unit:      info.Unit,
+			Logo:      info.Logo,
+			CreatedAt: info.CreatedAt,
+			UpdatedAt: info.UpdatedAt,
 		}
 	}
 
