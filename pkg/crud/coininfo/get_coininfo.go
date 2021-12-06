@@ -10,9 +10,9 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetCoinInfoByID(ctx context.Context, id string) (coinInfo *ent.CoinInfo, err error) {
+func GetCoinInfoByID(ctx context.Context, id uuid.UUID) (coinInfo *ent.CoinInfo, err error) {
 	coinInfo, err = db.Client().CoinInfo.Query().
-		Where(coininfo.ID(uuid.MustParse(id))).
+		Where(coininfo.ID(id)).
 		Only(ctx)
 	return
 }

@@ -25,18 +25,28 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 	)
 
 	if in.GetID() != "" {
-		if _, err := uuid.Parse(in.GetID()); err != nil {
+		id, err := uuid.Parse(in.GetID())
+		if err != nil {
 			logger.Sugar().Errorf("GetCoinInfo check ID not a valid uuid")
 			return nil, status.Error(codes.InvalidArgument, "ID invalid")
 		}
 
-		coinInfo, err = coininfo.GetCoinInfoByID(ctx, in.GetID())
+		coinInfo, err = coininfo.GetCoinInfoByID(ctx, id)
+		if ent.IsNotFound(err) {
+			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByID ID: %v not found", in.GetID())
+			return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
+		}
+
 		if err != nil {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByID error %v", err)
 			return nil, status.Error(codes.Internal, "internal server error")
 		}
 	} else if in.GetName() != "" {
 		coinInfo, err = coininfo.GetCoinInfoByName(ctx, in.GetName())
+		if ent.IsNotFound(err) {
+			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByName Name: %v not found", in.GetName())
+			return nil, status.Errorf(codes.NotFound, "Name: %v not found", in.GetName())
+		}
 		if err != nil {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByName error %v", err)
 			return nil, status.Error(codes.Internal, "internal server error")
