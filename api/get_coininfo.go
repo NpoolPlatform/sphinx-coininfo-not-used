@@ -27,8 +27,8 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 	if in.GetID() != "" {
 		id, err := uuid.Parse(in.GetID())
 		if err != nil {
-			logger.Sugar().Errorf("GetCoinInfo check ID not a valid uuid")
-			return nil, status.Error(codes.InvalidArgument, "ID invalid")
+			logger.Sugar().Errorf("GetCoinInfo check ID: %v not a valid uuid", in.GetID())
+			return nil, status.Errorf(codes.InvalidArgument, "ID: %v invalid", in.GetID())
 		}
 
 		coinInfo, err = coininfo.GetCoinInfoByID(ctx, id)
