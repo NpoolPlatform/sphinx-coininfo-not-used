@@ -226,7 +226,7 @@ pipeline {
       steps {
         sh 'DEVELOPMENT=development make release-docker-images'
         sh(returnStdout: true, script: '''
-          images=`docker images | grep entropypool | grep sphinx-proxy | grep none | awk '{ print $3 }'`
+          images=`docker images | grep entropypool | grep sphinx-coininfo | grep none | awk '{ print $3 }'`
           for image in $images; do
             docker rmi $image -f
           done
@@ -255,7 +255,7 @@ pipeline {
           tag=`git describe --tags $revlist`
           git reset --hard
           git checkout $tag
-          sed -i "s/sphinx-proxy:latest/sphinx-proxy:$tag/g" cmd/sphinx-proxy/k8s/01-sphinx-proxy.yaml
+          sed -i "s/sphinx-coininfo:latest/sphinx-coininfo:$tag/g" cmd/sphinx-coininfo/k8s/01-sphinx-coininfo.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
