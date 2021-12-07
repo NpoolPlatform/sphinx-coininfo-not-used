@@ -286,7 +286,7 @@ pipeline {
           tag=$major.$minor.$patch
           git reset --hard
           git checkout $tag
-          sed -i "s/sphinx-proxy:latest/sphinx-proxy:$tag/g" cmd/sphinx-proxy/k8s/01-sphinx-proxy.yaml
+          sed -i "s/sphinx-coininfo:latest/sphinx-coininfo:$tag/g" cmd/sphinx-coininfo/k8s/01-sphinx-coininfo.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
