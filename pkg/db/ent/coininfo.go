@@ -20,6 +20,8 @@ type CoinInfo struct {
 	Name string `json:"name,omitempty"`
 	// Unit holds the value of the "unit" field.
 	Unit string `json:"unit,omitempty"`
+	// ReservedAmount holds the value of the "reserved_amount" field.
+	ReservedAmount uint64 `json:"reserved_amount,omitempty"`
 	// PreSale holds the value of the "pre_sale" field.
 	PreSale bool `json:"pre_sale,omitempty"`
 	// Logo holds the value of the "logo" field.
@@ -39,7 +41,7 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case coininfo.FieldPreSale:
 			values[i] = new(sql.NullBool)
-		case coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt:
+		case coininfo.FieldReservedAmount, coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo:
 			values[i] = new(sql.NullString)
@@ -77,6 +79,12 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field unit", values[i])
 			} else if value.Valid {
 				ci.Unit = value.String
+			}
+		case coininfo.FieldReservedAmount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field reserved_amount", values[i])
+			} else if value.Valid {
+				ci.ReservedAmount = uint64(value.Int64)
 			}
 		case coininfo.FieldPreSale:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -140,6 +148,8 @@ func (ci *CoinInfo) String() string {
 	builder.WriteString(ci.Name)
 	builder.WriteString(", unit=")
 	builder.WriteString(ci.Unit)
+	builder.WriteString(", reserved_amount=")
+	builder.WriteString(fmt.Sprintf("%v", ci.ReservedAmount))
 	builder.WriteString(", pre_sale=")
 	builder.WriteString(fmt.Sprintf("%v", ci.PreSale))
 	builder.WriteString(", logo=")

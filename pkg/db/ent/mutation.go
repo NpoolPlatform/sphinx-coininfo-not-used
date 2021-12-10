@@ -29,23 +29,25 @@ const (
 // CoinInfoMutation represents an operation that mutates the CoinInfo nodes in the graph.
 type CoinInfoMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	name          *string
-	unit          *string
-	pre_sale      *bool
-	logo          *string
-	created_at    *uint32
-	addcreated_at *uint32
-	updated_at    *uint32
-	addupdated_at *uint32
-	deleted_at    *uint32
-	adddeleted_at *uint32
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*CoinInfo, error)
-	predicates    []predicate.CoinInfo
+	op                 Op
+	typ                string
+	id                 *uuid.UUID
+	name               *string
+	unit               *string
+	reserved_amount    *uint64
+	addreserved_amount *uint64
+	pre_sale           *bool
+	logo               *string
+	created_at         *uint32
+	addcreated_at      *uint32
+	updated_at         *uint32
+	addupdated_at      *uint32
+	deleted_at         *uint32
+	adddeleted_at      *uint32
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*CoinInfo, error)
+	predicates         []predicate.CoinInfo
 }
 
 var _ ent.Mutation = (*CoinInfoMutation)(nil)
@@ -203,6 +205,62 @@ func (m *CoinInfoMutation) OldUnit(ctx context.Context) (v string, err error) {
 // ResetUnit resets all changes to the "unit" field.
 func (m *CoinInfoMutation) ResetUnit() {
 	m.unit = nil
+}
+
+// SetReservedAmount sets the "reserved_amount" field.
+func (m *CoinInfoMutation) SetReservedAmount(u uint64) {
+	m.reserved_amount = &u
+	m.addreserved_amount = nil
+}
+
+// ReservedAmount returns the value of the "reserved_amount" field in the mutation.
+func (m *CoinInfoMutation) ReservedAmount() (r uint64, exists bool) {
+	v := m.reserved_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReservedAmount returns the old "reserved_amount" field's value of the CoinInfo entity.
+// If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CoinInfoMutation) OldReservedAmount(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldReservedAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldReservedAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReservedAmount: %w", err)
+	}
+	return oldValue.ReservedAmount, nil
+}
+
+// AddReservedAmount adds u to the "reserved_amount" field.
+func (m *CoinInfoMutation) AddReservedAmount(u uint64) {
+	if m.addreserved_amount != nil {
+		*m.addreserved_amount += u
+	} else {
+		m.addreserved_amount = &u
+	}
+}
+
+// AddedReservedAmount returns the value that was added to the "reserved_amount" field in this mutation.
+func (m *CoinInfoMutation) AddedReservedAmount() (r uint64, exists bool) {
+	v := m.addreserved_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetReservedAmount resets all changes to the "reserved_amount" field.
+func (m *CoinInfoMutation) ResetReservedAmount() {
+	m.reserved_amount = nil
+	m.addreserved_amount = nil
 }
 
 // SetPreSale sets the "pre_sale" field.
@@ -464,12 +522,15 @@ func (m *CoinInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CoinInfoMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.name != nil {
 		fields = append(fields, coininfo.FieldName)
 	}
 	if m.unit != nil {
 		fields = append(fields, coininfo.FieldUnit)
+	}
+	if m.reserved_amount != nil {
+		fields = append(fields, coininfo.FieldReservedAmount)
 	}
 	if m.pre_sale != nil {
 		fields = append(fields, coininfo.FieldPreSale)
@@ -498,6 +559,8 @@ func (m *CoinInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case coininfo.FieldUnit:
 		return m.Unit()
+	case coininfo.FieldReservedAmount:
+		return m.ReservedAmount()
 	case coininfo.FieldPreSale:
 		return m.PreSale()
 	case coininfo.FieldLogo:
@@ -521,6 +584,8 @@ func (m *CoinInfoMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldName(ctx)
 	case coininfo.FieldUnit:
 		return m.OldUnit(ctx)
+	case coininfo.FieldReservedAmount:
+		return m.OldReservedAmount(ctx)
 	case coininfo.FieldPreSale:
 		return m.OldPreSale(ctx)
 	case coininfo.FieldLogo:
@@ -553,6 +618,13 @@ func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUnit(v)
+		return nil
+	case coininfo.FieldReservedAmount:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReservedAmount(v)
 		return nil
 	case coininfo.FieldPreSale:
 		v, ok := value.(bool)
@@ -597,6 +669,9 @@ func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *CoinInfoMutation) AddedFields() []string {
 	var fields []string
+	if m.addreserved_amount != nil {
+		fields = append(fields, coininfo.FieldReservedAmount)
+	}
 	if m.addcreated_at != nil {
 		fields = append(fields, coininfo.FieldCreatedAt)
 	}
@@ -614,6 +689,8 @@ func (m *CoinInfoMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *CoinInfoMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case coininfo.FieldReservedAmount:
+		return m.AddedReservedAmount()
 	case coininfo.FieldCreatedAt:
 		return m.AddedCreatedAt()
 	case coininfo.FieldUpdatedAt:
@@ -629,6 +706,13 @@ func (m *CoinInfoMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *CoinInfoMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case coininfo.FieldReservedAmount:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddReservedAmount(v)
+		return nil
 	case coininfo.FieldCreatedAt:
 		v, ok := value.(uint32)
 		if !ok {
@@ -682,6 +766,9 @@ func (m *CoinInfoMutation) ResetField(name string) error {
 		return nil
 	case coininfo.FieldUnit:
 		m.ResetUnit()
+		return nil
+	case coininfo.FieldReservedAmount:
+		m.ResetReservedAmount()
 		return nil
 	case coininfo.FieldPreSale:
 		m.ResetPreSale()

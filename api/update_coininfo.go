@@ -35,7 +35,7 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	_, err = coininfo.UpdateCoinInfoByID(ctx, in.GetPreSale(), in.GetLogo(), in.GetID())
+	_, err = coininfo.UpdateCoinInfoByID(ctx, in.GetPreSale(), in.GetLogo(), in.GetID(), in.GetReservedAmount())
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinInfo call UpdateCoinInfoByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")

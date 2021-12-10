@@ -15,6 +15,8 @@ const (
 	FieldName = "name"
 	// FieldUnit holds the string denoting the unit field in the database.
 	FieldUnit = "unit"
+	// FieldReservedAmount holds the string denoting the reserved_amount field in the database.
+	FieldReservedAmount = "reserved_amount"
 	// FieldPreSale holds the string denoting the pre_sale field in the database.
 	FieldPreSale = "pre_sale"
 	// FieldLogo holds the string denoting the logo field in the database.
@@ -34,6 +36,7 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldUnit,
+	FieldReservedAmount,
 	FieldPreSale,
 	FieldLogo,
 	FieldCreatedAt,
@@ -58,6 +61,10 @@ var (
 	DefaultUnit string
 	// UnitValidator is a validator for the "unit" field. It is called by the builders before save.
 	UnitValidator func(string) error
+	// DefaultReservedAmount holds the default value on creation for the "reserved_amount" field.
+	DefaultReservedAmount uint64
+	// ReservedAmountValidator is a validator for the "reserved_amount" field. It is called by the builders before save.
+	ReservedAmountValidator func(uint64) error
 	// DefaultPreSale holds the default value on creation for the "pre_sale" field.
 	DefaultPreSale bool
 	// DefaultLogo holds the default value on creation for the "logo" field.

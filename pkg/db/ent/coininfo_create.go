@@ -43,6 +43,20 @@ func (cic *CoinInfoCreate) SetNillableUnit(s *string) *CoinInfoCreate {
 	return cic
 }
 
+// SetReservedAmount sets the "reserved_amount" field.
+func (cic *CoinInfoCreate) SetReservedAmount(u uint64) *CoinInfoCreate {
+	cic.mutation.SetReservedAmount(u)
+	return cic
+}
+
+// SetNillableReservedAmount sets the "reserved_amount" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableReservedAmount(u *uint64) *CoinInfoCreate {
+	if u != nil {
+		cic.SetReservedAmount(*u)
+	}
+	return cic
+}
+
 // SetPreSale sets the "pre_sale" field.
 func (cic *CoinInfoCreate) SetPreSale(b bool) *CoinInfoCreate {
 	cic.mutation.SetPreSale(b)
@@ -194,6 +208,10 @@ func (cic *CoinInfoCreate) defaults() {
 		v := coininfo.DefaultUnit
 		cic.mutation.SetUnit(v)
 	}
+	if _, ok := cic.mutation.ReservedAmount(); !ok {
+		v := coininfo.DefaultReservedAmount
+		cic.mutation.SetReservedAmount(v)
+	}
 	if _, ok := cic.mutation.PreSale(); !ok {
 		v := coininfo.DefaultPreSale
 		cic.mutation.SetPreSale(v)
@@ -236,6 +254,14 @@ func (cic *CoinInfoCreate) check() error {
 	if v, ok := cic.mutation.Unit(); ok {
 		if err := coininfo.UnitValidator(v); err != nil {
 			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "unit": %w`, err)}
+		}
+	}
+	if _, ok := cic.mutation.ReservedAmount(); !ok {
+		return &ValidationError{Name: "reserved_amount", err: errors.New(`ent: missing required field "reserved_amount"`)}
+	}
+	if v, ok := cic.mutation.ReservedAmount(); ok {
+		if err := coininfo.ReservedAmountValidator(v); err != nil {
+			return &ValidationError{Name: "reserved_amount", err: fmt.Errorf(`ent: validator failed for field "reserved_amount": %w`, err)}
 		}
 	}
 	if _, ok := cic.mutation.PreSale(); !ok {
@@ -301,6 +327,14 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 			Column: coininfo.FieldUnit,
 		})
 		_node.Unit = value
+	}
+	if value, ok := cic.mutation.ReservedAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: coininfo.FieldReservedAmount,
+		})
+		_node.ReservedAmount = value
 	}
 	if value, ok := cic.mutation.PreSale(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -417,6 +451,18 @@ func (u *CoinInfoUpsert) SetUnit(v string) *CoinInfoUpsert {
 // UpdateUnit sets the "unit" field to the value that was provided on create.
 func (u *CoinInfoUpsert) UpdateUnit() *CoinInfoUpsert {
 	u.SetExcluded(coininfo.FieldUnit)
+	return u
+}
+
+// SetReservedAmount sets the "reserved_amount" field.
+func (u *CoinInfoUpsert) SetReservedAmount(v uint64) *CoinInfoUpsert {
+	u.Set(coininfo.FieldReservedAmount, v)
+	return u
+}
+
+// UpdateReservedAmount sets the "reserved_amount" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateReservedAmount() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldReservedAmount)
 	return u
 }
 
@@ -555,6 +601,20 @@ func (u *CoinInfoUpsertOne) SetUnit(v string) *CoinInfoUpsertOne {
 func (u *CoinInfoUpsertOne) UpdateUnit() *CoinInfoUpsertOne {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.UpdateUnit()
+	})
+}
+
+// SetReservedAmount sets the "reserved_amount" field.
+func (u *CoinInfoUpsertOne) SetReservedAmount(v uint64) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetReservedAmount(v)
+	})
+}
+
+// UpdateReservedAmount sets the "reserved_amount" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateReservedAmount() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateReservedAmount()
 	})
 }
 
@@ -869,6 +929,20 @@ func (u *CoinInfoUpsertBulk) SetUnit(v string) *CoinInfoUpsertBulk {
 func (u *CoinInfoUpsertBulk) UpdateUnit() *CoinInfoUpsertBulk {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.UpdateUnit()
+	})
+}
+
+// SetReservedAmount sets the "reserved_amount" field.
+func (u *CoinInfoUpsertBulk) SetReservedAmount(v uint64) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetReservedAmount(v)
+	})
+}
+
+// UpdateReservedAmount sets the "reserved_amount" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateReservedAmount() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateReservedAmount()
 	})
 }
 

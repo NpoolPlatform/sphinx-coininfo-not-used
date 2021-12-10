@@ -13,6 +13,7 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "unit", Type: field.TypeString, Default: ""},
+		{Name: "reserved_amount", Type: field.TypeUint64, Default: 0},
 		{Name: "pre_sale", Type: field.TypeBool, Default: false},
 		{Name: "logo", Type: field.TypeString, Default: ""},
 		{Name: "created_at", Type: field.TypeUint32},

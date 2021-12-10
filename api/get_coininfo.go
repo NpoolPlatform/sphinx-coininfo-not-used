@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	"github.com/NpoolPlatform/go-service-framework/pkg/price"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
@@ -55,13 +56,14 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 
 	return &npool.GetCoinInfoResponse{
 		Info: &npool.CoinInfo{
-			ID:        coinInfo.ID.String(),
-			PreSale:   coinInfo.PreSale,
-			Name:      coinInfo.Name,
-			Unit:      coinInfo.Unit,
-			Logo:      coinInfo.Logo,
-			CreatedAt: coinInfo.CreatedAt,
-			UpdatedAt: coinInfo.UpdatedAt,
+			ID:             coinInfo.ID.String(),
+			PreSale:        coinInfo.PreSale,
+			Name:           coinInfo.Name,
+			Unit:           coinInfo.Unit,
+			ReservedAmount: price.DBPriceToVisualPrice(coinInfo.ReservedAmount),
+			Logo:           coinInfo.Logo,
+			CreatedAt:      coinInfo.CreatedAt,
+			UpdatedAt:      coinInfo.UpdatedAt,
 		},
 	}, nil
 }

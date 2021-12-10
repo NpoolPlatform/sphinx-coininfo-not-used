@@ -24,26 +24,32 @@ func init() {
 	coininfo.DefaultUnit = coininfoDescUnit.Default.(string)
 	// coininfo.UnitValidator is a validator for the "unit" field. It is called by the builders before save.
 	coininfo.UnitValidator = coininfoDescUnit.Validators[0].(func(string) error)
+	// coininfoDescReservedAmount is the schema descriptor for reserved_amount field.
+	coininfoDescReservedAmount := coininfoFields[3].Descriptor()
+	// coininfo.DefaultReservedAmount holds the default value on creation for the reserved_amount field.
+	coininfo.DefaultReservedAmount = coininfoDescReservedAmount.Default.(uint64)
+	// coininfo.ReservedAmountValidator is a validator for the "reserved_amount" field. It is called by the builders before save.
+	coininfo.ReservedAmountValidator = coininfoDescReservedAmount.Validators[0].(func(uint64) error)
 	// coininfoDescPreSale is the schema descriptor for pre_sale field.
-	coininfoDescPreSale := coininfoFields[3].Descriptor()
+	coininfoDescPreSale := coininfoFields[4].Descriptor()
 	// coininfo.DefaultPreSale holds the default value on creation for the pre_sale field.
 	coininfo.DefaultPreSale = coininfoDescPreSale.Default.(bool)
 	// coininfoDescLogo is the schema descriptor for logo field.
-	coininfoDescLogo := coininfoFields[4].Descriptor()
+	coininfoDescLogo := coininfoFields[5].Descriptor()
 	// coininfo.DefaultLogo holds the default value on creation for the logo field.
 	coininfo.DefaultLogo = coininfoDescLogo.Default.(string)
 	// coininfoDescCreatedAt is the schema descriptor for created_at field.
-	coininfoDescCreatedAt := coininfoFields[5].Descriptor()
+	coininfoDescCreatedAt := coininfoFields[6].Descriptor()
 	// coininfo.DefaultCreatedAt holds the default value on creation for the created_at field.
 	coininfo.DefaultCreatedAt = coininfoDescCreatedAt.Default.(func() uint32)
 	// coininfoDescUpdatedAt is the schema descriptor for updated_at field.
-	coininfoDescUpdatedAt := coininfoFields[6].Descriptor()
+	coininfoDescUpdatedAt := coininfoFields[7].Descriptor()
 	// coininfo.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	coininfo.DefaultUpdatedAt = coininfoDescUpdatedAt.Default.(func() uint32)
 	// coininfo.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	coininfo.UpdateDefaultUpdatedAt = coininfoDescUpdatedAt.UpdateDefault.(func() uint32)
 	// coininfoDescDeletedAt is the schema descriptor for deleted_at field.
-	coininfoDescDeletedAt := coininfoFields[7].Descriptor()
+	coininfoDescDeletedAt := coininfoFields[8].Descriptor()
 	// coininfo.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	coininfo.DefaultDeletedAt = coininfoDescDeletedAt.Default.(func() uint32)
 	// coininfoDescID is the schema descriptor for id field.

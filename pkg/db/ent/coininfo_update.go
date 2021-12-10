@@ -46,6 +46,27 @@ func (ciu *CoinInfoUpdate) SetNillableUnit(s *string) *CoinInfoUpdate {
 	return ciu
 }
 
+// SetReservedAmount sets the "reserved_amount" field.
+func (ciu *CoinInfoUpdate) SetReservedAmount(u uint64) *CoinInfoUpdate {
+	ciu.mutation.ResetReservedAmount()
+	ciu.mutation.SetReservedAmount(u)
+	return ciu
+}
+
+// SetNillableReservedAmount sets the "reserved_amount" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableReservedAmount(u *uint64) *CoinInfoUpdate {
+	if u != nil {
+		ciu.SetReservedAmount(*u)
+	}
+	return ciu
+}
+
+// AddReservedAmount adds u to the "reserved_amount" field.
+func (ciu *CoinInfoUpdate) AddReservedAmount(u uint64) *CoinInfoUpdate {
+	ciu.mutation.AddReservedAmount(u)
+	return ciu
+}
+
 // SetPreSale sets the "pre_sale" field.
 func (ciu *CoinInfoUpdate) SetPreSale(b bool) *CoinInfoUpdate {
 	ciu.mutation.SetPreSale(b)
@@ -215,6 +236,11 @@ func (ciu *CoinInfoUpdate) check() error {
 			return &ValidationError{Name: "unit", err: fmt.Errorf("ent: validator failed for field \"unit\": %w", err)}
 		}
 	}
+	if v, ok := ciu.mutation.ReservedAmount(); ok {
+		if err := coininfo.ReservedAmountValidator(v); err != nil {
+			return &ValidationError{Name: "reserved_amount", err: fmt.Errorf("ent: validator failed for field \"reserved_amount\": %w", err)}
+		}
+	}
 	return nil
 }
 
@@ -248,6 +274,20 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: coininfo.FieldUnit,
+		})
+	}
+	if value, ok := ciu.mutation.ReservedAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: coininfo.FieldReservedAmount,
+		})
+	}
+	if value, ok := ciu.mutation.AddedReservedAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: coininfo.FieldReservedAmount,
 		})
 	}
 	if value, ok := ciu.mutation.PreSale(); ok {
@@ -342,6 +382,27 @@ func (ciuo *CoinInfoUpdateOne) SetNillableUnit(s *string) *CoinInfoUpdateOne {
 	if s != nil {
 		ciuo.SetUnit(*s)
 	}
+	return ciuo
+}
+
+// SetReservedAmount sets the "reserved_amount" field.
+func (ciuo *CoinInfoUpdateOne) SetReservedAmount(u uint64) *CoinInfoUpdateOne {
+	ciuo.mutation.ResetReservedAmount()
+	ciuo.mutation.SetReservedAmount(u)
+	return ciuo
+}
+
+// SetNillableReservedAmount sets the "reserved_amount" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableReservedAmount(u *uint64) *CoinInfoUpdateOne {
+	if u != nil {
+		ciuo.SetReservedAmount(*u)
+	}
+	return ciuo
+}
+
+// AddReservedAmount adds u to the "reserved_amount" field.
+func (ciuo *CoinInfoUpdateOne) AddReservedAmount(u uint64) *CoinInfoUpdateOne {
+	ciuo.mutation.AddReservedAmount(u)
 	return ciuo
 }
 
@@ -521,6 +582,11 @@ func (ciuo *CoinInfoUpdateOne) check() error {
 			return &ValidationError{Name: "unit", err: fmt.Errorf("ent: validator failed for field \"unit\": %w", err)}
 		}
 	}
+	if v, ok := ciuo.mutation.ReservedAmount(); ok {
+		if err := coininfo.ReservedAmountValidator(v); err != nil {
+			return &ValidationError{Name: "reserved_amount", err: fmt.Errorf("ent: validator failed for field \"reserved_amount\": %w", err)}
+		}
+	}
 	return nil
 }
 
@@ -571,6 +637,20 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			Type:   field.TypeString,
 			Value:  value,
 			Column: coininfo.FieldUnit,
+		})
+	}
+	if value, ok := ciuo.mutation.ReservedAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: coininfo.FieldReservedAmount,
+		})
+	}
+	if value, ok := ciuo.mutation.AddedReservedAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: coininfo.FieldReservedAmount,
 		})
 	}
 	if value, ok := ciuo.mutation.PreSale(); ok {

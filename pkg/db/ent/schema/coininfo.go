@@ -20,6 +20,9 @@ func (CoinInfo) Fields() []ent.Field {
 			Unique(),
 		field.String("name").NotEmpty().Unique(),
 		field.String("unit").NotEmpty().Default(""),
+		field.Uint64("reserved_amount").
+			Positive().
+			Default(0),
 		field.Bool("pre_sale").Default(false),
 		field.String("logo").Default(""),
 		field.Uint32("created_at").

@@ -105,6 +105,13 @@ func Unit(v string) predicate.CoinInfo {
 	})
 }
 
+// ReservedAmount applies equality check predicate on the "reserved_amount" field. It's identical to ReservedAmountEQ.
+func ReservedAmount(v uint64) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReservedAmount), v))
+	})
+}
+
 // PreSale applies equality check predicate on the "pre_sale" field. It's identical to PreSaleEQ.
 func PreSale(v bool) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
@@ -359,6 +366,82 @@ func UnitEqualFold(v string) predicate.CoinInfo {
 func UnitContainsFold(v string) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldUnit), v))
+	})
+}
+
+// ReservedAmountEQ applies the EQ predicate on the "reserved_amount" field.
+func ReservedAmountEQ(v uint64) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReservedAmount), v))
+	})
+}
+
+// ReservedAmountNEQ applies the NEQ predicate on the "reserved_amount" field.
+func ReservedAmountNEQ(v uint64) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldReservedAmount), v))
+	})
+}
+
+// ReservedAmountIn applies the In predicate on the "reserved_amount" field.
+func ReservedAmountIn(vs ...uint64) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldReservedAmount), v...))
+	})
+}
+
+// ReservedAmountNotIn applies the NotIn predicate on the "reserved_amount" field.
+func ReservedAmountNotIn(vs ...uint64) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldReservedAmount), v...))
+	})
+}
+
+// ReservedAmountGT applies the GT predicate on the "reserved_amount" field.
+func ReservedAmountGT(v uint64) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldReservedAmount), v))
+	})
+}
+
+// ReservedAmountGTE applies the GTE predicate on the "reserved_amount" field.
+func ReservedAmountGTE(v uint64) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldReservedAmount), v))
+	})
+}
+
+// ReservedAmountLT applies the LT predicate on the "reserved_amount" field.
+func ReservedAmountLT(v uint64) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldReservedAmount), v))
+	})
+}
+
+// ReservedAmountLTE applies the LTE predicate on the "reserved_amount" field.
+func ReservedAmountLTE(v uint64) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldReservedAmount), v))
 	})
 }
 
