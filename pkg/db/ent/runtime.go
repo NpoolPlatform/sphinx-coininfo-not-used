@@ -28,8 +28,6 @@ func init() {
 	coininfoDescReservedAmount := coininfoFields[3].Descriptor()
 	// coininfo.DefaultReservedAmount holds the default value on creation for the reserved_amount field.
 	coininfo.DefaultReservedAmount = coininfoDescReservedAmount.Default.(uint64)
-	// coininfo.ReservedAmountValidator is a validator for the "reserved_amount" field. It is called by the builders before save.
-	coininfo.ReservedAmountValidator = coininfoDescReservedAmount.Validators[0].(func(uint64) error)
 	// coininfoDescPreSale is the schema descriptor for pre_sale field.
 	coininfoDescPreSale := coininfoFields[4].Descriptor()
 	// coininfo.DefaultPreSale holds the default value on creation for the pre_sale field.

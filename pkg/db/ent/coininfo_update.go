@@ -236,11 +236,6 @@ func (ciu *CoinInfoUpdate) check() error {
 			return &ValidationError{Name: "unit", err: fmt.Errorf("ent: validator failed for field \"unit\": %w", err)}
 		}
 	}
-	if v, ok := ciu.mutation.ReservedAmount(); ok {
-		if err := coininfo.ReservedAmountValidator(v); err != nil {
-			return &ValidationError{Name: "reserved_amount", err: fmt.Errorf("ent: validator failed for field \"reserved_amount\": %w", err)}
-		}
-	}
 	return nil
 }
 
@@ -580,11 +575,6 @@ func (ciuo *CoinInfoUpdateOne) check() error {
 	if v, ok := ciuo.mutation.Unit(); ok {
 		if err := coininfo.UnitValidator(v); err != nil {
 			return &ValidationError{Name: "unit", err: fmt.Errorf("ent: validator failed for field \"unit\": %w", err)}
-		}
-	}
-	if v, ok := ciuo.mutation.ReservedAmount(); ok {
-		if err := coininfo.ReservedAmountValidator(v); err != nil {
-			return &ValidationError{Name: "reserved_amount", err: fmt.Errorf("ent: validator failed for field \"reserved_amount\": %w", err)}
 		}
 	}
 	return nil

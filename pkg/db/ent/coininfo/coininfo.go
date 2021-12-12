@@ -63,8 +63,6 @@ var (
 	UnitValidator func(string) error
 	// DefaultReservedAmount holds the default value on creation for the "reserved_amount" field.
 	DefaultReservedAmount uint64
-	// ReservedAmountValidator is a validator for the "reserved_amount" field. It is called by the builders before save.
-	ReservedAmountValidator func(uint64) error
 	// DefaultPreSale holds the default value on creation for the "pre_sale" field.
 	DefaultPreSale bool
 	// DefaultLogo holds the default value on creation for the "logo" field.

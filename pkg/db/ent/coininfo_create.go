@@ -259,11 +259,6 @@ func (cic *CoinInfoCreate) check() error {
 	if _, ok := cic.mutation.ReservedAmount(); !ok {
 		return &ValidationError{Name: "reserved_amount", err: errors.New(`ent: missing required field "reserved_amount"`)}
 	}
-	if v, ok := cic.mutation.ReservedAmount(); ok {
-		if err := coininfo.ReservedAmountValidator(v); err != nil {
-			return &ValidationError{Name: "reserved_amount", err: fmt.Errorf(`ent: validator failed for field "reserved_amount": %w`, err)}
-		}
-	}
 	if _, ok := cic.mutation.PreSale(); !ok {
 		return &ValidationError{Name: "pre_sale", err: errors.New(`ent: missing required field "pre_sale"`)}
 	}
