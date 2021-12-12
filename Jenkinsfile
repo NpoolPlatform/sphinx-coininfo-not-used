@@ -101,7 +101,8 @@ pipeline {
         expression { BUILD_TARGET == 'true' }
       }
       steps {
-        sh 'DEVELOPMENT=development make generate-docker-images'
+        sh 'make verify-build'
+        sh 'DEVELOPMENT=development DOCKER_REGISTRY=$DOCKER_REGISTRY make generate-docker-images'
       }
     }
 
@@ -215,7 +216,8 @@ pipeline {
           git reset --hard
           git checkout $tag
         '''.stripIndent())
-        sh 'DEVELOPMENT=other make generate-docker-images'
+        sh 'make verify-build'
+        sh 'DEVELOPMENT=other DOCKER_REGISTRY=$DOCKER_REGISTRY make generate-docker-images'
       }
     }
 
@@ -224,7 +226,7 @@ pipeline {
         expression { RELEASE_TARGET == 'true' }
       }
       steps {
-        sh 'TAG=latest make release-docker-images'
+        sh 'TAG=latest DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images'
         sh(returnStdout: true, script: '''
           images=`docker images | grep entropypool | grep sphinx-coininfo | grep none | awk '{ print $3 }'`
           for image in $images; do
@@ -248,7 +250,7 @@ pipeline {
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
-            TAG=$tag make release-docker-images
+            TAG=$tag DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images
           fi
         '''.stripIndent())
       }
@@ -275,7 +277,7 @@ pipeline {
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
-            TAG=$tag make release-docker-images
+            TAG=$tag DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images
           fi
         '''.stripIndent())
       }
@@ -287,6 +289,7 @@ pipeline {
         expression { TARGET_ENV == 'development' }
       }
       steps {
+        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/sphinx-coininfo/k8s/01-sphinx-coininfo.yaml'
         sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
@@ -303,6 +306,7 @@ pipeline {
           git reset --hard
           git checkout $tag
           sed -i "s/sphinx-coininfo:latest/sphinx-coininfo:$tag/g" cmd/sphinx-coininfo/k8s/01-sphinx-coininfo.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/sphinx-coininfo/k8s/01-sphinx-coininfo.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
@@ -325,6 +329,7 @@ pipeline {
           git reset --hard
           git checkout $tag
           sed -i "s/sphinx-coininfo:latest/sphinx-coininfo:$tag/g" cmd/sphinx-coininfo/k8s/01-sphinx-coininfo.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/sphinx-coininfo/k8s/01-sphinx-coininfo.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
