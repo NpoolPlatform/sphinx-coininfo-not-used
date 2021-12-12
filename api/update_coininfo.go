@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	"github.com/NpoolPlatform/go-service-framework/pkg/price"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
@@ -35,11 +36,22 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	_, err = coininfo.UpdateCoinInfoByID(ctx, in.GetPreSale(), in.GetLogo(), in.GetID(), in.GetReservedAmount())
+	coinInfo, err := coininfo.UpdateCoinInfoByID(ctx, in.GetPreSale(), in.GetLogo(), in.GetID(), in.GetReservedAmount())
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinInfo call UpdateCoinInfoByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	return &npool.UpdateCoinInfoResponse{}, nil
+	return &npool.UpdateCoinInfoResponse{
+		Info: &npool.CoinInfo{
+			ID:             coinInfo.ID.String(),
+			PreSale:        coinInfo.PreSale,
+			Name:           coinInfo.Name,
+			Unit:           coinInfo.Unit,
+			Logo:           coinInfo.Logo,
+			ReservedAmount: price.DBPriceToVisualPrice(coinInfo.ReservedAmount),
+			CreatedAt:      coinInfo.CreatedAt,
+			UpdatedAt:      coinInfo.UpdatedAt,
+		},
+	}, nil
 }

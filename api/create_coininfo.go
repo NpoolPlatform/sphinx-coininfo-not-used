@@ -4,8 +4,10 @@ import (
 	"context"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	"github.com/NpoolPlatform/go-service-framework/pkg/price"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
+	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -22,6 +24,9 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		return nil, status.Error(codes.InvalidArgument, "Unit empty")
 	}
 
+	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
+	defer cancel()
+
 	err := coininfo.CreateCoinInfo(ctx, &npool.CoinInfo{
 		PreSale: in.GetPreSale(),
 		Name:    in.GetName(),
@@ -33,5 +38,22 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	return &npool.CreateCoinInfoResponse{}, nil
+	coinInfo, err := coininfo.GetCoinInfoByName(ctx, in.GetName())
+	if err != nil {
+		logger.Sugar().Errorf("CreateCoinInfo call GetCoinInfoByName error %v", err)
+		return nil, status.Error(codes.Internal, "internal server error")
+	}
+
+	return &npool.CreateCoinInfoResponse{
+		Info: &npool.CoinInfo{
+			ID:             coinInfo.ID.String(),
+			PreSale:        coinInfo.PreSale,
+			Name:           coinInfo.Name,
+			Unit:           coinInfo.Unit,
+			Logo:           coinInfo.Logo,
+			ReservedAmount: price.DBPriceToVisualPrice(coinInfo.ReservedAmount),
+			CreatedAt:      coinInfo.CreatedAt,
+			UpdatedAt:      coinInfo.UpdatedAt,
+		},
+	}, nil
 }
