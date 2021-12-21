@@ -40,9 +40,11 @@ pipeline {
     }
 
     stage('Switch to current cluster') {
-      anyOf {
-        expression { BUILD_TARGET == 'true' }
-        expression { DEPLOY_TARGET == 'true' }
+      when {
+        anyOf {
+          expression { BUILD_TARGET == 'true' }
+          expression { DEPLOY_TARGET == 'true' }
+        }
       }
       steps {
           sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
