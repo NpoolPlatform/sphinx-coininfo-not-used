@@ -8,6 +8,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
+	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,6 +25,9 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 		err      error
 		coinInfo *ent.CoinInfo
 	)
+
+	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
+	defer cancel()
 
 	if in.GetID() != "" {
 		id, err := uuid.Parse(in.GetID())
