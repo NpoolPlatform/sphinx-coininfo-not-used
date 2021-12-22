@@ -11,14 +11,22 @@ import (
 )
 
 func GetCoinInfoByID(ctx context.Context, id uuid.UUID) (coinInfo *ent.CoinInfo, err error) {
-	coinInfo, err = db.Client().CoinInfo.Query().
+	client, err := db.Client()
+	if err != nil {
+		return nil, err
+	}
+	coinInfo, err = client.CoinInfo.Query().
 		Where(coininfo.ID(id)).
 		Only(ctx)
 	return
 }
 
 func GetCoinInfoByName(ctx context.Context, coinName string) (coinInfo *ent.CoinInfo, err error) {
-	coinInfo, err = db.Client().CoinInfo.Query().
+	client, err := db.Client()
+	if err != nil {
+		return nil, err
+	}
+	coinInfo, err = client.CoinInfo.Query().
 		Where(coininfo.Name(coinName)).
 		Only(ctx)
 	return
@@ -35,7 +43,12 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.
 		params.limit = constant.PageSize
 	}
 
-	stm := db.Client().
+	client, err := db.Client()
+	if err != nil {
+		return nil, 0, err
+	}
+
+	stm := client.
 		CoinInfo.
 		Query()
 
