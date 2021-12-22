@@ -8,6 +8,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
+	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,6 +25,9 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		logger.Sugar().Errorf("UpdateCoinInfo check ID not a valid uuid")
 		return nil, status.Error(codes.InvalidArgument, "ID invalid")
 	}
+
+	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
+	defer cancel()
 
 	_, err = coininfo.GetCoinInfoByID(ctx, id)
 	if ent.IsNotFound(err) {
