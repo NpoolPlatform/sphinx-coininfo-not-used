@@ -10,7 +10,11 @@ import (
 )
 
 func UpdateCoinInfoByID(ctx context.Context, preSale bool, logo, id string, reservedAmount float64) (coinInfo *ent.CoinInfo, err error) {
-	stmt := db.Client().
+	client, err := db.Client()
+	if err != nil {
+		return nil, err
+	}
+	stmt := client.
 		CoinInfo.
 		UpdateOneID(uuid.MustParse(id))
 
