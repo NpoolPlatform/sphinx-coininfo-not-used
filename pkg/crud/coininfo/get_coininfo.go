@@ -33,14 +33,14 @@ func GetCoinInfoByName(ctx context.Context, coinName string) (coinInfo *ent.Coin
 }
 
 type GetAllCoinInfosParams struct {
-	preSale       bool
-	name          string
-	offset, limit int
+	PreSale       bool
+	Name          string
+	Offset, Limit int
 }
 
 func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.CoinInfo, int, error) {
-	if params.limit == 0 {
-		params.limit = constant.PageSize
+	if params.Limit == 0 {
+		params.Limit = constant.PageSize
 	}
 
 	client, err := db.Client()
@@ -52,12 +52,12 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.
 		CoinInfo.
 		Query()
 
-	if params.name != "" {
-		stm.Where(coininfo.NameEQ(params.name))
+	if params.Name != "" {
+		stm.Where(coininfo.NameEQ(params.Name))
 	}
 
-	if params.preSale {
-		stm.Where(coininfo.PreSaleEQ(params.preSale))
+	if params.PreSale {
+		stm.Where(coininfo.PreSaleEQ(params.PreSale))
 	}
 
 	// total
@@ -69,8 +69,8 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.
 	// infos
 	coinInfos, err := stm.
 		Order(ent.Desc(coininfo.FieldCreatedAt)).
-		Offset(params.offset).
-		Limit(params.limit).
+		Offset(params.Offset).
+		Limit(params.Limit).
 		All(ctx)
 
 	return coinInfos, total, err

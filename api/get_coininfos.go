@@ -17,7 +17,12 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
-	resp, total, err := coininfo.GetAllCoinInfos(ctx, coininfo.GetAllCoinInfosParams{})
+	resp, total, err := coininfo.GetAllCoinInfos(ctx, coininfo.GetAllCoinInfosParams{
+		PreSale: in.GetPreSale(),
+		Name:    in.GetName(),
+		Offset:  int(in.GetOffset()),
+		Limit:   int(in.GetLimit()),
+	})
 	if err != nil {
 		logger.Sugar().Errorf("GetCoinInfos call GetAllCoinInfos error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
