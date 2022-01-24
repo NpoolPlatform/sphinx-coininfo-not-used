@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -62,7 +63,7 @@ func (ciu *CoinInfoUpdate) SetNillableReservedAmount(u *uint64) *CoinInfoUpdate 
 }
 
 // AddReservedAmount adds u to the "reserved_amount" field.
-func (ciu *CoinInfoUpdate) AddReservedAmount(u uint64) *CoinInfoUpdate {
+func (ciu *CoinInfoUpdate) AddReservedAmount(u int64) *CoinInfoUpdate {
 	ciu.mutation.AddReservedAmount(u)
 	return ciu
 }
@@ -95,6 +96,20 @@ func (ciu *CoinInfoUpdate) SetNillableLogo(s *string) *CoinInfoUpdate {
 	return ciu
 }
 
+// SetEnv sets the "env" field.
+func (ciu *CoinInfoUpdate) SetEnv(s string) *CoinInfoUpdate {
+	ciu.mutation.SetEnv(s)
+	return ciu
+}
+
+// SetNillableEnv sets the "env" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableEnv(s *string) *CoinInfoUpdate {
+	if s != nil {
+		ciu.SetEnv(*s)
+	}
+	return ciu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ciu *CoinInfoUpdate) SetCreatedAt(u uint32) *CoinInfoUpdate {
 	ciu.mutation.ResetCreatedAt()
@@ -111,7 +126,7 @@ func (ciu *CoinInfoUpdate) SetNillableCreatedAt(u *uint32) *CoinInfoUpdate {
 }
 
 // AddCreatedAt adds u to the "created_at" field.
-func (ciu *CoinInfoUpdate) AddCreatedAt(u uint32) *CoinInfoUpdate {
+func (ciu *CoinInfoUpdate) AddCreatedAt(u int32) *CoinInfoUpdate {
 	ciu.mutation.AddCreatedAt(u)
 	return ciu
 }
@@ -124,7 +139,7 @@ func (ciu *CoinInfoUpdate) SetUpdatedAt(u uint32) *CoinInfoUpdate {
 }
 
 // AddUpdatedAt adds u to the "updated_at" field.
-func (ciu *CoinInfoUpdate) AddUpdatedAt(u uint32) *CoinInfoUpdate {
+func (ciu *CoinInfoUpdate) AddUpdatedAt(u int32) *CoinInfoUpdate {
 	ciu.mutation.AddUpdatedAt(u)
 	return ciu
 }
@@ -145,7 +160,7 @@ func (ciu *CoinInfoUpdate) SetNillableDeletedAt(u *uint32) *CoinInfoUpdate {
 }
 
 // AddDeletedAt adds u to the "deleted_at" field.
-func (ciu *CoinInfoUpdate) AddDeletedAt(u uint32) *CoinInfoUpdate {
+func (ciu *CoinInfoUpdate) AddDeletedAt(u int32) *CoinInfoUpdate {
 	ciu.mutation.AddDeletedAt(u)
 	return ciu
 }
@@ -228,12 +243,12 @@ func (ciu *CoinInfoUpdate) defaults() {
 func (ciu *CoinInfoUpdate) check() error {
 	if v, ok := ciu.mutation.Name(); ok {
 		if err := coininfo.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "CoinInfo.name": %w`, err)}
 		}
 	}
 	if v, ok := ciu.mutation.Unit(); ok {
 		if err := coininfo.UnitValidator(v); err != nil {
-			return &ValidationError{Name: "unit", err: fmt.Errorf("ent: validator failed for field \"unit\": %w", err)}
+			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "CoinInfo.unit": %w`, err)}
 		}
 	}
 	return nil
@@ -297,6 +312,13 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: coininfo.FieldLogo,
+		})
+	}
+	if value, ok := ciu.mutation.Env(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldEnv,
 		})
 	}
 	if value, ok := ciu.mutation.CreatedAt(); ok {
@@ -396,7 +418,7 @@ func (ciuo *CoinInfoUpdateOne) SetNillableReservedAmount(u *uint64) *CoinInfoUpd
 }
 
 // AddReservedAmount adds u to the "reserved_amount" field.
-func (ciuo *CoinInfoUpdateOne) AddReservedAmount(u uint64) *CoinInfoUpdateOne {
+func (ciuo *CoinInfoUpdateOne) AddReservedAmount(u int64) *CoinInfoUpdateOne {
 	ciuo.mutation.AddReservedAmount(u)
 	return ciuo
 }
@@ -429,6 +451,20 @@ func (ciuo *CoinInfoUpdateOne) SetNillableLogo(s *string) *CoinInfoUpdateOne {
 	return ciuo
 }
 
+// SetEnv sets the "env" field.
+func (ciuo *CoinInfoUpdateOne) SetEnv(s string) *CoinInfoUpdateOne {
+	ciuo.mutation.SetEnv(s)
+	return ciuo
+}
+
+// SetNillableEnv sets the "env" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableEnv(s *string) *CoinInfoUpdateOne {
+	if s != nil {
+		ciuo.SetEnv(*s)
+	}
+	return ciuo
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ciuo *CoinInfoUpdateOne) SetCreatedAt(u uint32) *CoinInfoUpdateOne {
 	ciuo.mutation.ResetCreatedAt()
@@ -445,7 +481,7 @@ func (ciuo *CoinInfoUpdateOne) SetNillableCreatedAt(u *uint32) *CoinInfoUpdateOn
 }
 
 // AddCreatedAt adds u to the "created_at" field.
-func (ciuo *CoinInfoUpdateOne) AddCreatedAt(u uint32) *CoinInfoUpdateOne {
+func (ciuo *CoinInfoUpdateOne) AddCreatedAt(u int32) *CoinInfoUpdateOne {
 	ciuo.mutation.AddCreatedAt(u)
 	return ciuo
 }
@@ -458,7 +494,7 @@ func (ciuo *CoinInfoUpdateOne) SetUpdatedAt(u uint32) *CoinInfoUpdateOne {
 }
 
 // AddUpdatedAt adds u to the "updated_at" field.
-func (ciuo *CoinInfoUpdateOne) AddUpdatedAt(u uint32) *CoinInfoUpdateOne {
+func (ciuo *CoinInfoUpdateOne) AddUpdatedAt(u int32) *CoinInfoUpdateOne {
 	ciuo.mutation.AddUpdatedAt(u)
 	return ciuo
 }
@@ -479,7 +515,7 @@ func (ciuo *CoinInfoUpdateOne) SetNillableDeletedAt(u *uint32) *CoinInfoUpdateOn
 }
 
 // AddDeletedAt adds u to the "deleted_at" field.
-func (ciuo *CoinInfoUpdateOne) AddDeletedAt(u uint32) *CoinInfoUpdateOne {
+func (ciuo *CoinInfoUpdateOne) AddDeletedAt(u int32) *CoinInfoUpdateOne {
 	ciuo.mutation.AddDeletedAt(u)
 	return ciuo
 }
@@ -569,12 +605,12 @@ func (ciuo *CoinInfoUpdateOne) defaults() {
 func (ciuo *CoinInfoUpdateOne) check() error {
 	if v, ok := ciuo.mutation.Name(); ok {
 		if err := coininfo.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "CoinInfo.name": %w`, err)}
 		}
 	}
 	if v, ok := ciuo.mutation.Unit(); ok {
 		if err := coininfo.UnitValidator(v); err != nil {
-			return &ValidationError{Name: "unit", err: fmt.Errorf("ent: validator failed for field \"unit\": %w", err)}
+			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "CoinInfo.unit": %w`, err)}
 		}
 	}
 	return nil
@@ -593,7 +629,7 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 	}
 	id, ok := ciuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing CoinInfo.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "CoinInfo.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := ciuo.fields; len(fields) > 0 {
@@ -655,6 +691,13 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			Type:   field.TypeString,
 			Value:  value,
 			Column: coininfo.FieldLogo,
+		})
+	}
+	if value, ok := ciuo.mutation.Env(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldEnv,
 		})
 	}
 	if value, ok := ciuo.mutation.CreatedAt(); ok {

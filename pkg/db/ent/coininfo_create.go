@@ -85,6 +85,20 @@ func (cic *CoinInfoCreate) SetNillableLogo(s *string) *CoinInfoCreate {
 	return cic
 }
 
+// SetEnv sets the "env" field.
+func (cic *CoinInfoCreate) SetEnv(s string) *CoinInfoCreate {
+	cic.mutation.SetEnv(s)
+	return cic
+}
+
+// SetNillableEnv sets the "env" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableEnv(s *string) *CoinInfoCreate {
+	if s != nil {
+		cic.SetEnv(*s)
+	}
+	return cic
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (cic *CoinInfoCreate) SetCreatedAt(u uint32) *CoinInfoCreate {
 	cic.mutation.SetCreatedAt(u)
@@ -130,6 +144,14 @@ func (cic *CoinInfoCreate) SetNillableDeletedAt(u *uint32) *CoinInfoCreate {
 // SetID sets the "id" field.
 func (cic *CoinInfoCreate) SetID(u uuid.UUID) *CoinInfoCreate {
 	cic.mutation.SetID(u)
+	return cic
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableID(u *uuid.UUID) *CoinInfoCreate {
+	if u != nil {
+		cic.SetID(*u)
+	}
 	return cic
 }
 
@@ -220,6 +242,10 @@ func (cic *CoinInfoCreate) defaults() {
 		v := coininfo.DefaultLogo
 		cic.mutation.SetLogo(v)
 	}
+	if _, ok := cic.mutation.Env(); !ok {
+		v := coininfo.DefaultEnv
+		cic.mutation.SetEnv(v)
+	}
 	if _, ok := cic.mutation.CreatedAt(); !ok {
 		v := coininfo.DefaultCreatedAt()
 		cic.mutation.SetCreatedAt(v)
@@ -241,38 +267,41 @@ func (cic *CoinInfoCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (cic *CoinInfoCreate) check() error {
 	if _, ok := cic.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "name"`)}
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "CoinInfo.name"`)}
 	}
 	if v, ok := cic.mutation.Name(); ok {
 		if err := coininfo.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "name": %w`, err)}
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "CoinInfo.name": %w`, err)}
 		}
 	}
 	if _, ok := cic.mutation.Unit(); !ok {
-		return &ValidationError{Name: "unit", err: errors.New(`ent: missing required field "unit"`)}
+		return &ValidationError{Name: "unit", err: errors.New(`ent: missing required field "CoinInfo.unit"`)}
 	}
 	if v, ok := cic.mutation.Unit(); ok {
 		if err := coininfo.UnitValidator(v); err != nil {
-			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "unit": %w`, err)}
+			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "CoinInfo.unit": %w`, err)}
 		}
 	}
 	if _, ok := cic.mutation.ReservedAmount(); !ok {
-		return &ValidationError{Name: "reserved_amount", err: errors.New(`ent: missing required field "reserved_amount"`)}
+		return &ValidationError{Name: "reserved_amount", err: errors.New(`ent: missing required field "CoinInfo.reserved_amount"`)}
 	}
 	if _, ok := cic.mutation.PreSale(); !ok {
-		return &ValidationError{Name: "pre_sale", err: errors.New(`ent: missing required field "pre_sale"`)}
+		return &ValidationError{Name: "pre_sale", err: errors.New(`ent: missing required field "CoinInfo.pre_sale"`)}
 	}
 	if _, ok := cic.mutation.Logo(); !ok {
-		return &ValidationError{Name: "logo", err: errors.New(`ent: missing required field "logo"`)}
+		return &ValidationError{Name: "logo", err: errors.New(`ent: missing required field "CoinInfo.logo"`)}
+	}
+	if _, ok := cic.mutation.Env(); !ok {
+		return &ValidationError{Name: "env", err: errors.New(`ent: missing required field "CoinInfo.env"`)}
 	}
 	if _, ok := cic.mutation.CreatedAt(); !ok {
-		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "created_at"`)}
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "CoinInfo.created_at"`)}
 	}
 	if _, ok := cic.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "updated_at"`)}
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "CoinInfo.updated_at"`)}
 	}
 	if _, ok := cic.mutation.DeletedAt(); !ok {
-		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "deleted_at"`)}
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "CoinInfo.deleted_at"`)}
 	}
 	return nil
 }
@@ -286,7 +315,11 @@ func (cic *CoinInfoCreate) sqlSave(ctx context.Context) (*CoinInfo, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		_node.ID = _spec.ID.Value.(uuid.UUID)
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
 	}
 	return _node, nil
 }
@@ -305,7 +338,7 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = cic.conflict
 	if id, ok := cic.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := cic.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -346,6 +379,14 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 			Column: coininfo.FieldLogo,
 		})
 		_node.Logo = value
+	}
+	if value, ok := cic.mutation.Env(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldEnv,
+		})
+		_node.Env = value
 	}
 	if value, ok := cic.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -461,6 +502,12 @@ func (u *CoinInfoUpsert) UpdateReservedAmount() *CoinInfoUpsert {
 	return u
 }
 
+// AddReservedAmount adds v to the "reserved_amount" field.
+func (u *CoinInfoUpsert) AddReservedAmount(v uint64) *CoinInfoUpsert {
+	u.Add(coininfo.FieldReservedAmount, v)
+	return u
+}
+
 // SetPreSale sets the "pre_sale" field.
 func (u *CoinInfoUpsert) SetPreSale(v bool) *CoinInfoUpsert {
 	u.Set(coininfo.FieldPreSale, v)
@@ -485,6 +532,18 @@ func (u *CoinInfoUpsert) UpdateLogo() *CoinInfoUpsert {
 	return u
 }
 
+// SetEnv sets the "env" field.
+func (u *CoinInfoUpsert) SetEnv(v string) *CoinInfoUpsert {
+	u.Set(coininfo.FieldEnv, v)
+	return u
+}
+
+// UpdateEnv sets the "env" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateEnv() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldEnv)
+	return u
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (u *CoinInfoUpsert) SetCreatedAt(v uint32) *CoinInfoUpsert {
 	u.Set(coininfo.FieldCreatedAt, v)
@@ -494,6 +553,12 @@ func (u *CoinInfoUpsert) SetCreatedAt(v uint32) *CoinInfoUpsert {
 // UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
 func (u *CoinInfoUpsert) UpdateCreatedAt() *CoinInfoUpsert {
 	u.SetExcluded(coininfo.FieldCreatedAt)
+	return u
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *CoinInfoUpsert) AddCreatedAt(v uint32) *CoinInfoUpsert {
+	u.Add(coininfo.FieldCreatedAt, v)
 	return u
 }
 
@@ -509,6 +574,12 @@ func (u *CoinInfoUpsert) UpdateUpdatedAt() *CoinInfoUpsert {
 	return u
 }
 
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *CoinInfoUpsert) AddUpdatedAt(v uint32) *CoinInfoUpsert {
+	u.Add(coininfo.FieldUpdatedAt, v)
+	return u
+}
+
 // SetDeletedAt sets the "deleted_at" field.
 func (u *CoinInfoUpsert) SetDeletedAt(v uint32) *CoinInfoUpsert {
 	u.Set(coininfo.FieldDeletedAt, v)
@@ -521,7 +592,13 @@ func (u *CoinInfoUpsert) UpdateDeletedAt() *CoinInfoUpsert {
 	return u
 }
 
-// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *CoinInfoUpsert) AddDeletedAt(v uint32) *CoinInfoUpsert {
+	u.Add(coininfo.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
 //	client.CoinInfo.Create().
@@ -606,6 +683,13 @@ func (u *CoinInfoUpsertOne) SetReservedAmount(v uint64) *CoinInfoUpsertOne {
 	})
 }
 
+// AddReservedAmount adds v to the "reserved_amount" field.
+func (u *CoinInfoUpsertOne) AddReservedAmount(v uint64) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddReservedAmount(v)
+	})
+}
+
 // UpdateReservedAmount sets the "reserved_amount" field to the value that was provided on create.
 func (u *CoinInfoUpsertOne) UpdateReservedAmount() *CoinInfoUpsertOne {
 	return u.Update(func(s *CoinInfoUpsert) {
@@ -641,10 +725,31 @@ func (u *CoinInfoUpsertOne) UpdateLogo() *CoinInfoUpsertOne {
 	})
 }
 
+// SetEnv sets the "env" field.
+func (u *CoinInfoUpsertOne) SetEnv(v string) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetEnv(v)
+	})
+}
+
+// UpdateEnv sets the "env" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateEnv() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateEnv()
+	})
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (u *CoinInfoUpsertOne) SetCreatedAt(v uint32) *CoinInfoUpsertOne {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *CoinInfoUpsertOne) AddCreatedAt(v uint32) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddCreatedAt(v)
 	})
 }
 
@@ -662,6 +767,13 @@ func (u *CoinInfoUpsertOne) SetUpdatedAt(v uint32) *CoinInfoUpsertOne {
 	})
 }
 
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *CoinInfoUpsertOne) AddUpdatedAt(v uint32) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
 func (u *CoinInfoUpsertOne) UpdateUpdatedAt() *CoinInfoUpsertOne {
 	return u.Update(func(s *CoinInfoUpsert) {
@@ -673,6 +785,13 @@ func (u *CoinInfoUpsertOne) UpdateUpdatedAt() *CoinInfoUpsertOne {
 func (u *CoinInfoUpsertOne) SetDeletedAt(v uint32) *CoinInfoUpsertOne {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *CoinInfoUpsertOne) AddDeletedAt(v uint32) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddDeletedAt(v)
 	})
 }
 
@@ -846,7 +965,7 @@ type CoinInfoUpsertBulk struct {
 	create *CoinInfoCreateBulk
 }
 
-// UpdateNewValues updates the fields using the new values that
+// UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
 //	client.CoinInfo.Create().
@@ -934,6 +1053,13 @@ func (u *CoinInfoUpsertBulk) SetReservedAmount(v uint64) *CoinInfoUpsertBulk {
 	})
 }
 
+// AddReservedAmount adds v to the "reserved_amount" field.
+func (u *CoinInfoUpsertBulk) AddReservedAmount(v uint64) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddReservedAmount(v)
+	})
+}
+
 // UpdateReservedAmount sets the "reserved_amount" field to the value that was provided on create.
 func (u *CoinInfoUpsertBulk) UpdateReservedAmount() *CoinInfoUpsertBulk {
 	return u.Update(func(s *CoinInfoUpsert) {
@@ -969,10 +1095,31 @@ func (u *CoinInfoUpsertBulk) UpdateLogo() *CoinInfoUpsertBulk {
 	})
 }
 
+// SetEnv sets the "env" field.
+func (u *CoinInfoUpsertBulk) SetEnv(v string) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetEnv(v)
+	})
+}
+
+// UpdateEnv sets the "env" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateEnv() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateEnv()
+	})
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (u *CoinInfoUpsertBulk) SetCreatedAt(v uint32) *CoinInfoUpsertBulk {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *CoinInfoUpsertBulk) AddCreatedAt(v uint32) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddCreatedAt(v)
 	})
 }
 
@@ -990,6 +1137,13 @@ func (u *CoinInfoUpsertBulk) SetUpdatedAt(v uint32) *CoinInfoUpsertBulk {
 	})
 }
 
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *CoinInfoUpsertBulk) AddUpdatedAt(v uint32) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
 func (u *CoinInfoUpsertBulk) UpdateUpdatedAt() *CoinInfoUpsertBulk {
 	return u.Update(func(s *CoinInfoUpsert) {
@@ -1001,6 +1155,13 @@ func (u *CoinInfoUpsertBulk) UpdateUpdatedAt() *CoinInfoUpsertBulk {
 func (u *CoinInfoUpsertBulk) SetDeletedAt(v uint32) *CoinInfoUpsertBulk {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *CoinInfoUpsertBulk) AddDeletedAt(v uint32) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.AddDeletedAt(v)
 	})
 }
 

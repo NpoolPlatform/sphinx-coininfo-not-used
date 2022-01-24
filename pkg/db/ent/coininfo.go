@@ -26,6 +26,8 @@ type CoinInfo struct {
 	PreSale bool `json:"pre_sale,omitempty"`
 	// Logo holds the value of the "logo" field.
 	Logo string `json:"logo,omitempty"`
+	// Env holds the value of the "env" field.
+	Env string `json:"env,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -43,7 +45,7 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case coininfo.FieldReservedAmount, coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo:
+		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo, coininfo.FieldEnv:
 			values[i] = new(sql.NullString)
 		case coininfo.FieldID:
 			values[i] = new(uuid.UUID)
@@ -97,6 +99,12 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value.Valid {
 				ci.Logo = value.String
+			}
+		case coininfo.FieldEnv:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field env", values[i])
+			} else if value.Valid {
+				ci.Env = value.String
 			}
 		case coininfo.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -154,6 +162,8 @@ func (ci *CoinInfo) String() string {
 	builder.WriteString(fmt.Sprintf("%v", ci.PreSale))
 	builder.WriteString(", logo=")
 	builder.WriteString(ci.Logo)
+	builder.WriteString(", env=")
+	builder.WriteString(ci.Env)
 	builder.WriteString(", created_at=")
 	builder.WriteString(fmt.Sprintf("%v", ci.CreatedAt))
 	builder.WriteString(", updated_at=")

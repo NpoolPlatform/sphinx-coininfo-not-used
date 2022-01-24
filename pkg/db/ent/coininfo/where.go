@@ -126,6 +126,13 @@ func Logo(v string) predicate.CoinInfo {
 	})
 }
 
+// Env applies equality check predicate on the "env" field. It's identical to EnvEQ.
+func Env(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEnv), v))
+	})
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v uint32) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
@@ -567,6 +574,117 @@ func LogoEqualFold(v string) predicate.CoinInfo {
 func LogoContainsFold(v string) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldLogo), v))
+	})
+}
+
+// EnvEQ applies the EQ predicate on the "env" field.
+func EnvEQ(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEnv), v))
+	})
+}
+
+// EnvNEQ applies the NEQ predicate on the "env" field.
+func EnvNEQ(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEnv), v))
+	})
+}
+
+// EnvIn applies the In predicate on the "env" field.
+func EnvIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEnv), v...))
+	})
+}
+
+// EnvNotIn applies the NotIn predicate on the "env" field.
+func EnvNotIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEnv), v...))
+	})
+}
+
+// EnvGT applies the GT predicate on the "env" field.
+func EnvGT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEnv), v))
+	})
+}
+
+// EnvGTE applies the GTE predicate on the "env" field.
+func EnvGTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEnv), v))
+	})
+}
+
+// EnvLT applies the LT predicate on the "env" field.
+func EnvLT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEnv), v))
+	})
+}
+
+// EnvLTE applies the LTE predicate on the "env" field.
+func EnvLTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEnv), v))
+	})
+}
+
+// EnvContains applies the Contains predicate on the "env" field.
+func EnvContains(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldEnv), v))
+	})
+}
+
+// EnvHasPrefix applies the HasPrefix predicate on the "env" field.
+func EnvHasPrefix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldEnv), v))
+	})
+}
+
+// EnvHasSuffix applies the HasSuffix predicate on the "env" field.
+func EnvHasSuffix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldEnv), v))
+	})
+}
+
+// EnvEqualFold applies the EqualFold predicate on the "env" field.
+func EnvEqualFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldEnv), v))
+	})
+}
+
+// EnvContainsFold applies the ContainsFold predicate on the "env" field.
+func EnvContainsFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldEnv), v))
 	})
 }
 

@@ -17,6 +17,7 @@ func CreateCoinInfo(ctx context.Context, info *coininfo.CoinInfo) error {
 		SetName(info.GetName()).
 		SetUnit(info.GetUnit()).
 		SetLogo(info.GetLogo()).
+		SetEnv(info.GetENV()).
 		SetPreSale(info.GetPreSale()).
 		OnConflictColumns(dcoin.FieldName).
 		Ignore().

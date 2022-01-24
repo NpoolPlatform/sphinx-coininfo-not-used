@@ -15,13 +15,23 @@ import (
 // CreateCoinInfo support duplicate
 func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoRequest) (*npool.CreateCoinInfoResponse, error) {
 	if in.GetName() == "" {
-		logger.Sugar().Errorf("CreateCoinInfo check Name is empty")
+		logger.Sugar().Error("CreateCoinInfo check Name is empty")
 		return nil, status.Error(codes.InvalidArgument, "Name empty")
 	}
 
 	if in.GetUnit() == "" {
-		logger.Sugar().Errorf("CreateCoinInfo check Unit is empty")
+		logger.Sugar().Error("CreateCoinInfo check Unit is empty")
 		return nil, status.Error(codes.InvalidArgument, "Unit empty")
+	}
+
+	if in.GetENV() == "" {
+		logger.Sugar().Error("CreateCoinInfo check ENV is empty")
+		return nil, status.Error(codes.InvalidArgument, "ENV empty")
+	}
+
+	if in.GetENV() != "main" && in.GetENV() != "test" {
+		logger.Sugar().Errorf("CreateCoinInfo check ENV: %s invalid", in.GetENV())
+		return nil, status.Error(codes.InvalidArgument, "ENV invalid")
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
@@ -32,6 +42,7 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		Name:    in.GetName(),
 		Unit:    in.GetUnit(),
 		Logo:    in.GetLogo(),
+		ENV:     in.GetENV(),
 	})
 	if err != nil {
 		logger.Sugar().Errorf("CreateCoinInfo call CreateCoinInfo error %v", err)
@@ -51,6 +62,7 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 			Name:           coinInfo.Name,
 			Unit:           coinInfo.Unit,
 			Logo:           coinInfo.Logo,
+			ENV:            coinInfo.Env,
 			ReservedAmount: price.DBPriceToVisualPrice(coinInfo.ReservedAmount),
 			CreatedAt:      coinInfo.CreatedAt,
 			UpdatedAt:      coinInfo.UpdatedAt,

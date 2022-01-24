@@ -16,6 +16,7 @@ var (
 		{Name: "reserved_amount", Type: field.TypeUint64, Default: 0},
 		{Name: "pre_sale", Type: field.TypeBool, Default: false},
 		{Name: "logo", Type: field.TypeString, Default: ""},
+		{Name: "env", Type: field.TypeString, Default: "main"},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},

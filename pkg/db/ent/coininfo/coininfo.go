@@ -21,6 +21,8 @@ const (
 	FieldPreSale = "pre_sale"
 	// FieldLogo holds the string denoting the logo field in the database.
 	FieldLogo = "logo"
+	// FieldEnv holds the string denoting the env field in the database.
+	FieldEnv = "env"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -39,6 +41,7 @@ var Columns = []string{
 	FieldReservedAmount,
 	FieldPreSale,
 	FieldLogo,
+	FieldEnv,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
@@ -67,6 +70,8 @@ var (
 	DefaultPreSale bool
 	// DefaultLogo holds the default value on creation for the "logo" field.
 	DefaultLogo string
+	// DefaultEnv holds the default value on creation for the "env" field.
+	DefaultEnv string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() uint32
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

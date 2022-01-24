@@ -337,6 +337,10 @@ func (ciq *CoinInfoQuery) sqlAll(ctx context.Context) ([]*CoinInfo, error) {
 
 func (ciq *CoinInfoQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := ciq.querySpec()
+	_spec.Node.Columns = ciq.fields
+	if len(ciq.fields) > 0 {
+		_spec.Unique = ciq.unique != nil && *ciq.unique
+	}
 	return sqlgraph.CountNodes(ctx, ciq.driver, _spec)
 }
 
@@ -407,6 +411,9 @@ func (ciq *CoinInfoQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if ciq.sql != nil {
 		selector = ciq.sql
 		selector.Select(selector.Columns(columns...)...)
+	}
+	if ciq.unique != nil && *ciq.unique {
+		selector.Distinct()
 	}
 	for _, p := range ciq.predicates {
 		p(selector)
@@ -686,9 +693,7 @@ func (cigb *CoinInfoGroupBy) sqlQuery() *sql.Selector {
 		for _, f := range cigb.fields {
 			columns = append(columns, selector.C(f))
 		}
-		for _, c := range aggregation {
-			columns = append(columns, c)
-		}
+		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
 	return selector.GroupBy(selector.Columns(cigb.fields...)...)
