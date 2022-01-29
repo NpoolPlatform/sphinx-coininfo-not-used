@@ -3,4 +3,6 @@ commonLabels:
 
 resources:
 - 01-sphinx-coininfo.yaml
-- 02-ingress.yaml
+- 02-strip-prefix.yaml
+- 03-traefik-ingress.yaml
+- 04-traefik-vpn-ingress.yaml
