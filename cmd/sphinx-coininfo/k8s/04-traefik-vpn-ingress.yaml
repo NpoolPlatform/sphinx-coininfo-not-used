@@ -26,5 +26,5 @@ spec:
               servicePort: 50150
     - host: api.procyon.vip
       http: *http_rules
-    - host: api.npool.top
+    - host: api.xpool.top
       http: *http_rules
