@@ -6,6 +6,7 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/api"
 	db "github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 
+	apimgrcli "github.com/NpoolPlatform/api-manager/pkg/client"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	cli "github.com/urfave/cli/v2"
@@ -43,5 +44,12 @@ func rpcRegister(server grpc.ServiceRegistrar) error {
 }
 
 func rpcGatewayRegister(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	return api.RegisterGateway(mux, endpoint, opts)
+	err := api.RegisterGateway(mux, endpoint, opts)
+	if err != nil {
+		return err
+	}
+
+	apimgrcli.Register(mux)
+
+	return nil
 }
