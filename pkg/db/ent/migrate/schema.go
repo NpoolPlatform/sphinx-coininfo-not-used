@@ -34,9 +34,28 @@ var (
 			},
 		},
 	}
+	// DescriptionsColumns holds the columns for the "descriptions" table.
+	DescriptionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "coin_id", Type: field.TypeUUID, Unique: true},
+		{Name: "human_readable_name", Type: field.TypeString},
+		{Name: "descriptions", Type: field.TypeJSON},
+		{Name: "spec_title", Type: field.TypeString},
+		{Name: "specs", Type: field.TypeJSON},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+	}
+	// DescriptionsTable holds the schema information for the "descriptions" table.
+	DescriptionsTable = &schema.Table{
+		Name:       "descriptions",
+		Columns:    DescriptionsColumns,
+		PrimaryKey: []*schema.Column{DescriptionsColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CoinInfosTable,
+		DescriptionsTable,
 	}
 )
 

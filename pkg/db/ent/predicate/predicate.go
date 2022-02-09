@@ -8,3 +8,6 @@ import (
 
 // CoinInfo is the predicate function for coininfo builders.
 type CoinInfo func(*sql.Selector)
+
+// Description is the predicate function for description builders.
+type Description func(*sql.Selector)

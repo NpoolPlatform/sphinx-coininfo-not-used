@@ -4,6 +4,7 @@ package ent
 
 import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
+	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/description"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/schema"
 	"github.com/google/uuid"
 )
@@ -58,4 +59,24 @@ func init() {
 	coininfoDescID := coininfoFields[0].Descriptor()
 	// coininfo.DefaultID holds the default value on creation for the id field.
 	coininfo.DefaultID = coininfoDescID.Default.(func() uuid.UUID)
+	descriptionFields := schema.Description{}.Fields()
+	_ = descriptionFields
+	// descriptionDescCreatedAt is the schema descriptor for created_at field.
+	descriptionDescCreatedAt := descriptionFields[6].Descriptor()
+	// description.DefaultCreatedAt holds the default value on creation for the created_at field.
+	description.DefaultCreatedAt = descriptionDescCreatedAt.Default.(func() uint32)
+	// descriptionDescUpdatedAt is the schema descriptor for updated_at field.
+	descriptionDescUpdatedAt := descriptionFields[7].Descriptor()
+	// description.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	description.DefaultUpdatedAt = descriptionDescUpdatedAt.Default.(func() uint32)
+	// description.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	description.UpdateDefaultUpdatedAt = descriptionDescUpdatedAt.UpdateDefault.(func() uint32)
+	// descriptionDescDeletedAt is the schema descriptor for deleted_at field.
+	descriptionDescDeletedAt := descriptionFields[8].Descriptor()
+	// description.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	description.DefaultDeletedAt = descriptionDescDeletedAt.Default.(func() uint32)
+	// descriptionDescID is the schema descriptor for id field.
+	descriptionDescID := descriptionFields[0].Descriptor()
+	// description.DefaultID holds the default value on creation for the id field.
+	description.DefaultID = descriptionDescID.Default.(func() uuid.UUID)
 }
