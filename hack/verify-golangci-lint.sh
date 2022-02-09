@@ -17,16 +17,11 @@ if ! command -v gofumpt; then
     go install mvdan.cc/gofumpt@latest
 fi
 
-#if ! command -v golangci-lint; then
-#    curl -sfL $URL | sh -s $VERSION
-#    PATH=$PATH:bin
-#fi
-
-if [ ! -f bin/golangci-lint ]; then
+if ! command -v golangci-lint; then
     curl -sfL $URL | sh -s $VERSION
+    PATH=$PATH:bin
+    cp bin/golangci-lint /usr/bin
 fi
-
-PATH=$PATH:bin
 
 golangci-lint version
 golangci-lint linters
