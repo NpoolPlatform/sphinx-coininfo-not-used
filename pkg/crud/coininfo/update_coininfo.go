@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func UpdateCoinInfoByID(ctx context.Context, preSale bool, logo, id string, reservedAmount float64) (coinInfo *ent.CoinInfo, err error) {
+func UpdateCoinInfoByID(ctx context.Context, preSale, forPay bool, logo, id string, reservedAmount float64) (coinInfo *ent.CoinInfo, err error) {
 	client, err := db.Client()
 	if err != nil {
 		return nil, err
@@ -21,6 +21,7 @@ func UpdateCoinInfoByID(ctx context.Context, preSale bool, logo, id string, rese
 	if preSale {
 		stmt.SetPreSale(preSale)
 	}
+	stmt.SetForPay(forPay)
 	if logo != "" {
 		stmt.SetLogo(logo)
 	}

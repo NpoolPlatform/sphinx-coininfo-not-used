@@ -28,6 +28,8 @@ type CoinInfo struct {
 	Logo string `json:"logo,omitempty"`
 	// Env holds the value of the "env" field.
 	Env string `json:"env,omitempty"`
+	// ForPay holds the value of the "for_pay" field.
+	ForPay bool `json:"for_pay,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -41,7 +43,7 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case coininfo.FieldPreSale:
+		case coininfo.FieldPreSale, coininfo.FieldForPay:
 			values[i] = new(sql.NullBool)
 		case coininfo.FieldReservedAmount, coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
@@ -106,6 +108,12 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ci.Env = value.String
 			}
+		case coininfo.FieldForPay:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field for_pay", values[i])
+			} else if value.Valid {
+				ci.ForPay = value.Bool
+			}
 		case coininfo.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -164,6 +172,8 @@ func (ci *CoinInfo) String() string {
 	builder.WriteString(ci.Logo)
 	builder.WriteString(", env=")
 	builder.WriteString(ci.Env)
+	builder.WriteString(", for_pay=")
+	builder.WriteString(fmt.Sprintf("%v", ci.ForPay))
 	builder.WriteString(", created_at=")
 	builder.WriteString(fmt.Sprintf("%v", ci.CreatedAt))
 	builder.WriteString(", updated_at=")

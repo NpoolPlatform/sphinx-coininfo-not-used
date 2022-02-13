@@ -43,6 +43,7 @@ type CoinInfoMutation struct {
 	pre_sale           *bool
 	logo               *string
 	env                *string
+	for_pay            *bool
 	created_at         *uint32
 	addcreated_at      *int32
 	updated_at         *uint32
@@ -395,6 +396,42 @@ func (m *CoinInfoMutation) ResetEnv() {
 	m.env = nil
 }
 
+// SetForPay sets the "for_pay" field.
+func (m *CoinInfoMutation) SetForPay(b bool) {
+	m.for_pay = &b
+}
+
+// ForPay returns the value of the "for_pay" field in the mutation.
+func (m *CoinInfoMutation) ForPay() (r bool, exists bool) {
+	v := m.for_pay
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldForPay returns the old "for_pay" field's value of the CoinInfo entity.
+// If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CoinInfoMutation) OldForPay(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldForPay is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldForPay requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldForPay: %w", err)
+	}
+	return oldValue.ForPay, nil
+}
+
+// ResetForPay resets all changes to the "for_pay" field.
+func (m *CoinInfoMutation) ResetForPay() {
+	m.for_pay = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *CoinInfoMutation) SetCreatedAt(u uint32) {
 	m.created_at = &u
@@ -582,7 +619,7 @@ func (m *CoinInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CoinInfoMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.name != nil {
 		fields = append(fields, coininfo.FieldName)
 	}
@@ -600,6 +637,9 @@ func (m *CoinInfoMutation) Fields() []string {
 	}
 	if m.env != nil {
 		fields = append(fields, coininfo.FieldEnv)
+	}
+	if m.for_pay != nil {
+		fields = append(fields, coininfo.FieldForPay)
 	}
 	if m.created_at != nil {
 		fields = append(fields, coininfo.FieldCreatedAt)
@@ -630,6 +670,8 @@ func (m *CoinInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Logo()
 	case coininfo.FieldEnv:
 		return m.Env()
+	case coininfo.FieldForPay:
+		return m.ForPay()
 	case coininfo.FieldCreatedAt:
 		return m.CreatedAt()
 	case coininfo.FieldUpdatedAt:
@@ -657,6 +699,8 @@ func (m *CoinInfoMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldLogo(ctx)
 	case coininfo.FieldEnv:
 		return m.OldEnv(ctx)
+	case coininfo.FieldForPay:
+		return m.OldForPay(ctx)
 	case coininfo.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case coininfo.FieldUpdatedAt:
@@ -713,6 +757,13 @@ func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEnv(v)
+		return nil
+	case coininfo.FieldForPay:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetForPay(v)
 		return nil
 	case coininfo.FieldCreatedAt:
 		v, ok := value.(uint32)
@@ -852,6 +903,9 @@ func (m *CoinInfoMutation) ResetField(name string) error {
 		return nil
 	case coininfo.FieldEnv:
 		m.ResetEnv()
+		return nil
+	case coininfo.FieldForPay:
+		m.ResetForPay()
 		return nil
 	case coininfo.FieldCreatedAt:
 		m.ResetCreatedAt()

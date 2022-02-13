@@ -133,6 +133,13 @@ func Env(v string) predicate.CoinInfo {
 	})
 }
 
+// ForPay applies equality check predicate on the "for_pay" field. It's identical to ForPayEQ.
+func ForPay(v bool) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldForPay), v))
+	})
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v uint32) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
@@ -685,6 +692,20 @@ func EnvEqualFold(v string) predicate.CoinInfo {
 func EnvContainsFold(v string) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldEnv), v))
+	})
+}
+
+// ForPayEQ applies the EQ predicate on the "for_pay" field.
+func ForPayEQ(v bool) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldForPay), v))
+	})
+}
+
+// ForPayNEQ applies the NEQ predicate on the "for_pay" field.
+func ForPayNEQ(v bool) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldForPay), v))
 	})
 }
 

@@ -110,6 +110,12 @@ func (ciu *CoinInfoUpdate) SetNillableEnv(s *string) *CoinInfoUpdate {
 	return ciu
 }
 
+// SetForPay sets the "for_pay" field.
+func (ciu *CoinInfoUpdate) SetForPay(b bool) *CoinInfoUpdate {
+	ciu.mutation.SetForPay(b)
+	return ciu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ciu *CoinInfoUpdate) SetCreatedAt(u uint32) *CoinInfoUpdate {
 	ciu.mutation.ResetCreatedAt()
@@ -321,6 +327,13 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: coininfo.FieldEnv,
 		})
 	}
+	if value, ok := ciu.mutation.ForPay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: coininfo.FieldForPay,
+		})
+	}
 	if value, ok := ciu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -462,6 +475,12 @@ func (ciuo *CoinInfoUpdateOne) SetNillableEnv(s *string) *CoinInfoUpdateOne {
 	if s != nil {
 		ciuo.SetEnv(*s)
 	}
+	return ciuo
+}
+
+// SetForPay sets the "for_pay" field.
+func (ciuo *CoinInfoUpdateOne) SetForPay(b bool) *CoinInfoUpdateOne {
+	ciuo.mutation.SetForPay(b)
 	return ciuo
 }
 
@@ -698,6 +717,13 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			Type:   field.TypeString,
 			Value:  value,
 			Column: coininfo.FieldEnv,
+		})
+	}
+	if value, ok := ciuo.mutation.ForPay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: coininfo.FieldForPay,
 		})
 	}
 	if value, ok := ciuo.mutation.CreatedAt(); ok {

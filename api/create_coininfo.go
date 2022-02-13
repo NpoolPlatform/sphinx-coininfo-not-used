@@ -59,6 +59,7 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		Info: &npool.CoinInfo{
 			ID:             coinInfo.ID.String(),
 			PreSale:        coinInfo.PreSale,
+			ForPay:         coinInfo.ForPay,
 			Name:           coinInfo.Name,
 			Unit:           coinInfo.Unit,
 			Logo:           coinInfo.Logo,

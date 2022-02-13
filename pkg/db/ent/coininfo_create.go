@@ -99,6 +99,12 @@ func (cic *CoinInfoCreate) SetNillableEnv(s *string) *CoinInfoCreate {
 	return cic
 }
 
+// SetForPay sets the "for_pay" field.
+func (cic *CoinInfoCreate) SetForPay(b bool) *CoinInfoCreate {
+	cic.mutation.SetForPay(b)
+	return cic
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (cic *CoinInfoCreate) SetCreatedAt(u uint32) *CoinInfoCreate {
 	cic.mutation.SetCreatedAt(u)
@@ -294,6 +300,9 @@ func (cic *CoinInfoCreate) check() error {
 	if _, ok := cic.mutation.Env(); !ok {
 		return &ValidationError{Name: "env", err: errors.New(`ent: missing required field "CoinInfo.env"`)}
 	}
+	if _, ok := cic.mutation.ForPay(); !ok {
+		return &ValidationError{Name: "for_pay", err: errors.New(`ent: missing required field "CoinInfo.for_pay"`)}
+	}
 	if _, ok := cic.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "CoinInfo.created_at"`)}
 	}
@@ -387,6 +396,14 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 			Column: coininfo.FieldEnv,
 		})
 		_node.Env = value
+	}
+	if value, ok := cic.mutation.ForPay(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: coininfo.FieldForPay,
+		})
+		_node.ForPay = value
 	}
 	if value, ok := cic.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -541,6 +558,18 @@ func (u *CoinInfoUpsert) SetEnv(v string) *CoinInfoUpsert {
 // UpdateEnv sets the "env" field to the value that was provided on create.
 func (u *CoinInfoUpsert) UpdateEnv() *CoinInfoUpsert {
 	u.SetExcluded(coininfo.FieldEnv)
+	return u
+}
+
+// SetForPay sets the "for_pay" field.
+func (u *CoinInfoUpsert) SetForPay(v bool) *CoinInfoUpsert {
+	u.Set(coininfo.FieldForPay, v)
+	return u
+}
+
+// UpdateForPay sets the "for_pay" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateForPay() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldForPay)
 	return u
 }
 
@@ -736,6 +765,20 @@ func (u *CoinInfoUpsertOne) SetEnv(v string) *CoinInfoUpsertOne {
 func (u *CoinInfoUpsertOne) UpdateEnv() *CoinInfoUpsertOne {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.UpdateEnv()
+	})
+}
+
+// SetForPay sets the "for_pay" field.
+func (u *CoinInfoUpsertOne) SetForPay(v bool) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetForPay(v)
+	})
+}
+
+// UpdateForPay sets the "for_pay" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateForPay() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateForPay()
 	})
 }
 
@@ -1106,6 +1149,20 @@ func (u *CoinInfoUpsertBulk) SetEnv(v string) *CoinInfoUpsertBulk {
 func (u *CoinInfoUpsertBulk) UpdateEnv() *CoinInfoUpsertBulk {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.UpdateEnv()
+	})
+}
+
+// SetForPay sets the "for_pay" field.
+func (u *CoinInfoUpsertBulk) SetForPay(v bool) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetForPay(v)
+	})
+}
+
+// UpdateForPay sets the "for_pay" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateForPay() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateForPay()
 	})
 }
 

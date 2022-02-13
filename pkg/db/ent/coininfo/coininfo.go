@@ -23,6 +23,8 @@ const (
 	FieldLogo = "logo"
 	// FieldEnv holds the string denoting the env field in the database.
 	FieldEnv = "env"
+	// FieldForPay holds the string denoting the for_pay field in the database.
+	FieldForPay = "for_pay"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -42,6 +44,7 @@ var Columns = []string{
 	FieldPreSale,
 	FieldLogo,
 	FieldEnv,
+	FieldForPay,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
