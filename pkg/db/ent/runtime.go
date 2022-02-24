@@ -41,6 +41,10 @@ func init() {
 	coininfoDescEnv := coininfoFields[6].Descriptor()
 	// coininfo.DefaultEnv holds the default value on creation for the env field.
 	coininfo.DefaultEnv = coininfoDescEnv.Default.(string)
+	// coininfoDescForPay is the schema descriptor for for_pay field.
+	coininfoDescForPay := coininfoFields[7].Descriptor()
+	// coininfo.DefaultForPay holds the default value on creation for the for_pay field.
+	coininfo.DefaultForPay = coininfoDescForPay.Default.(bool)
 	// coininfoDescCreatedAt is the schema descriptor for created_at field.
 	coininfoDescCreatedAt := coininfoFields[8].Descriptor()
 	// coininfo.DefaultCreatedAt holds the default value on creation for the created_at field.

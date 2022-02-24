@@ -17,7 +17,7 @@ var (
 		{Name: "pre_sale", Type: field.TypeBool, Default: false},
 		{Name: "logo", Type: field.TypeString, Default: ""},
 		{Name: "env", Type: field.TypeString, Default: "main"},
-		{Name: "for_pay", Type: field.TypeBool},
+		{Name: "for_pay", Type: field.TypeBool, Default: false},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},

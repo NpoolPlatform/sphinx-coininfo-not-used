@@ -116,6 +116,14 @@ func (ciu *CoinInfoUpdate) SetForPay(b bool) *CoinInfoUpdate {
 	return ciu
 }
 
+// SetNillableForPay sets the "for_pay" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableForPay(b *bool) *CoinInfoUpdate {
+	if b != nil {
+		ciu.SetForPay(*b)
+	}
+	return ciu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ciu *CoinInfoUpdate) SetCreatedAt(u uint32) *CoinInfoUpdate {
 	ciu.mutation.ResetCreatedAt()
@@ -481,6 +489,14 @@ func (ciuo *CoinInfoUpdateOne) SetNillableEnv(s *string) *CoinInfoUpdateOne {
 // SetForPay sets the "for_pay" field.
 func (ciuo *CoinInfoUpdateOne) SetForPay(b bool) *CoinInfoUpdateOne {
 	ciuo.mutation.SetForPay(b)
+	return ciuo
+}
+
+// SetNillableForPay sets the "for_pay" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableForPay(b *bool) *CoinInfoUpdateOne {
+	if b != nil {
+		ciuo.SetForPay(*b)
+	}
 	return ciuo
 }
 

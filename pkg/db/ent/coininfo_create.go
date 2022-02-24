@@ -105,6 +105,14 @@ func (cic *CoinInfoCreate) SetForPay(b bool) *CoinInfoCreate {
 	return cic
 }
 
+// SetNillableForPay sets the "for_pay" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableForPay(b *bool) *CoinInfoCreate {
+	if b != nil {
+		cic.SetForPay(*b)
+	}
+	return cic
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (cic *CoinInfoCreate) SetCreatedAt(u uint32) *CoinInfoCreate {
 	cic.mutation.SetCreatedAt(u)
@@ -251,6 +259,10 @@ func (cic *CoinInfoCreate) defaults() {
 	if _, ok := cic.mutation.Env(); !ok {
 		v := coininfo.DefaultEnv
 		cic.mutation.SetEnv(v)
+	}
+	if _, ok := cic.mutation.ForPay(); !ok {
+		v := coininfo.DefaultForPay
+		cic.mutation.SetForPay(v)
 	}
 	if _, ok := cic.mutation.CreatedAt(); !ok {
 		v := coininfo.DefaultCreatedAt()

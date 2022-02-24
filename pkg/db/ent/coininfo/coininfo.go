@@ -75,6 +75,8 @@ var (
 	DefaultLogo string
 	// DefaultEnv holds the default value on creation for the "env" field.
 	DefaultEnv string
+	// DefaultForPay holds the default value on creation for the "for_pay" field.
+	DefaultForPay bool
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() uint32
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
