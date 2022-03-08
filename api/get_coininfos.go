@@ -38,6 +38,7 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest
 			Name:           info.Name,
 			Unit:           info.Unit,
 			Logo:           info.Logo,
+			ENV:            info.Env,
 			CreatedAt:      info.CreatedAt,
 			UpdatedAt:      info.UpdatedAt,
 		}

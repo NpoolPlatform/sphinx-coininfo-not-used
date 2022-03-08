@@ -64,6 +64,7 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			PreSale:        coinInfo.PreSale,
 			ForPay:         coinInfo.ForPay,
 			Name:           coinInfo.Name,
+			ENV:            coinInfo.Env,
 			Unit:           coinInfo.Unit,
 			ReservedAmount: price.DBPriceToVisualPrice(coinInfo.ReservedAmount),
 			Logo:           coinInfo.Logo,
