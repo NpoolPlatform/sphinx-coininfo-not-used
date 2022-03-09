@@ -18,9 +18,7 @@ func UpdateCoinInfoByID(ctx context.Context, preSale, forPay bool, logo, id stri
 		CoinInfo.
 		UpdateOneID(uuid.MustParse(id))
 
-	if preSale {
-		stmt.SetPreSale(preSale)
-	}
+	stmt.SetPreSale(preSale)
 	stmt.SetForPay(forPay)
 	if logo != "" {
 		stmt.SetLogo(logo)
