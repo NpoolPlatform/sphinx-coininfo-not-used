@@ -33,10 +33,12 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest
 		infos[i] = &npool.CoinInfo{
 			ID:             info.ID.String(),
 			PreSale:        info.PreSale,
+			ForPay:         info.ForPay,
 			ReservedAmount: price.DBPriceToVisualPrice(info.ReservedAmount),
 			Name:           info.Name,
 			Unit:           info.Unit,
 			Logo:           info.Logo,
+			ENV:            info.Env,
 			CreatedAt:      info.CreatedAt,
 			UpdatedAt:      info.UpdatedAt,
 		}
