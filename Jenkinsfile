@@ -17,9 +17,9 @@ pipeline {
       steps {
         // Get linter and other build tools.
         sh '''
-          go get -u golang.org/x/lint/golint
-          go get github.com/tebeka/go2xunit
-          go get github.com/t-yuki/gocover-cobertura
+          go install golang.org/x/lint/golint@latest
+          go install github.com/tebeka/go2xunit@latest
+          go install github.com/t-yuki/gocover-cobertura@latest
         '''
         sh 'make deps'
       }
