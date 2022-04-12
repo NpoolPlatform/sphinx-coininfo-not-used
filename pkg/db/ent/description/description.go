@@ -11,16 +11,14 @@ const (
 	Label = "description"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldCoinID holds the string denoting the coin_id field in the database.
-	FieldCoinID = "coin_id"
-	// FieldHumanReadableName holds the string denoting the human_readable_name field in the database.
-	FieldHumanReadableName = "human_readable_name"
-	// FieldDescriptions holds the string denoting the descriptions field in the database.
-	FieldDescriptions = "descriptions"
-	// FieldSpecTitle holds the string denoting the spec_title field in the database.
-	FieldSpecTitle = "spec_title"
-	// FieldSpecs holds the string denoting the specs field in the database.
-	FieldSpecs = "specs"
+	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
+	FieldCoinTypeID = "coin_type_id"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
+	// FieldMessage holds the string denoting the message field in the database.
+	FieldMessage = "message"
+	// FieldUsedFor holds the string denoting the used_for field in the database.
+	FieldUsedFor = "used_for"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -34,11 +32,10 @@ const (
 // Columns holds all SQL columns for description fields.
 var Columns = []string{
 	FieldID,
-	FieldCoinID,
-	FieldHumanReadableName,
-	FieldDescriptions,
-	FieldSpecTitle,
-	FieldSpecs,
+	FieldCoinTypeID,
+	FieldTitle,
+	FieldMessage,
+	FieldUsedFor,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,

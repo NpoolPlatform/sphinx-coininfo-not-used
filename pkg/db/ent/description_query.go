@@ -255,12 +255,12 @@ func (dq *DescriptionQuery) Clone() *DescriptionQuery {
 // Example:
 //
 //	var v []struct {
-//		CoinID uuid.UUID `json:"coin_id,omitempty"`
+//		CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Description.Query().
-//		GroupBy(description.FieldCoinID).
+//		GroupBy(description.FieldCoinTypeID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +282,11 @@ func (dq *DescriptionQuery) GroupBy(field string, fields ...string) *Description
 // Example:
 //
 //	var v []struct {
-//		CoinID uuid.UUID `json:"coin_id,omitempty"`
+//		CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 //	}
 //
 //	client.Description.Query().
-//		Select(description.FieldCoinID).
+//		Select(description.FieldCoinTypeID).
 //		Scan(ctx, &v)
 //
 func (dq *DescriptionQuery) Select(fields ...string) *DescriptionSelect {

@@ -91,24 +91,31 @@ func IDLTE(id uuid.UUID) predicate.Description {
 	})
 }
 
-// CoinID applies equality check predicate on the "coin_id" field. It's identical to CoinIDEQ.
-func CoinID(v uuid.UUID) predicate.Description {
+// CoinTypeID applies equality check predicate on the "coin_type_id" field. It's identical to CoinTypeIDEQ.
+func CoinTypeID(v uuid.UUID) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinID), v))
+		s.Where(sql.EQ(s.C(FieldCoinTypeID), v))
 	})
 }
 
-// HumanReadableName applies equality check predicate on the "human_readable_name" field. It's identical to HumanReadableNameEQ.
-func HumanReadableName(v string) predicate.Description {
+// Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
+func Title(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldHumanReadableName), v))
+		s.Where(sql.EQ(s.C(FieldTitle), v))
 	})
 }
 
-// SpecTitle applies equality check predicate on the "spec_title" field. It's identical to SpecTitleEQ.
-func SpecTitle(v string) predicate.Description {
+// Message applies equality check predicate on the "message" field. It's identical to MessageEQ.
+func Message(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSpecTitle), v))
+		s.Where(sql.EQ(s.C(FieldMessage), v))
+	})
+}
+
+// UsedFor applies equality check predicate on the "used_for" field. It's identical to UsedForEQ.
+func UsedFor(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsedFor), v))
 	})
 }
 
@@ -133,22 +140,22 @@ func DeletedAt(v uint32) predicate.Description {
 	})
 }
 
-// CoinIDEQ applies the EQ predicate on the "coin_id" field.
-func CoinIDEQ(v uuid.UUID) predicate.Description {
+// CoinTypeIDEQ applies the EQ predicate on the "coin_type_id" field.
+func CoinTypeIDEQ(v uuid.UUID) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinID), v))
+		s.Where(sql.EQ(s.C(FieldCoinTypeID), v))
 	})
 }
 
-// CoinIDNEQ applies the NEQ predicate on the "coin_id" field.
-func CoinIDNEQ(v uuid.UUID) predicate.Description {
+// CoinTypeIDNEQ applies the NEQ predicate on the "coin_type_id" field.
+func CoinTypeIDNEQ(v uuid.UUID) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCoinID), v))
+		s.Where(sql.NEQ(s.C(FieldCoinTypeID), v))
 	})
 }
 
-// CoinIDIn applies the In predicate on the "coin_id" field.
-func CoinIDIn(vs ...uuid.UUID) predicate.Description {
+// CoinTypeIDIn applies the In predicate on the "coin_type_id" field.
+func CoinTypeIDIn(vs ...uuid.UUID) predicate.Description {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -160,12 +167,12 @@ func CoinIDIn(vs ...uuid.UUID) predicate.Description {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldCoinID), v...))
+		s.Where(sql.In(s.C(FieldCoinTypeID), v...))
 	})
 }
 
-// CoinIDNotIn applies the NotIn predicate on the "coin_id" field.
-func CoinIDNotIn(vs ...uuid.UUID) predicate.Description {
+// CoinTypeIDNotIn applies the NotIn predicate on the "coin_type_id" field.
+func CoinTypeIDNotIn(vs ...uuid.UUID) predicate.Description {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -177,54 +184,54 @@ func CoinIDNotIn(vs ...uuid.UUID) predicate.Description {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldCoinID), v...))
+		s.Where(sql.NotIn(s.C(FieldCoinTypeID), v...))
 	})
 }
 
-// CoinIDGT applies the GT predicate on the "coin_id" field.
-func CoinIDGT(v uuid.UUID) predicate.Description {
+// CoinTypeIDGT applies the GT predicate on the "coin_type_id" field.
+func CoinTypeIDGT(v uuid.UUID) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCoinID), v))
+		s.Where(sql.GT(s.C(FieldCoinTypeID), v))
 	})
 }
 
-// CoinIDGTE applies the GTE predicate on the "coin_id" field.
-func CoinIDGTE(v uuid.UUID) predicate.Description {
+// CoinTypeIDGTE applies the GTE predicate on the "coin_type_id" field.
+func CoinTypeIDGTE(v uuid.UUID) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCoinID), v))
+		s.Where(sql.GTE(s.C(FieldCoinTypeID), v))
 	})
 }
 
-// CoinIDLT applies the LT predicate on the "coin_id" field.
-func CoinIDLT(v uuid.UUID) predicate.Description {
+// CoinTypeIDLT applies the LT predicate on the "coin_type_id" field.
+func CoinTypeIDLT(v uuid.UUID) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCoinID), v))
+		s.Where(sql.LT(s.C(FieldCoinTypeID), v))
 	})
 }
 
-// CoinIDLTE applies the LTE predicate on the "coin_id" field.
-func CoinIDLTE(v uuid.UUID) predicate.Description {
+// CoinTypeIDLTE applies the LTE predicate on the "coin_type_id" field.
+func CoinTypeIDLTE(v uuid.UUID) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCoinID), v))
+		s.Where(sql.LTE(s.C(FieldCoinTypeID), v))
 	})
 }
 
-// HumanReadableNameEQ applies the EQ predicate on the "human_readable_name" field.
-func HumanReadableNameEQ(v string) predicate.Description {
+// TitleEQ applies the EQ predicate on the "title" field.
+func TitleEQ(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldHumanReadableName), v))
+		s.Where(sql.EQ(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameNEQ applies the NEQ predicate on the "human_readable_name" field.
-func HumanReadableNameNEQ(v string) predicate.Description {
+// TitleNEQ applies the NEQ predicate on the "title" field.
+func TitleNEQ(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldHumanReadableName), v))
+		s.Where(sql.NEQ(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameIn applies the In predicate on the "human_readable_name" field.
-func HumanReadableNameIn(vs ...string) predicate.Description {
+// TitleIn applies the In predicate on the "title" field.
+func TitleIn(vs ...string) predicate.Description {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -236,12 +243,12 @@ func HumanReadableNameIn(vs ...string) predicate.Description {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldHumanReadableName), v...))
+		s.Where(sql.In(s.C(FieldTitle), v...))
 	})
 }
 
-// HumanReadableNameNotIn applies the NotIn predicate on the "human_readable_name" field.
-func HumanReadableNameNotIn(vs ...string) predicate.Description {
+// TitleNotIn applies the NotIn predicate on the "title" field.
+func TitleNotIn(vs ...string) predicate.Description {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -253,89 +260,89 @@ func HumanReadableNameNotIn(vs ...string) predicate.Description {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldHumanReadableName), v...))
+		s.Where(sql.NotIn(s.C(FieldTitle), v...))
 	})
 }
 
-// HumanReadableNameGT applies the GT predicate on the "human_readable_name" field.
-func HumanReadableNameGT(v string) predicate.Description {
+// TitleGT applies the GT predicate on the "title" field.
+func TitleGT(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldHumanReadableName), v))
+		s.Where(sql.GT(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameGTE applies the GTE predicate on the "human_readable_name" field.
-func HumanReadableNameGTE(v string) predicate.Description {
+// TitleGTE applies the GTE predicate on the "title" field.
+func TitleGTE(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldHumanReadableName), v))
+		s.Where(sql.GTE(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameLT applies the LT predicate on the "human_readable_name" field.
-func HumanReadableNameLT(v string) predicate.Description {
+// TitleLT applies the LT predicate on the "title" field.
+func TitleLT(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldHumanReadableName), v))
+		s.Where(sql.LT(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameLTE applies the LTE predicate on the "human_readable_name" field.
-func HumanReadableNameLTE(v string) predicate.Description {
+// TitleLTE applies the LTE predicate on the "title" field.
+func TitleLTE(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldHumanReadableName), v))
+		s.Where(sql.LTE(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameContains applies the Contains predicate on the "human_readable_name" field.
-func HumanReadableNameContains(v string) predicate.Description {
+// TitleContains applies the Contains predicate on the "title" field.
+func TitleContains(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldHumanReadableName), v))
+		s.Where(sql.Contains(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameHasPrefix applies the HasPrefix predicate on the "human_readable_name" field.
-func HumanReadableNameHasPrefix(v string) predicate.Description {
+// TitleHasPrefix applies the HasPrefix predicate on the "title" field.
+func TitleHasPrefix(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldHumanReadableName), v))
+		s.Where(sql.HasPrefix(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameHasSuffix applies the HasSuffix predicate on the "human_readable_name" field.
-func HumanReadableNameHasSuffix(v string) predicate.Description {
+// TitleHasSuffix applies the HasSuffix predicate on the "title" field.
+func TitleHasSuffix(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldHumanReadableName), v))
+		s.Where(sql.HasSuffix(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameEqualFold applies the EqualFold predicate on the "human_readable_name" field.
-func HumanReadableNameEqualFold(v string) predicate.Description {
+// TitleEqualFold applies the EqualFold predicate on the "title" field.
+func TitleEqualFold(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldHumanReadableName), v))
+		s.Where(sql.EqualFold(s.C(FieldTitle), v))
 	})
 }
 
-// HumanReadableNameContainsFold applies the ContainsFold predicate on the "human_readable_name" field.
-func HumanReadableNameContainsFold(v string) predicate.Description {
+// TitleContainsFold applies the ContainsFold predicate on the "title" field.
+func TitleContainsFold(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldHumanReadableName), v))
+		s.Where(sql.ContainsFold(s.C(FieldTitle), v))
 	})
 }
 
-// SpecTitleEQ applies the EQ predicate on the "spec_title" field.
-func SpecTitleEQ(v string) predicate.Description {
+// MessageEQ applies the EQ predicate on the "message" field.
+func MessageEQ(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSpecTitle), v))
+		s.Where(sql.EQ(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleNEQ applies the NEQ predicate on the "spec_title" field.
-func SpecTitleNEQ(v string) predicate.Description {
+// MessageNEQ applies the NEQ predicate on the "message" field.
+func MessageNEQ(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldSpecTitle), v))
+		s.Where(sql.NEQ(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleIn applies the In predicate on the "spec_title" field.
-func SpecTitleIn(vs ...string) predicate.Description {
+// MessageIn applies the In predicate on the "message" field.
+func MessageIn(vs ...string) predicate.Description {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -347,12 +354,12 @@ func SpecTitleIn(vs ...string) predicate.Description {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldSpecTitle), v...))
+		s.Where(sql.In(s.C(FieldMessage), v...))
 	})
 }
 
-// SpecTitleNotIn applies the NotIn predicate on the "spec_title" field.
-func SpecTitleNotIn(vs ...string) predicate.Description {
+// MessageNotIn applies the NotIn predicate on the "message" field.
+func MessageNotIn(vs ...string) predicate.Description {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -364,70 +371,181 @@ func SpecTitleNotIn(vs ...string) predicate.Description {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldSpecTitle), v...))
+		s.Where(sql.NotIn(s.C(FieldMessage), v...))
 	})
 }
 
-// SpecTitleGT applies the GT predicate on the "spec_title" field.
-func SpecTitleGT(v string) predicate.Description {
+// MessageGT applies the GT predicate on the "message" field.
+func MessageGT(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldSpecTitle), v))
+		s.Where(sql.GT(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleGTE applies the GTE predicate on the "spec_title" field.
-func SpecTitleGTE(v string) predicate.Description {
+// MessageGTE applies the GTE predicate on the "message" field.
+func MessageGTE(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldSpecTitle), v))
+		s.Where(sql.GTE(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleLT applies the LT predicate on the "spec_title" field.
-func SpecTitleLT(v string) predicate.Description {
+// MessageLT applies the LT predicate on the "message" field.
+func MessageLT(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldSpecTitle), v))
+		s.Where(sql.LT(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleLTE applies the LTE predicate on the "spec_title" field.
-func SpecTitleLTE(v string) predicate.Description {
+// MessageLTE applies the LTE predicate on the "message" field.
+func MessageLTE(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldSpecTitle), v))
+		s.Where(sql.LTE(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleContains applies the Contains predicate on the "spec_title" field.
-func SpecTitleContains(v string) predicate.Description {
+// MessageContains applies the Contains predicate on the "message" field.
+func MessageContains(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldSpecTitle), v))
+		s.Where(sql.Contains(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleHasPrefix applies the HasPrefix predicate on the "spec_title" field.
-func SpecTitleHasPrefix(v string) predicate.Description {
+// MessageHasPrefix applies the HasPrefix predicate on the "message" field.
+func MessageHasPrefix(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldSpecTitle), v))
+		s.Where(sql.HasPrefix(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleHasSuffix applies the HasSuffix predicate on the "spec_title" field.
-func SpecTitleHasSuffix(v string) predicate.Description {
+// MessageHasSuffix applies the HasSuffix predicate on the "message" field.
+func MessageHasSuffix(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldSpecTitle), v))
+		s.Where(sql.HasSuffix(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleEqualFold applies the EqualFold predicate on the "spec_title" field.
-func SpecTitleEqualFold(v string) predicate.Description {
+// MessageEqualFold applies the EqualFold predicate on the "message" field.
+func MessageEqualFold(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldSpecTitle), v))
+		s.Where(sql.EqualFold(s.C(FieldMessage), v))
 	})
 }
 
-// SpecTitleContainsFold applies the ContainsFold predicate on the "spec_title" field.
-func SpecTitleContainsFold(v string) predicate.Description {
+// MessageContainsFold applies the ContainsFold predicate on the "message" field.
+func MessageContainsFold(v string) predicate.Description {
 	return predicate.Description(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldSpecTitle), v))
+		s.Where(sql.ContainsFold(s.C(FieldMessage), v))
+	})
+}
+
+// UsedForEQ applies the EQ predicate on the "used_for" field.
+func UsedForEQ(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForNEQ applies the NEQ predicate on the "used_for" field.
+func UsedForNEQ(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForIn applies the In predicate on the "used_for" field.
+func UsedForIn(vs ...string) predicate.Description {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Description(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUsedFor), v...))
+	})
+}
+
+// UsedForNotIn applies the NotIn predicate on the "used_for" field.
+func UsedForNotIn(vs ...string) predicate.Description {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Description(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUsedFor), v...))
+	})
+}
+
+// UsedForGT applies the GT predicate on the "used_for" field.
+func UsedForGT(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForGTE applies the GTE predicate on the "used_for" field.
+func UsedForGTE(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForLT applies the LT predicate on the "used_for" field.
+func UsedForLT(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForLTE applies the LTE predicate on the "used_for" field.
+func UsedForLTE(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForContains applies the Contains predicate on the "used_for" field.
+func UsedForContains(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForHasPrefix applies the HasPrefix predicate on the "used_for" field.
+func UsedForHasPrefix(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForHasSuffix applies the HasSuffix predicate on the "used_for" field.
+func UsedForHasSuffix(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForEqualFold applies the EqualFold predicate on the "used_for" field.
+func UsedForEqualFold(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForContainsFold applies the ContainsFold predicate on the "used_for" field.
+func UsedForContainsFold(v string) predicate.Description {
+	return predicate.Description(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUsedFor), v))
 	})
 }
 

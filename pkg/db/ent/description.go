@@ -3,13 +3,11 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/description"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/types"
 	"github.com/google/uuid"
 )
 
@@ -18,16 +16,14 @@ type Description struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// CoinID holds the value of the "coin_id" field.
-	CoinID uuid.UUID `json:"coin_id,omitempty"`
-	// HumanReadableName holds the value of the "human_readable_name" field.
-	HumanReadableName string `json:"human_readable_name,omitempty"`
-	// Descriptions holds the value of the "descriptions" field.
-	Descriptions []types.CoinDescription `json:"descriptions,omitempty"`
-	// SpecTitle holds the value of the "spec_title" field.
-	SpecTitle string `json:"spec_title,omitempty"`
-	// Specs holds the value of the "specs" field.
-	Specs []types.CoinSpec `json:"specs,omitempty"`
+	// CoinTypeID holds the value of the "coin_type_id" field.
+	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
+	// Title holds the value of the "title" field.
+	Title string `json:"title,omitempty"`
+	// Message holds the value of the "message" field.
+	Message string `json:"message,omitempty"`
+	// UsedFor holds the value of the "used_for" field.
+	UsedFor string `json:"used_for,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -41,13 +37,11 @@ func (*Description) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case description.FieldDescriptions, description.FieldSpecs:
-			values[i] = new([]byte)
 		case description.FieldCreatedAt, description.FieldUpdatedAt, description.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case description.FieldHumanReadableName, description.FieldSpecTitle:
+		case description.FieldTitle, description.FieldMessage, description.FieldUsedFor:
 			values[i] = new(sql.NullString)
-		case description.FieldID, description.FieldCoinID:
+		case description.FieldID, description.FieldCoinTypeID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Description", columns[i])
@@ -70,39 +64,29 @@ func (d *Description) assignValues(columns []string, values []interface{}) error
 			} else if value != nil {
 				d.ID = *value
 			}
-		case description.FieldCoinID:
+		case description.FieldCoinTypeID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field coin_id", values[i])
+				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
 			} else if value != nil {
-				d.CoinID = *value
+				d.CoinTypeID = *value
 			}
-		case description.FieldHumanReadableName:
+		case description.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field human_readable_name", values[i])
+				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
-				d.HumanReadableName = value.String
+				d.Title = value.String
 			}
-		case description.FieldDescriptions:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field descriptions", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &d.Descriptions); err != nil {
-					return fmt.Errorf("unmarshal field descriptions: %w", err)
-				}
-			}
-		case description.FieldSpecTitle:
+		case description.FieldMessage:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field spec_title", values[i])
+				return fmt.Errorf("unexpected type %T for field message", values[i])
 			} else if value.Valid {
-				d.SpecTitle = value.String
+				d.Message = value.String
 			}
-		case description.FieldSpecs:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field specs", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &d.Specs); err != nil {
-					return fmt.Errorf("unmarshal field specs: %w", err)
-				}
+		case description.FieldUsedFor:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field used_for", values[i])
+			} else if value.Valid {
+				d.UsedFor = value.String
 			}
 		case description.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -150,16 +134,14 @@ func (d *Description) String() string {
 	var builder strings.Builder
 	builder.WriteString("Description(")
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
-	builder.WriteString(", coin_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.CoinID))
-	builder.WriteString(", human_readable_name=")
-	builder.WriteString(d.HumanReadableName)
-	builder.WriteString(", descriptions=")
-	builder.WriteString(fmt.Sprintf("%v", d.Descriptions))
-	builder.WriteString(", spec_title=")
-	builder.WriteString(d.SpecTitle)
-	builder.WriteString(", specs=")
-	builder.WriteString(fmt.Sprintf("%v", d.Specs))
+	builder.WriteString(", coin_type_id=")
+	builder.WriteString(fmt.Sprintf("%v", d.CoinTypeID))
+	builder.WriteString(", title=")
+	builder.WriteString(d.Title)
+	builder.WriteString(", message=")
+	builder.WriteString(d.Message)
+	builder.WriteString(", used_for=")
+	builder.WriteString(d.UsedFor)
 	builder.WriteString(", created_at=")
 	builder.WriteString(fmt.Sprintf("%v", d.CreatedAt))
 	builder.WriteString(", updated_at=")

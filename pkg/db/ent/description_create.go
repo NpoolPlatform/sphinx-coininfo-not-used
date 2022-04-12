@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/description"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/types"
 	"github.com/google/uuid"
 )
 
@@ -24,33 +23,27 @@ type DescriptionCreate struct {
 	conflict []sql.ConflictOption
 }
 
-// SetCoinID sets the "coin_id" field.
-func (dc *DescriptionCreate) SetCoinID(u uuid.UUID) *DescriptionCreate {
-	dc.mutation.SetCoinID(u)
+// SetCoinTypeID sets the "coin_type_id" field.
+func (dc *DescriptionCreate) SetCoinTypeID(u uuid.UUID) *DescriptionCreate {
+	dc.mutation.SetCoinTypeID(u)
 	return dc
 }
 
-// SetHumanReadableName sets the "human_readable_name" field.
-func (dc *DescriptionCreate) SetHumanReadableName(s string) *DescriptionCreate {
-	dc.mutation.SetHumanReadableName(s)
+// SetTitle sets the "title" field.
+func (dc *DescriptionCreate) SetTitle(s string) *DescriptionCreate {
+	dc.mutation.SetTitle(s)
 	return dc
 }
 
-// SetDescriptions sets the "descriptions" field.
-func (dc *DescriptionCreate) SetDescriptions(td []types.CoinDescription) *DescriptionCreate {
-	dc.mutation.SetDescriptions(td)
+// SetMessage sets the "message" field.
+func (dc *DescriptionCreate) SetMessage(s string) *DescriptionCreate {
+	dc.mutation.SetMessage(s)
 	return dc
 }
 
-// SetSpecTitle sets the "spec_title" field.
-func (dc *DescriptionCreate) SetSpecTitle(s string) *DescriptionCreate {
-	dc.mutation.SetSpecTitle(s)
-	return dc
-}
-
-// SetSpecs sets the "specs" field.
-func (dc *DescriptionCreate) SetSpecs(ts []types.CoinSpec) *DescriptionCreate {
-	dc.mutation.SetSpecs(ts)
+// SetUsedFor sets the "used_for" field.
+func (dc *DescriptionCreate) SetUsedFor(s string) *DescriptionCreate {
+	dc.mutation.SetUsedFor(s)
 	return dc
 }
 
@@ -201,20 +194,17 @@ func (dc *DescriptionCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (dc *DescriptionCreate) check() error {
-	if _, ok := dc.mutation.CoinID(); !ok {
-		return &ValidationError{Name: "coin_id", err: errors.New(`ent: missing required field "Description.coin_id"`)}
+	if _, ok := dc.mutation.CoinTypeID(); !ok {
+		return &ValidationError{Name: "coin_type_id", err: errors.New(`ent: missing required field "Description.coin_type_id"`)}
 	}
-	if _, ok := dc.mutation.HumanReadableName(); !ok {
-		return &ValidationError{Name: "human_readable_name", err: errors.New(`ent: missing required field "Description.human_readable_name"`)}
+	if _, ok := dc.mutation.Title(); !ok {
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Description.title"`)}
 	}
-	if _, ok := dc.mutation.Descriptions(); !ok {
-		return &ValidationError{Name: "descriptions", err: errors.New(`ent: missing required field "Description.descriptions"`)}
+	if _, ok := dc.mutation.Message(); !ok {
+		return &ValidationError{Name: "message", err: errors.New(`ent: missing required field "Description.message"`)}
 	}
-	if _, ok := dc.mutation.SpecTitle(); !ok {
-		return &ValidationError{Name: "spec_title", err: errors.New(`ent: missing required field "Description.spec_title"`)}
-	}
-	if _, ok := dc.mutation.Specs(); !ok {
-		return &ValidationError{Name: "specs", err: errors.New(`ent: missing required field "Description.specs"`)}
+	if _, ok := dc.mutation.UsedFor(); !ok {
+		return &ValidationError{Name: "used_for", err: errors.New(`ent: missing required field "Description.used_for"`)}
 	}
 	if _, ok := dc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Description.created_at"`)}
@@ -262,45 +252,37 @@ func (dc *DescriptionCreate) createSpec() (*Description, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := dc.mutation.CoinID(); ok {
+	if value, ok := dc.mutation.CoinTypeID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: description.FieldCoinID,
+			Column: description.FieldCoinTypeID,
 		})
-		_node.CoinID = value
+		_node.CoinTypeID = value
 	}
-	if value, ok := dc.mutation.HumanReadableName(); ok {
+	if value, ok := dc.mutation.Title(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldHumanReadableName,
+			Column: description.FieldTitle,
 		})
-		_node.HumanReadableName = value
+		_node.Title = value
 	}
-	if value, ok := dc.mutation.Descriptions(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: description.FieldDescriptions,
-		})
-		_node.Descriptions = value
-	}
-	if value, ok := dc.mutation.SpecTitle(); ok {
+	if value, ok := dc.mutation.Message(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldSpecTitle,
+			Column: description.FieldMessage,
 		})
-		_node.SpecTitle = value
+		_node.Message = value
 	}
-	if value, ok := dc.mutation.Specs(); ok {
+	if value, ok := dc.mutation.UsedFor(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldSpecs,
+			Column: description.FieldUsedFor,
 		})
-		_node.Specs = value
+		_node.UsedFor = value
 	}
 	if value, ok := dc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -333,7 +315,7 @@ func (dc *DescriptionCreate) createSpec() (*Description, *sqlgraph.CreateSpec) {
 // of the `INSERT` statement. For example:
 //
 //	client.Description.Create().
-//		SetCoinID(v).
+//		SetCoinTypeID(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -342,7 +324,7 @@ func (dc *DescriptionCreate) createSpec() (*Description, *sqlgraph.CreateSpec) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.DescriptionUpsert) {
-//			SetCoinID(v+v).
+//			SetCoinTypeID(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -380,63 +362,51 @@ type (
 	}
 )
 
-// SetCoinID sets the "coin_id" field.
-func (u *DescriptionUpsert) SetCoinID(v uuid.UUID) *DescriptionUpsert {
-	u.Set(description.FieldCoinID, v)
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *DescriptionUpsert) SetCoinTypeID(v uuid.UUID) *DescriptionUpsert {
+	u.Set(description.FieldCoinTypeID, v)
 	return u
 }
 
-// UpdateCoinID sets the "coin_id" field to the value that was provided on create.
-func (u *DescriptionUpsert) UpdateCoinID() *DescriptionUpsert {
-	u.SetExcluded(description.FieldCoinID)
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *DescriptionUpsert) UpdateCoinTypeID() *DescriptionUpsert {
+	u.SetExcluded(description.FieldCoinTypeID)
 	return u
 }
 
-// SetHumanReadableName sets the "human_readable_name" field.
-func (u *DescriptionUpsert) SetHumanReadableName(v string) *DescriptionUpsert {
-	u.Set(description.FieldHumanReadableName, v)
+// SetTitle sets the "title" field.
+func (u *DescriptionUpsert) SetTitle(v string) *DescriptionUpsert {
+	u.Set(description.FieldTitle, v)
 	return u
 }
 
-// UpdateHumanReadableName sets the "human_readable_name" field to the value that was provided on create.
-func (u *DescriptionUpsert) UpdateHumanReadableName() *DescriptionUpsert {
-	u.SetExcluded(description.FieldHumanReadableName)
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *DescriptionUpsert) UpdateTitle() *DescriptionUpsert {
+	u.SetExcluded(description.FieldTitle)
 	return u
 }
 
-// SetDescriptions sets the "descriptions" field.
-func (u *DescriptionUpsert) SetDescriptions(v []types.CoinDescription) *DescriptionUpsert {
-	u.Set(description.FieldDescriptions, v)
+// SetMessage sets the "message" field.
+func (u *DescriptionUpsert) SetMessage(v string) *DescriptionUpsert {
+	u.Set(description.FieldMessage, v)
 	return u
 }
 
-// UpdateDescriptions sets the "descriptions" field to the value that was provided on create.
-func (u *DescriptionUpsert) UpdateDescriptions() *DescriptionUpsert {
-	u.SetExcluded(description.FieldDescriptions)
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *DescriptionUpsert) UpdateMessage() *DescriptionUpsert {
+	u.SetExcluded(description.FieldMessage)
 	return u
 }
 
-// SetSpecTitle sets the "spec_title" field.
-func (u *DescriptionUpsert) SetSpecTitle(v string) *DescriptionUpsert {
-	u.Set(description.FieldSpecTitle, v)
+// SetUsedFor sets the "used_for" field.
+func (u *DescriptionUpsert) SetUsedFor(v string) *DescriptionUpsert {
+	u.Set(description.FieldUsedFor, v)
 	return u
 }
 
-// UpdateSpecTitle sets the "spec_title" field to the value that was provided on create.
-func (u *DescriptionUpsert) UpdateSpecTitle() *DescriptionUpsert {
-	u.SetExcluded(description.FieldSpecTitle)
-	return u
-}
-
-// SetSpecs sets the "specs" field.
-func (u *DescriptionUpsert) SetSpecs(v []types.CoinSpec) *DescriptionUpsert {
-	u.Set(description.FieldSpecs, v)
-	return u
-}
-
-// UpdateSpecs sets the "specs" field to the value that was provided on create.
-func (u *DescriptionUpsert) UpdateSpecs() *DescriptionUpsert {
-	u.SetExcluded(description.FieldSpecs)
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *DescriptionUpsert) UpdateUsedFor() *DescriptionUpsert {
+	u.SetExcluded(description.FieldUsedFor)
 	return u
 }
 
@@ -544,73 +514,59 @@ func (u *DescriptionUpsertOne) Update(set func(*DescriptionUpsert)) *Description
 	return u
 }
 
-// SetCoinID sets the "coin_id" field.
-func (u *DescriptionUpsertOne) SetCoinID(v uuid.UUID) *DescriptionUpsertOne {
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *DescriptionUpsertOne) SetCoinTypeID(v uuid.UUID) *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetCoinID(v)
+		s.SetCoinTypeID(v)
 	})
 }
 
-// UpdateCoinID sets the "coin_id" field to the value that was provided on create.
-func (u *DescriptionUpsertOne) UpdateCoinID() *DescriptionUpsertOne {
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *DescriptionUpsertOne) UpdateCoinTypeID() *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateCoinID()
+		s.UpdateCoinTypeID()
 	})
 }
 
-// SetHumanReadableName sets the "human_readable_name" field.
-func (u *DescriptionUpsertOne) SetHumanReadableName(v string) *DescriptionUpsertOne {
+// SetTitle sets the "title" field.
+func (u *DescriptionUpsertOne) SetTitle(v string) *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetHumanReadableName(v)
+		s.SetTitle(v)
 	})
 }
 
-// UpdateHumanReadableName sets the "human_readable_name" field to the value that was provided on create.
-func (u *DescriptionUpsertOne) UpdateHumanReadableName() *DescriptionUpsertOne {
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *DescriptionUpsertOne) UpdateTitle() *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateHumanReadableName()
+		s.UpdateTitle()
 	})
 }
 
-// SetDescriptions sets the "descriptions" field.
-func (u *DescriptionUpsertOne) SetDescriptions(v []types.CoinDescription) *DescriptionUpsertOne {
+// SetMessage sets the "message" field.
+func (u *DescriptionUpsertOne) SetMessage(v string) *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetDescriptions(v)
+		s.SetMessage(v)
 	})
 }
 
-// UpdateDescriptions sets the "descriptions" field to the value that was provided on create.
-func (u *DescriptionUpsertOne) UpdateDescriptions() *DescriptionUpsertOne {
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *DescriptionUpsertOne) UpdateMessage() *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateDescriptions()
+		s.UpdateMessage()
 	})
 }
 
-// SetSpecTitle sets the "spec_title" field.
-func (u *DescriptionUpsertOne) SetSpecTitle(v string) *DescriptionUpsertOne {
+// SetUsedFor sets the "used_for" field.
+func (u *DescriptionUpsertOne) SetUsedFor(v string) *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetSpecTitle(v)
+		s.SetUsedFor(v)
 	})
 }
 
-// UpdateSpecTitle sets the "spec_title" field to the value that was provided on create.
-func (u *DescriptionUpsertOne) UpdateSpecTitle() *DescriptionUpsertOne {
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *DescriptionUpsertOne) UpdateUsedFor() *DescriptionUpsertOne {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateSpecTitle()
-	})
-}
-
-// SetSpecs sets the "specs" field.
-func (u *DescriptionUpsertOne) SetSpecs(v []types.CoinSpec) *DescriptionUpsertOne {
-	return u.Update(func(s *DescriptionUpsert) {
-		s.SetSpecs(v)
-	})
-}
-
-// UpdateSpecs sets the "specs" field to the value that was provided on create.
-func (u *DescriptionUpsertOne) UpdateSpecs() *DescriptionUpsertOne {
-	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateSpecs()
+		s.UpdateUsedFor()
 	})
 }
 
@@ -809,7 +765,7 @@ func (dcb *DescriptionCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.DescriptionUpsert) {
-//			SetCoinID(v+v).
+//			SetCoinTypeID(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -893,73 +849,59 @@ func (u *DescriptionUpsertBulk) Update(set func(*DescriptionUpsert)) *Descriptio
 	return u
 }
 
-// SetCoinID sets the "coin_id" field.
-func (u *DescriptionUpsertBulk) SetCoinID(v uuid.UUID) *DescriptionUpsertBulk {
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *DescriptionUpsertBulk) SetCoinTypeID(v uuid.UUID) *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetCoinID(v)
+		s.SetCoinTypeID(v)
 	})
 }
 
-// UpdateCoinID sets the "coin_id" field to the value that was provided on create.
-func (u *DescriptionUpsertBulk) UpdateCoinID() *DescriptionUpsertBulk {
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *DescriptionUpsertBulk) UpdateCoinTypeID() *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateCoinID()
+		s.UpdateCoinTypeID()
 	})
 }
 
-// SetHumanReadableName sets the "human_readable_name" field.
-func (u *DescriptionUpsertBulk) SetHumanReadableName(v string) *DescriptionUpsertBulk {
+// SetTitle sets the "title" field.
+func (u *DescriptionUpsertBulk) SetTitle(v string) *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetHumanReadableName(v)
+		s.SetTitle(v)
 	})
 }
 
-// UpdateHumanReadableName sets the "human_readable_name" field to the value that was provided on create.
-func (u *DescriptionUpsertBulk) UpdateHumanReadableName() *DescriptionUpsertBulk {
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *DescriptionUpsertBulk) UpdateTitle() *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateHumanReadableName()
+		s.UpdateTitle()
 	})
 }
 
-// SetDescriptions sets the "descriptions" field.
-func (u *DescriptionUpsertBulk) SetDescriptions(v []types.CoinDescription) *DescriptionUpsertBulk {
+// SetMessage sets the "message" field.
+func (u *DescriptionUpsertBulk) SetMessage(v string) *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetDescriptions(v)
+		s.SetMessage(v)
 	})
 }
 
-// UpdateDescriptions sets the "descriptions" field to the value that was provided on create.
-func (u *DescriptionUpsertBulk) UpdateDescriptions() *DescriptionUpsertBulk {
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *DescriptionUpsertBulk) UpdateMessage() *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateDescriptions()
+		s.UpdateMessage()
 	})
 }
 
-// SetSpecTitle sets the "spec_title" field.
-func (u *DescriptionUpsertBulk) SetSpecTitle(v string) *DescriptionUpsertBulk {
+// SetUsedFor sets the "used_for" field.
+func (u *DescriptionUpsertBulk) SetUsedFor(v string) *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.SetSpecTitle(v)
+		s.SetUsedFor(v)
 	})
 }
 
-// UpdateSpecTitle sets the "spec_title" field to the value that was provided on create.
-func (u *DescriptionUpsertBulk) UpdateSpecTitle() *DescriptionUpsertBulk {
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *DescriptionUpsertBulk) UpdateUsedFor() *DescriptionUpsertBulk {
 	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateSpecTitle()
-	})
-}
-
-// SetSpecs sets the "specs" field.
-func (u *DescriptionUpsertBulk) SetSpecs(v []types.CoinSpec) *DescriptionUpsertBulk {
-	return u.Update(func(s *DescriptionUpsert) {
-		s.SetSpecs(v)
-	})
-}
-
-// UpdateSpecs sets the "specs" field to the value that was provided on create.
-func (u *DescriptionUpsertBulk) UpdateSpecs() *DescriptionUpsertBulk {
-	return u.Update(func(s *DescriptionUpsert) {
-		s.UpdateSpecs()
+		s.UpdateUsedFor()
 	})
 }
 

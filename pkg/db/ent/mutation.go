@@ -11,7 +11,6 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/description"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/predicate"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/types"
 	"github.com/google/uuid"
 
 	"entgo.io/ent"
@@ -1079,24 +1078,23 @@ func (m *CoinInfoMutation) ResetEdge(name string) error {
 // DescriptionMutation represents an operation that mutates the Description nodes in the graph.
 type DescriptionMutation struct {
 	config
-	op                  Op
-	typ                 string
-	id                  *uuid.UUID
-	coin_id             *uuid.UUID
-	human_readable_name *string
-	descriptions        *[]types.CoinDescription
-	spec_title          *string
-	specs               *[]types.CoinSpec
-	created_at          *uint32
-	addcreated_at       *int32
-	updated_at          *uint32
-	addupdated_at       *int32
-	deleted_at          *uint32
-	adddeleted_at       *int32
-	clearedFields       map[string]struct{}
-	done                bool
-	oldValue            func(context.Context) (*Description, error)
-	predicates          []predicate.Description
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	coin_type_id  *uuid.UUID
+	title         *string
+	message       *string
+	used_for      *string
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Description, error)
+	predicates    []predicate.Description
 }
 
 var _ ent.Mutation = (*DescriptionMutation)(nil)
@@ -1203,184 +1201,148 @@ func (m *DescriptionMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	}
 }
 
-// SetCoinID sets the "coin_id" field.
-func (m *DescriptionMutation) SetCoinID(u uuid.UUID) {
-	m.coin_id = &u
+// SetCoinTypeID sets the "coin_type_id" field.
+func (m *DescriptionMutation) SetCoinTypeID(u uuid.UUID) {
+	m.coin_type_id = &u
 }
 
-// CoinID returns the value of the "coin_id" field in the mutation.
-func (m *DescriptionMutation) CoinID() (r uuid.UUID, exists bool) {
-	v := m.coin_id
+// CoinTypeID returns the value of the "coin_type_id" field in the mutation.
+func (m *DescriptionMutation) CoinTypeID() (r uuid.UUID, exists bool) {
+	v := m.coin_type_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCoinID returns the old "coin_id" field's value of the Description entity.
+// OldCoinTypeID returns the old "coin_type_id" field's value of the Description entity.
 // If the Description object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DescriptionMutation) OldCoinID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *DescriptionMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCoinID is only allowed on UpdateOne operations")
+		return v, errors.New("OldCoinTypeID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCoinID requires an ID field in the mutation")
+		return v, errors.New("OldCoinTypeID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCoinID: %w", err)
+		return v, fmt.Errorf("querying old value for OldCoinTypeID: %w", err)
 	}
-	return oldValue.CoinID, nil
+	return oldValue.CoinTypeID, nil
 }
 
-// ResetCoinID resets all changes to the "coin_id" field.
-func (m *DescriptionMutation) ResetCoinID() {
-	m.coin_id = nil
+// ResetCoinTypeID resets all changes to the "coin_type_id" field.
+func (m *DescriptionMutation) ResetCoinTypeID() {
+	m.coin_type_id = nil
 }
 
-// SetHumanReadableName sets the "human_readable_name" field.
-func (m *DescriptionMutation) SetHumanReadableName(s string) {
-	m.human_readable_name = &s
+// SetTitle sets the "title" field.
+func (m *DescriptionMutation) SetTitle(s string) {
+	m.title = &s
 }
 
-// HumanReadableName returns the value of the "human_readable_name" field in the mutation.
-func (m *DescriptionMutation) HumanReadableName() (r string, exists bool) {
-	v := m.human_readable_name
+// Title returns the value of the "title" field in the mutation.
+func (m *DescriptionMutation) Title() (r string, exists bool) {
+	v := m.title
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldHumanReadableName returns the old "human_readable_name" field's value of the Description entity.
+// OldTitle returns the old "title" field's value of the Description entity.
 // If the Description object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DescriptionMutation) OldHumanReadableName(ctx context.Context) (v string, err error) {
+func (m *DescriptionMutation) OldTitle(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldHumanReadableName is only allowed on UpdateOne operations")
+		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldHumanReadableName requires an ID field in the mutation")
+		return v, errors.New("OldTitle requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldHumanReadableName: %w", err)
+		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
 	}
-	return oldValue.HumanReadableName, nil
+	return oldValue.Title, nil
 }
 
-// ResetHumanReadableName resets all changes to the "human_readable_name" field.
-func (m *DescriptionMutation) ResetHumanReadableName() {
-	m.human_readable_name = nil
+// ResetTitle resets all changes to the "title" field.
+func (m *DescriptionMutation) ResetTitle() {
+	m.title = nil
 }
 
-// SetDescriptions sets the "descriptions" field.
-func (m *DescriptionMutation) SetDescriptions(td []types.CoinDescription) {
-	m.descriptions = &td
+// SetMessage sets the "message" field.
+func (m *DescriptionMutation) SetMessage(s string) {
+	m.message = &s
 }
 
-// Descriptions returns the value of the "descriptions" field in the mutation.
-func (m *DescriptionMutation) Descriptions() (r []types.CoinDescription, exists bool) {
-	v := m.descriptions
+// Message returns the value of the "message" field in the mutation.
+func (m *DescriptionMutation) Message() (r string, exists bool) {
+	v := m.message
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDescriptions returns the old "descriptions" field's value of the Description entity.
+// OldMessage returns the old "message" field's value of the Description entity.
 // If the Description object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DescriptionMutation) OldDescriptions(ctx context.Context) (v []types.CoinDescription, err error) {
+func (m *DescriptionMutation) OldMessage(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescriptions is only allowed on UpdateOne operations")
+		return v, errors.New("OldMessage is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescriptions requires an ID field in the mutation")
+		return v, errors.New("OldMessage requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescriptions: %w", err)
+		return v, fmt.Errorf("querying old value for OldMessage: %w", err)
 	}
-	return oldValue.Descriptions, nil
+	return oldValue.Message, nil
 }
 
-// ResetDescriptions resets all changes to the "descriptions" field.
-func (m *DescriptionMutation) ResetDescriptions() {
-	m.descriptions = nil
+// ResetMessage resets all changes to the "message" field.
+func (m *DescriptionMutation) ResetMessage() {
+	m.message = nil
 }
 
-// SetSpecTitle sets the "spec_title" field.
-func (m *DescriptionMutation) SetSpecTitle(s string) {
-	m.spec_title = &s
+// SetUsedFor sets the "used_for" field.
+func (m *DescriptionMutation) SetUsedFor(s string) {
+	m.used_for = &s
 }
 
-// SpecTitle returns the value of the "spec_title" field in the mutation.
-func (m *DescriptionMutation) SpecTitle() (r string, exists bool) {
-	v := m.spec_title
+// UsedFor returns the value of the "used_for" field in the mutation.
+func (m *DescriptionMutation) UsedFor() (r string, exists bool) {
+	v := m.used_for
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldSpecTitle returns the old "spec_title" field's value of the Description entity.
+// OldUsedFor returns the old "used_for" field's value of the Description entity.
 // If the Description object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DescriptionMutation) OldSpecTitle(ctx context.Context) (v string, err error) {
+func (m *DescriptionMutation) OldUsedFor(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSpecTitle is only allowed on UpdateOne operations")
+		return v, errors.New("OldUsedFor is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSpecTitle requires an ID field in the mutation")
+		return v, errors.New("OldUsedFor requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSpecTitle: %w", err)
+		return v, fmt.Errorf("querying old value for OldUsedFor: %w", err)
 	}
-	return oldValue.SpecTitle, nil
+	return oldValue.UsedFor, nil
 }
 
-// ResetSpecTitle resets all changes to the "spec_title" field.
-func (m *DescriptionMutation) ResetSpecTitle() {
-	m.spec_title = nil
-}
-
-// SetSpecs sets the "specs" field.
-func (m *DescriptionMutation) SetSpecs(ts []types.CoinSpec) {
-	m.specs = &ts
-}
-
-// Specs returns the value of the "specs" field in the mutation.
-func (m *DescriptionMutation) Specs() (r []types.CoinSpec, exists bool) {
-	v := m.specs
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSpecs returns the old "specs" field's value of the Description entity.
-// If the Description object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DescriptionMutation) OldSpecs(ctx context.Context) (v []types.CoinSpec, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSpecs is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSpecs requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSpecs: %w", err)
-	}
-	return oldValue.Specs, nil
-}
-
-// ResetSpecs resets all changes to the "specs" field.
-func (m *DescriptionMutation) ResetSpecs() {
-	m.specs = nil
+// ResetUsedFor resets all changes to the "used_for" field.
+func (m *DescriptionMutation) ResetUsedFor() {
+	m.used_for = nil
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -1570,21 +1532,18 @@ func (m *DescriptionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DescriptionMutation) Fields() []string {
-	fields := make([]string, 0, 8)
-	if m.coin_id != nil {
-		fields = append(fields, description.FieldCoinID)
+	fields := make([]string, 0, 7)
+	if m.coin_type_id != nil {
+		fields = append(fields, description.FieldCoinTypeID)
 	}
-	if m.human_readable_name != nil {
-		fields = append(fields, description.FieldHumanReadableName)
+	if m.title != nil {
+		fields = append(fields, description.FieldTitle)
 	}
-	if m.descriptions != nil {
-		fields = append(fields, description.FieldDescriptions)
+	if m.message != nil {
+		fields = append(fields, description.FieldMessage)
 	}
-	if m.spec_title != nil {
-		fields = append(fields, description.FieldSpecTitle)
-	}
-	if m.specs != nil {
-		fields = append(fields, description.FieldSpecs)
+	if m.used_for != nil {
+		fields = append(fields, description.FieldUsedFor)
 	}
 	if m.created_at != nil {
 		fields = append(fields, description.FieldCreatedAt)
@@ -1603,16 +1562,14 @@ func (m *DescriptionMutation) Fields() []string {
 // schema.
 func (m *DescriptionMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case description.FieldCoinID:
-		return m.CoinID()
-	case description.FieldHumanReadableName:
-		return m.HumanReadableName()
-	case description.FieldDescriptions:
-		return m.Descriptions()
-	case description.FieldSpecTitle:
-		return m.SpecTitle()
-	case description.FieldSpecs:
-		return m.Specs()
+	case description.FieldCoinTypeID:
+		return m.CoinTypeID()
+	case description.FieldTitle:
+		return m.Title()
+	case description.FieldMessage:
+		return m.Message()
+	case description.FieldUsedFor:
+		return m.UsedFor()
 	case description.FieldCreatedAt:
 		return m.CreatedAt()
 	case description.FieldUpdatedAt:
@@ -1628,16 +1585,14 @@ func (m *DescriptionMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *DescriptionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case description.FieldCoinID:
-		return m.OldCoinID(ctx)
-	case description.FieldHumanReadableName:
-		return m.OldHumanReadableName(ctx)
-	case description.FieldDescriptions:
-		return m.OldDescriptions(ctx)
-	case description.FieldSpecTitle:
-		return m.OldSpecTitle(ctx)
-	case description.FieldSpecs:
-		return m.OldSpecs(ctx)
+	case description.FieldCoinTypeID:
+		return m.OldCoinTypeID(ctx)
+	case description.FieldTitle:
+		return m.OldTitle(ctx)
+	case description.FieldMessage:
+		return m.OldMessage(ctx)
+	case description.FieldUsedFor:
+		return m.OldUsedFor(ctx)
 	case description.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case description.FieldUpdatedAt:
@@ -1653,40 +1608,33 @@ func (m *DescriptionMutation) OldField(ctx context.Context, name string) (ent.Va
 // type.
 func (m *DescriptionMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case description.FieldCoinID:
+	case description.FieldCoinTypeID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCoinID(v)
+		m.SetCoinTypeID(v)
 		return nil
-	case description.FieldHumanReadableName:
+	case description.FieldTitle:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetHumanReadableName(v)
+		m.SetTitle(v)
 		return nil
-	case description.FieldDescriptions:
-		v, ok := value.([]types.CoinDescription)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDescriptions(v)
-		return nil
-	case description.FieldSpecTitle:
+	case description.FieldMessage:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetSpecTitle(v)
+		m.SetMessage(v)
 		return nil
-	case description.FieldSpecs:
-		v, ok := value.([]types.CoinSpec)
+	case description.FieldUsedFor:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetSpecs(v)
+		m.SetUsedFor(v)
 		return nil
 	case description.FieldCreatedAt:
 		v, ok := value.(uint32)
@@ -1797,20 +1745,17 @@ func (m *DescriptionMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *DescriptionMutation) ResetField(name string) error {
 	switch name {
-	case description.FieldCoinID:
-		m.ResetCoinID()
+	case description.FieldCoinTypeID:
+		m.ResetCoinTypeID()
 		return nil
-	case description.FieldHumanReadableName:
-		m.ResetHumanReadableName()
+	case description.FieldTitle:
+		m.ResetTitle()
 		return nil
-	case description.FieldDescriptions:
-		m.ResetDescriptions()
+	case description.FieldMessage:
+		m.ResetMessage()
 		return nil
-	case description.FieldSpecTitle:
-		m.ResetSpecTitle()
-		return nil
-	case description.FieldSpecs:
-		m.ResetSpecs()
+	case description.FieldUsedFor:
+		m.ResetUsedFor()
 		return nil
 	case description.FieldCreatedAt:
 		m.ResetCreatedAt()

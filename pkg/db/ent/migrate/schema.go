@@ -40,11 +40,10 @@ var (
 	// DescriptionsColumns holds the columns for the "descriptions" table.
 	DescriptionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "coin_id", Type: field.TypeUUID, Unique: true},
-		{Name: "human_readable_name", Type: field.TypeString},
-		{Name: "descriptions", Type: field.TypeJSON},
-		{Name: "spec_title", Type: field.TypeString},
-		{Name: "specs", Type: field.TypeJSON},
+		{Name: "coin_type_id", Type: field.TypeUUID},
+		{Name: "title", Type: field.TypeString},
+		{Name: "message", Type: field.TypeString},
+		{Name: "used_for", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
@@ -54,6 +53,13 @@ var (
 		Name:       "descriptions",
 		Columns:    DescriptionsColumns,
 		PrimaryKey: []*schema.Column{DescriptionsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "description_coin_type_id_used_for",
+				Unique:  true,
+				Columns: []*schema.Column{DescriptionsColumns[1], DescriptionsColumns[4]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{

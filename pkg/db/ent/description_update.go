@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/description"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/predicate"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/types"
 	"github.com/google/uuid"
 )
 
@@ -29,33 +28,27 @@ func (du *DescriptionUpdate) Where(ps ...predicate.Description) *DescriptionUpda
 	return du
 }
 
-// SetCoinID sets the "coin_id" field.
-func (du *DescriptionUpdate) SetCoinID(u uuid.UUID) *DescriptionUpdate {
-	du.mutation.SetCoinID(u)
+// SetCoinTypeID sets the "coin_type_id" field.
+func (du *DescriptionUpdate) SetCoinTypeID(u uuid.UUID) *DescriptionUpdate {
+	du.mutation.SetCoinTypeID(u)
 	return du
 }
 
-// SetHumanReadableName sets the "human_readable_name" field.
-func (du *DescriptionUpdate) SetHumanReadableName(s string) *DescriptionUpdate {
-	du.mutation.SetHumanReadableName(s)
+// SetTitle sets the "title" field.
+func (du *DescriptionUpdate) SetTitle(s string) *DescriptionUpdate {
+	du.mutation.SetTitle(s)
 	return du
 }
 
-// SetDescriptions sets the "descriptions" field.
-func (du *DescriptionUpdate) SetDescriptions(td []types.CoinDescription) *DescriptionUpdate {
-	du.mutation.SetDescriptions(td)
+// SetMessage sets the "message" field.
+func (du *DescriptionUpdate) SetMessage(s string) *DescriptionUpdate {
+	du.mutation.SetMessage(s)
 	return du
 }
 
-// SetSpecTitle sets the "spec_title" field.
-func (du *DescriptionUpdate) SetSpecTitle(s string) *DescriptionUpdate {
-	du.mutation.SetSpecTitle(s)
-	return du
-}
-
-// SetSpecs sets the "specs" field.
-func (du *DescriptionUpdate) SetSpecs(ts []types.CoinSpec) *DescriptionUpdate {
-	du.mutation.SetSpecs(ts)
+// SetUsedFor sets the "used_for" field.
+func (du *DescriptionUpdate) SetUsedFor(s string) *DescriptionUpdate {
+	du.mutation.SetUsedFor(s)
 	return du
 }
 
@@ -200,39 +193,32 @@ func (du *DescriptionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := du.mutation.CoinID(); ok {
+	if value, ok := du.mutation.CoinTypeID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: description.FieldCoinID,
+			Column: description.FieldCoinTypeID,
 		})
 	}
-	if value, ok := du.mutation.HumanReadableName(); ok {
+	if value, ok := du.mutation.Title(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldHumanReadableName,
+			Column: description.FieldTitle,
 		})
 	}
-	if value, ok := du.mutation.Descriptions(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: description.FieldDescriptions,
-		})
-	}
-	if value, ok := du.mutation.SpecTitle(); ok {
+	if value, ok := du.mutation.Message(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldSpecTitle,
+			Column: description.FieldMessage,
 		})
 	}
-	if value, ok := du.mutation.Specs(); ok {
+	if value, ok := du.mutation.UsedFor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldSpecs,
+			Column: description.FieldUsedFor,
 		})
 	}
 	if value, ok := du.mutation.CreatedAt(); ok {
@@ -296,33 +282,27 @@ type DescriptionUpdateOne struct {
 	mutation *DescriptionMutation
 }
 
-// SetCoinID sets the "coin_id" field.
-func (duo *DescriptionUpdateOne) SetCoinID(u uuid.UUID) *DescriptionUpdateOne {
-	duo.mutation.SetCoinID(u)
+// SetCoinTypeID sets the "coin_type_id" field.
+func (duo *DescriptionUpdateOne) SetCoinTypeID(u uuid.UUID) *DescriptionUpdateOne {
+	duo.mutation.SetCoinTypeID(u)
 	return duo
 }
 
-// SetHumanReadableName sets the "human_readable_name" field.
-func (duo *DescriptionUpdateOne) SetHumanReadableName(s string) *DescriptionUpdateOne {
-	duo.mutation.SetHumanReadableName(s)
+// SetTitle sets the "title" field.
+func (duo *DescriptionUpdateOne) SetTitle(s string) *DescriptionUpdateOne {
+	duo.mutation.SetTitle(s)
 	return duo
 }
 
-// SetDescriptions sets the "descriptions" field.
-func (duo *DescriptionUpdateOne) SetDescriptions(td []types.CoinDescription) *DescriptionUpdateOne {
-	duo.mutation.SetDescriptions(td)
+// SetMessage sets the "message" field.
+func (duo *DescriptionUpdateOne) SetMessage(s string) *DescriptionUpdateOne {
+	duo.mutation.SetMessage(s)
 	return duo
 }
 
-// SetSpecTitle sets the "spec_title" field.
-func (duo *DescriptionUpdateOne) SetSpecTitle(s string) *DescriptionUpdateOne {
-	duo.mutation.SetSpecTitle(s)
-	return duo
-}
-
-// SetSpecs sets the "specs" field.
-func (duo *DescriptionUpdateOne) SetSpecs(ts []types.CoinSpec) *DescriptionUpdateOne {
-	duo.mutation.SetSpecs(ts)
+// SetUsedFor sets the "used_for" field.
+func (duo *DescriptionUpdateOne) SetUsedFor(s string) *DescriptionUpdateOne {
+	duo.mutation.SetUsedFor(s)
 	return duo
 }
 
@@ -491,39 +471,32 @@ func (duo *DescriptionUpdateOne) sqlSave(ctx context.Context) (_node *Descriptio
 			}
 		}
 	}
-	if value, ok := duo.mutation.CoinID(); ok {
+	if value, ok := duo.mutation.CoinTypeID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: description.FieldCoinID,
+			Column: description.FieldCoinTypeID,
 		})
 	}
-	if value, ok := duo.mutation.HumanReadableName(); ok {
+	if value, ok := duo.mutation.Title(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldHumanReadableName,
+			Column: description.FieldTitle,
 		})
 	}
-	if value, ok := duo.mutation.Descriptions(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: description.FieldDescriptions,
-		})
-	}
-	if value, ok := duo.mutation.SpecTitle(); ok {
+	if value, ok := duo.mutation.Message(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldSpecTitle,
+			Column: description.FieldMessage,
 		})
 	}
-	if value, ok := duo.mutation.Specs(); ok {
+	if value, ok := duo.mutation.UsedFor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: description.FieldSpecs,
+			Column: description.FieldUsedFor,
 		})
 	}
 	if value, ok := duo.mutation.CreatedAt(); ok {
