@@ -140,6 +140,20 @@ func ForPay(v bool) predicate.CoinInfo {
 	})
 }
 
+// HomePage applies equality check predicate on the "home_page" field. It's identical to HomePageEQ.
+func HomePage(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHomePage), v))
+	})
+}
+
+// Specs applies equality check predicate on the "specs" field. It's identical to SpecsEQ.
+func Specs(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSpecs), v))
+	})
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v uint32) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
@@ -706,6 +720,228 @@ func ForPayEQ(v bool) predicate.CoinInfo {
 func ForPayNEQ(v bool) predicate.CoinInfo {
 	return predicate.CoinInfo(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldForPay), v))
+	})
+}
+
+// HomePageEQ applies the EQ predicate on the "home_page" field.
+func HomePageEQ(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageNEQ applies the NEQ predicate on the "home_page" field.
+func HomePageNEQ(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageIn applies the In predicate on the "home_page" field.
+func HomePageIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldHomePage), v...))
+	})
+}
+
+// HomePageNotIn applies the NotIn predicate on the "home_page" field.
+func HomePageNotIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldHomePage), v...))
+	})
+}
+
+// HomePageGT applies the GT predicate on the "home_page" field.
+func HomePageGT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageGTE applies the GTE predicate on the "home_page" field.
+func HomePageGTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageLT applies the LT predicate on the "home_page" field.
+func HomePageLT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageLTE applies the LTE predicate on the "home_page" field.
+func HomePageLTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageContains applies the Contains predicate on the "home_page" field.
+func HomePageContains(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageHasPrefix applies the HasPrefix predicate on the "home_page" field.
+func HomePageHasPrefix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageHasSuffix applies the HasSuffix predicate on the "home_page" field.
+func HomePageHasSuffix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageEqualFold applies the EqualFold predicate on the "home_page" field.
+func HomePageEqualFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldHomePage), v))
+	})
+}
+
+// HomePageContainsFold applies the ContainsFold predicate on the "home_page" field.
+func HomePageContainsFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldHomePage), v))
+	})
+}
+
+// SpecsEQ applies the EQ predicate on the "specs" field.
+func SpecsEQ(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsNEQ applies the NEQ predicate on the "specs" field.
+func SpecsNEQ(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsIn applies the In predicate on the "specs" field.
+func SpecsIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSpecs), v...))
+	})
+}
+
+// SpecsNotIn applies the NotIn predicate on the "specs" field.
+func SpecsNotIn(vs ...string) predicate.CoinInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSpecs), v...))
+	})
+}
+
+// SpecsGT applies the GT predicate on the "specs" field.
+func SpecsGT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsGTE applies the GTE predicate on the "specs" field.
+func SpecsGTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsLT applies the LT predicate on the "specs" field.
+func SpecsLT(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsLTE applies the LTE predicate on the "specs" field.
+func SpecsLTE(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsContains applies the Contains predicate on the "specs" field.
+func SpecsContains(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsHasPrefix applies the HasPrefix predicate on the "specs" field.
+func SpecsHasPrefix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsHasSuffix applies the HasSuffix predicate on the "specs" field.
+func SpecsHasSuffix(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsEqualFold applies the EqualFold predicate on the "specs" field.
+func SpecsEqualFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSpecs), v))
+	})
+}
+
+// SpecsContainsFold applies the ContainsFold predicate on the "specs" field.
+func SpecsContainsFold(v string) predicate.CoinInfo {
+	return predicate.CoinInfo(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSpecs), v))
 	})
 }
 

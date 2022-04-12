@@ -124,6 +124,34 @@ func (ciu *CoinInfoUpdate) SetNillableForPay(b *bool) *CoinInfoUpdate {
 	return ciu
 }
 
+// SetHomePage sets the "home_page" field.
+func (ciu *CoinInfoUpdate) SetHomePage(s string) *CoinInfoUpdate {
+	ciu.mutation.SetHomePage(s)
+	return ciu
+}
+
+// SetNillableHomePage sets the "home_page" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableHomePage(s *string) *CoinInfoUpdate {
+	if s != nil {
+		ciu.SetHomePage(*s)
+	}
+	return ciu
+}
+
+// SetSpecs sets the "specs" field.
+func (ciu *CoinInfoUpdate) SetSpecs(s string) *CoinInfoUpdate {
+	ciu.mutation.SetSpecs(s)
+	return ciu
+}
+
+// SetNillableSpecs sets the "specs" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableSpecs(s *string) *CoinInfoUpdate {
+	if s != nil {
+		ciu.SetSpecs(*s)
+	}
+	return ciu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ciu *CoinInfoUpdate) SetCreatedAt(u uint32) *CoinInfoUpdate {
 	ciu.mutation.ResetCreatedAt()
@@ -342,6 +370,20 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: coininfo.FieldForPay,
 		})
 	}
+	if value, ok := ciu.mutation.HomePage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldHomePage,
+		})
+	}
+	if value, ok := ciu.mutation.Specs(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldSpecs,
+		})
+	}
 	if value, ok := ciu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -496,6 +538,34 @@ func (ciuo *CoinInfoUpdateOne) SetForPay(b bool) *CoinInfoUpdateOne {
 func (ciuo *CoinInfoUpdateOne) SetNillableForPay(b *bool) *CoinInfoUpdateOne {
 	if b != nil {
 		ciuo.SetForPay(*b)
+	}
+	return ciuo
+}
+
+// SetHomePage sets the "home_page" field.
+func (ciuo *CoinInfoUpdateOne) SetHomePage(s string) *CoinInfoUpdateOne {
+	ciuo.mutation.SetHomePage(s)
+	return ciuo
+}
+
+// SetNillableHomePage sets the "home_page" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableHomePage(s *string) *CoinInfoUpdateOne {
+	if s != nil {
+		ciuo.SetHomePage(*s)
+	}
+	return ciuo
+}
+
+// SetSpecs sets the "specs" field.
+func (ciuo *CoinInfoUpdateOne) SetSpecs(s string) *CoinInfoUpdateOne {
+	ciuo.mutation.SetSpecs(s)
+	return ciuo
+}
+
+// SetNillableSpecs sets the "specs" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableSpecs(s *string) *CoinInfoUpdateOne {
+	if s != nil {
+		ciuo.SetSpecs(*s)
 	}
 	return ciuo
 }
@@ -740,6 +810,20 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			Type:   field.TypeBool,
 			Value:  value,
 			Column: coininfo.FieldForPay,
+		})
+	}
+	if value, ok := ciuo.mutation.HomePage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldHomePage,
+		})
+	}
+	if value, ok := ciuo.mutation.Specs(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldSpecs,
 		})
 	}
 	if value, ok := ciuo.mutation.CreatedAt(); ok {

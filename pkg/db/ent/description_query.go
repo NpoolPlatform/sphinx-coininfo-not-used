@@ -107,7 +107,7 @@ func (dq *DescriptionQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single Description entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one Description entity is not found.
+// Returns a *NotSingularError when more than one Description entity is found.
 // Returns a *NotFoundError when no Description entities are found.
 func (dq *DescriptionQuery) Only(ctx context.Context) (*Description, error) {
 	nodes, err := dq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (dq *DescriptionQuery) OnlyX(ctx context.Context) *Description {
 }
 
 // OnlyID is like Only, but returns the only Description ID in the query.
-// Returns a *NotSingularError when exactly one Description ID is not found.
+// Returns a *NotSingularError when more than one Description ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (dq *DescriptionQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (dq *DescriptionQuery) Clone() *DescriptionQuery {
 		order:      append([]OrderFunc{}, dq.order...),
 		predicates: append([]predicate.Description{}, dq.predicates...),
 		// clone intermediate query.
-		sql:  dq.sql.Clone(),
-		path: dq.path,
+		sql:    dq.sql.Clone(),
+		path:   dq.path,
+		unique: dq.unique,
 	}
 }
 

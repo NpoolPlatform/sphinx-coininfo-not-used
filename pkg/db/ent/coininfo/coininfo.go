@@ -25,6 +25,10 @@ const (
 	FieldEnv = "env"
 	// FieldForPay holds the string denoting the for_pay field in the database.
 	FieldForPay = "for_pay"
+	// FieldHomePage holds the string denoting the home_page field in the database.
+	FieldHomePage = "home_page"
+	// FieldSpecs holds the string denoting the specs field in the database.
+	FieldSpecs = "specs"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -45,6 +49,8 @@ var Columns = []string{
 	FieldLogo,
 	FieldEnv,
 	FieldForPay,
+	FieldHomePage,
+	FieldSpecs,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
@@ -77,6 +83,10 @@ var (
 	DefaultEnv string
 	// DefaultForPay holds the default value on creation for the "for_pay" field.
 	DefaultForPay bool
+	// DefaultHomePage holds the default value on creation for the "home_page" field.
+	DefaultHomePage string
+	// DefaultSpecs holds the default value on creation for the "specs" field.
+	DefaultSpecs string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() uint32
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

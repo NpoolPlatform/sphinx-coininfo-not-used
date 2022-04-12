@@ -113,6 +113,34 @@ func (cic *CoinInfoCreate) SetNillableForPay(b *bool) *CoinInfoCreate {
 	return cic
 }
 
+// SetHomePage sets the "home_page" field.
+func (cic *CoinInfoCreate) SetHomePage(s string) *CoinInfoCreate {
+	cic.mutation.SetHomePage(s)
+	return cic
+}
+
+// SetNillableHomePage sets the "home_page" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableHomePage(s *string) *CoinInfoCreate {
+	if s != nil {
+		cic.SetHomePage(*s)
+	}
+	return cic
+}
+
+// SetSpecs sets the "specs" field.
+func (cic *CoinInfoCreate) SetSpecs(s string) *CoinInfoCreate {
+	cic.mutation.SetSpecs(s)
+	return cic
+}
+
+// SetNillableSpecs sets the "specs" field if the given value is not nil.
+func (cic *CoinInfoCreate) SetNillableSpecs(s *string) *CoinInfoCreate {
+	if s != nil {
+		cic.SetSpecs(*s)
+	}
+	return cic
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (cic *CoinInfoCreate) SetCreatedAt(u uint32) *CoinInfoCreate {
 	cic.mutation.SetCreatedAt(u)
@@ -264,6 +292,14 @@ func (cic *CoinInfoCreate) defaults() {
 		v := coininfo.DefaultForPay
 		cic.mutation.SetForPay(v)
 	}
+	if _, ok := cic.mutation.HomePage(); !ok {
+		v := coininfo.DefaultHomePage
+		cic.mutation.SetHomePage(v)
+	}
+	if _, ok := cic.mutation.Specs(); !ok {
+		v := coininfo.DefaultSpecs
+		cic.mutation.SetSpecs(v)
+	}
 	if _, ok := cic.mutation.CreatedAt(); !ok {
 		v := coininfo.DefaultCreatedAt()
 		cic.mutation.SetCreatedAt(v)
@@ -314,6 +350,12 @@ func (cic *CoinInfoCreate) check() error {
 	}
 	if _, ok := cic.mutation.ForPay(); !ok {
 		return &ValidationError{Name: "for_pay", err: errors.New(`ent: missing required field "CoinInfo.for_pay"`)}
+	}
+	if _, ok := cic.mutation.HomePage(); !ok {
+		return &ValidationError{Name: "home_page", err: errors.New(`ent: missing required field "CoinInfo.home_page"`)}
+	}
+	if _, ok := cic.mutation.Specs(); !ok {
+		return &ValidationError{Name: "specs", err: errors.New(`ent: missing required field "CoinInfo.specs"`)}
 	}
 	if _, ok := cic.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "CoinInfo.created_at"`)}
@@ -416,6 +458,22 @@ func (cic *CoinInfoCreate) createSpec() (*CoinInfo, *sqlgraph.CreateSpec) {
 			Column: coininfo.FieldForPay,
 		})
 		_node.ForPay = value
+	}
+	if value, ok := cic.mutation.HomePage(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldHomePage,
+		})
+		_node.HomePage = value
+	}
+	if value, ok := cic.mutation.Specs(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: coininfo.FieldSpecs,
+		})
+		_node.Specs = value
 	}
 	if value, ok := cic.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -582,6 +640,30 @@ func (u *CoinInfoUpsert) SetForPay(v bool) *CoinInfoUpsert {
 // UpdateForPay sets the "for_pay" field to the value that was provided on create.
 func (u *CoinInfoUpsert) UpdateForPay() *CoinInfoUpsert {
 	u.SetExcluded(coininfo.FieldForPay)
+	return u
+}
+
+// SetHomePage sets the "home_page" field.
+func (u *CoinInfoUpsert) SetHomePage(v string) *CoinInfoUpsert {
+	u.Set(coininfo.FieldHomePage, v)
+	return u
+}
+
+// UpdateHomePage sets the "home_page" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateHomePage() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldHomePage)
+	return u
+}
+
+// SetSpecs sets the "specs" field.
+func (u *CoinInfoUpsert) SetSpecs(v string) *CoinInfoUpsert {
+	u.Set(coininfo.FieldSpecs, v)
+	return u
+}
+
+// UpdateSpecs sets the "specs" field to the value that was provided on create.
+func (u *CoinInfoUpsert) UpdateSpecs() *CoinInfoUpsert {
+	u.SetExcluded(coininfo.FieldSpecs)
 	return u
 }
 
@@ -791,6 +873,34 @@ func (u *CoinInfoUpsertOne) SetForPay(v bool) *CoinInfoUpsertOne {
 func (u *CoinInfoUpsertOne) UpdateForPay() *CoinInfoUpsertOne {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.UpdateForPay()
+	})
+}
+
+// SetHomePage sets the "home_page" field.
+func (u *CoinInfoUpsertOne) SetHomePage(v string) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetHomePage(v)
+	})
+}
+
+// UpdateHomePage sets the "home_page" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateHomePage() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateHomePage()
+	})
+}
+
+// SetSpecs sets the "specs" field.
+func (u *CoinInfoUpsertOne) SetSpecs(v string) *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetSpecs(v)
+	})
+}
+
+// UpdateSpecs sets the "specs" field to the value that was provided on create.
+func (u *CoinInfoUpsertOne) UpdateSpecs() *CoinInfoUpsertOne {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateSpecs()
 	})
 }
 
@@ -1175,6 +1285,34 @@ func (u *CoinInfoUpsertBulk) SetForPay(v bool) *CoinInfoUpsertBulk {
 func (u *CoinInfoUpsertBulk) UpdateForPay() *CoinInfoUpsertBulk {
 	return u.Update(func(s *CoinInfoUpsert) {
 		s.UpdateForPay()
+	})
+}
+
+// SetHomePage sets the "home_page" field.
+func (u *CoinInfoUpsertBulk) SetHomePage(v string) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetHomePage(v)
+	})
+}
+
+// UpdateHomePage sets the "home_page" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateHomePage() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateHomePage()
+	})
+}
+
+// SetSpecs sets the "specs" field.
+func (u *CoinInfoUpsertBulk) SetSpecs(v string) *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.SetSpecs(v)
+	})
+}
+
+// UpdateSpecs sets the "specs" field to the value that was provided on create.
+func (u *CoinInfoUpsertBulk) UpdateSpecs() *CoinInfoUpsertBulk {
+	return u.Update(func(s *CoinInfoUpsert) {
+		s.UpdateSpecs()
 	})
 }
 

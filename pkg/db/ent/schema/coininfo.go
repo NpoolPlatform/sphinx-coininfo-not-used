@@ -26,6 +26,8 @@ func (CoinInfo) Fields() []ent.Field {
 		field.String("logo").Default(""),
 		field.String("env").Default("main"), // main or test
 		field.Bool("for_pay").Default(false),
+		field.String("home_page").Default(""),
+		field.String("specs").Default(""),
 		field.Uint32("created_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())

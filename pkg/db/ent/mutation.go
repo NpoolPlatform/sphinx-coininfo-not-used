@@ -44,6 +44,8 @@ type CoinInfoMutation struct {
 	logo               *string
 	env                *string
 	for_pay            *bool
+	home_page          *string
+	specs              *string
 	created_at         *uint32
 	addcreated_at      *int32
 	updated_at         *uint32
@@ -432,6 +434,78 @@ func (m *CoinInfoMutation) ResetForPay() {
 	m.for_pay = nil
 }
 
+// SetHomePage sets the "home_page" field.
+func (m *CoinInfoMutation) SetHomePage(s string) {
+	m.home_page = &s
+}
+
+// HomePage returns the value of the "home_page" field in the mutation.
+func (m *CoinInfoMutation) HomePage() (r string, exists bool) {
+	v := m.home_page
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHomePage returns the old "home_page" field's value of the CoinInfo entity.
+// If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CoinInfoMutation) OldHomePage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHomePage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHomePage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHomePage: %w", err)
+	}
+	return oldValue.HomePage, nil
+}
+
+// ResetHomePage resets all changes to the "home_page" field.
+func (m *CoinInfoMutation) ResetHomePage() {
+	m.home_page = nil
+}
+
+// SetSpecs sets the "specs" field.
+func (m *CoinInfoMutation) SetSpecs(s string) {
+	m.specs = &s
+}
+
+// Specs returns the value of the "specs" field in the mutation.
+func (m *CoinInfoMutation) Specs() (r string, exists bool) {
+	v := m.specs
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSpecs returns the old "specs" field's value of the CoinInfo entity.
+// If the CoinInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CoinInfoMutation) OldSpecs(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSpecs is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSpecs requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSpecs: %w", err)
+	}
+	return oldValue.Specs, nil
+}
+
+// ResetSpecs resets all changes to the "specs" field.
+func (m *CoinInfoMutation) ResetSpecs() {
+	m.specs = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *CoinInfoMutation) SetCreatedAt(u uint32) {
 	m.created_at = &u
@@ -619,7 +693,7 @@ func (m *CoinInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CoinInfoMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 12)
 	if m.name != nil {
 		fields = append(fields, coininfo.FieldName)
 	}
@@ -640,6 +714,12 @@ func (m *CoinInfoMutation) Fields() []string {
 	}
 	if m.for_pay != nil {
 		fields = append(fields, coininfo.FieldForPay)
+	}
+	if m.home_page != nil {
+		fields = append(fields, coininfo.FieldHomePage)
+	}
+	if m.specs != nil {
+		fields = append(fields, coininfo.FieldSpecs)
 	}
 	if m.created_at != nil {
 		fields = append(fields, coininfo.FieldCreatedAt)
@@ -672,6 +752,10 @@ func (m *CoinInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Env()
 	case coininfo.FieldForPay:
 		return m.ForPay()
+	case coininfo.FieldHomePage:
+		return m.HomePage()
+	case coininfo.FieldSpecs:
+		return m.Specs()
 	case coininfo.FieldCreatedAt:
 		return m.CreatedAt()
 	case coininfo.FieldUpdatedAt:
@@ -701,6 +785,10 @@ func (m *CoinInfoMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldEnv(ctx)
 	case coininfo.FieldForPay:
 		return m.OldForPay(ctx)
+	case coininfo.FieldHomePage:
+		return m.OldHomePage(ctx)
+	case coininfo.FieldSpecs:
+		return m.OldSpecs(ctx)
 	case coininfo.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case coininfo.FieldUpdatedAt:
@@ -764,6 +852,20 @@ func (m *CoinInfoMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetForPay(v)
+		return nil
+	case coininfo.FieldHomePage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHomePage(v)
+		return nil
+	case coininfo.FieldSpecs:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSpecs(v)
 		return nil
 	case coininfo.FieldCreatedAt:
 		v, ok := value.(uint32)
@@ -906,6 +1008,12 @@ func (m *CoinInfoMutation) ResetField(name string) error {
 		return nil
 	case coininfo.FieldForPay:
 		m.ResetForPay()
+		return nil
+	case coininfo.FieldHomePage:
+		m.ResetHomePage()
+		return nil
+	case coininfo.FieldSpecs:
+		m.ResetSpecs()
 		return nil
 	case coininfo.FieldCreatedAt:
 		m.ResetCreatedAt()

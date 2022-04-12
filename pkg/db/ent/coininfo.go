@@ -30,6 +30,10 @@ type CoinInfo struct {
 	Env string `json:"env,omitempty"`
 	// ForPay holds the value of the "for_pay" field.
 	ForPay bool `json:"for_pay,omitempty"`
+	// HomePage holds the value of the "home_page" field.
+	HomePage string `json:"home_page,omitempty"`
+	// Specs holds the value of the "specs" field.
+	Specs string `json:"specs,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -47,7 +51,7 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case coininfo.FieldReservedAmount, coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo, coininfo.FieldEnv:
+		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo, coininfo.FieldEnv, coininfo.FieldHomePage, coininfo.FieldSpecs:
 			values[i] = new(sql.NullString)
 		case coininfo.FieldID:
 			values[i] = new(uuid.UUID)
@@ -114,6 +118,18 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ci.ForPay = value.Bool
 			}
+		case coininfo.FieldHomePage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field home_page", values[i])
+			} else if value.Valid {
+				ci.HomePage = value.String
+			}
+		case coininfo.FieldSpecs:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field specs", values[i])
+			} else if value.Valid {
+				ci.Specs = value.String
+			}
 		case coininfo.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -174,6 +190,10 @@ func (ci *CoinInfo) String() string {
 	builder.WriteString(ci.Env)
 	builder.WriteString(", for_pay=")
 	builder.WriteString(fmt.Sprintf("%v", ci.ForPay))
+	builder.WriteString(", home_page=")
+	builder.WriteString(ci.HomePage)
+	builder.WriteString(", specs=")
+	builder.WriteString(ci.Specs)
 	builder.WriteString(", created_at=")
 	builder.WriteString(fmt.Sprintf("%v", ci.CreatedAt))
 	builder.WriteString(", updated_at=")

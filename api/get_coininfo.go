@@ -68,6 +68,8 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			Unit:           coinInfo.Unit,
 			ReservedAmount: price.DBPriceToVisualPrice(coinInfo.ReservedAmount),
 			Logo:           coinInfo.Logo,
+			HomePage:       coinInfo.HomePage,
+			Specs:          coinInfo.Specs,
 			CreatedAt:      coinInfo.CreatedAt,
 			UpdatedAt:      coinInfo.UpdatedAt,
 		},
