@@ -6,9 +6,14 @@ import (
 	"github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	dcoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
+	"go.opentelemetry.io/otel"
 )
 
 func CreateCoinInfo(ctx context.Context, info *coininfo.CoinInfo) error {
+	_, span := otel.Tracer("").Start(ctx, "")
+	defer span.End()
+
+	span.AddEvent("")
 	client, err := db.Client()
 	if err != nil {
 		return err

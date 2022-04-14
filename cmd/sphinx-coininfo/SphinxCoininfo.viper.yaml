@@ -1,5 +1,7 @@
 ---
 config:
+  # dev prod
+  env: "dev"
   hostname: "sphinx-coininfo.npool.top"
   http_port: 50150
   grpc_port: 50151

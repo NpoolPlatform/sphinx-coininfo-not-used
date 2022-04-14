@@ -8,12 +8,15 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-// TODO check pagesize max size
 func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest) (*npool.GetCoinInfosResponse, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfos")
+	defer span.End()
+
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 

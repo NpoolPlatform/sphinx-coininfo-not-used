@@ -8,12 +8,16 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 // CreateCoinInfo support duplicate
 func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoRequest) (*npool.CreateCoinInfoResponse, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "CreateCoinInfo")
+	defer span.End()
+
 	if in.GetName() == "" {
 		logger.Sugar().Error("CreateCoinInfo check Name is empty")
 		return nil, status.Error(codes.InvalidArgument, "Name empty")
