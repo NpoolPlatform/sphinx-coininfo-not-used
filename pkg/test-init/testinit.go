@@ -12,13 +12,12 @@ import (
 	redisconst "github.com/NpoolPlatform/go-service-framework/pkg/redis/const"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	servicename "github.com/NpoolPlatform/sphinx-coininfo/pkg/service-name" //nolint
-	"golang.org/x/xerrors"
 )
 
 func Init() error {
 	_, myPath, _, ok := runtime.Caller(0)
 	if !ok {
-		return xerrors.Errorf("cannot get source file path")
+		return fmt.Errorf("cannot get source file path")
 	}
 
 	appName := path.Base(path.Dir(path.Dir(path.Dir(myPath))))
@@ -29,11 +28,11 @@ func Init() error {
 		config.ServiceNameToNamespace(redisconst.RedisServiceName),
 		config.ServiceNameToNamespace(rabbitmqconst.RabbitMQServiceName))
 	if err != nil {
-		return xerrors.Errorf("cannot init app stub: %v", err)
+		return fmt.Errorf("cannot init app stub: %v", err)
 	}
 	err = db.Init()
 	if err != nil {
-		return xerrors.Errorf("cannot init database: %v", err)
+		return fmt.Errorf("cannot init database: %v", err)
 	}
 
 	return nil
