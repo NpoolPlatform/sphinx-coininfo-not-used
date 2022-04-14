@@ -203,6 +203,11 @@ func (dc *DescriptionCreate) check() error {
 	if _, ok := dc.mutation.Message(); !ok {
 		return &ValidationError{Name: "message", err: errors.New(`ent: missing required field "Description.message"`)}
 	}
+	if v, ok := dc.mutation.Message(); ok {
+		if err := description.MessageValidator(v); err != nil {
+			return &ValidationError{Name: "message", err: fmt.Errorf(`ent: validator failed for field "Description.message": %w`, err)}
+		}
+	}
 	if _, ok := dc.mutation.UsedFor(); !ok {
 		return &ValidationError{Name: "used_for", err: errors.New(`ent: missing required field "Description.used_for"`)}
 	}

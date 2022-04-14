@@ -7,7 +7,6 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/price"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -29,15 +28,15 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
-	_, err = coininfo.GetCoinInfoByID(ctx, id)
-	if ent.IsNotFound(err) {
-		logger.Sugar().Errorf("UpdateCoinInfo call GetCoinInfoByID ID: %v not found", in.GetID())
-		return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
-	}
-
+	existCoin, err := coininfo.ExistCoinInfoByID(ctx, id)
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinInfo call GetCoinInfoByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
+	}
+
+	if !existCoin {
+		logger.Sugar().Errorf("UpdateCoinInfo call GetCoinInfoByID ID: %v not found", in.GetID())
+		return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
 	}
 
 	coinInfo, err := coininfo.UpdateCoinInfoByID(ctx, in.GetPreSale(), in.GetForPay(), in.GetLogo(), in.GetID(), in.GetHomePage(), in.GetSpecs(), in.GetReservedAmount())

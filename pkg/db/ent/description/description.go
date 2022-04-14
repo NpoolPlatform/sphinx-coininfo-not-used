@@ -52,6 +52,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// MessageValidator is a validator for the "message" field. It is called by the builders before save.
+	MessageValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() uint32
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
