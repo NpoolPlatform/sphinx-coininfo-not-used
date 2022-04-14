@@ -20,7 +20,7 @@ func (Description) Fields() []ent.Field {
 			Unique(),
 		field.UUID("coin_type_id", uuid.UUID{}),
 		field.String("title"),
-		field.String("message"),
+		field.String("message").MaxLen(2048),
 		field.String("used_for"),
 		field.Uint32("created_at").
 			DefaultFunc(func() uint32 {

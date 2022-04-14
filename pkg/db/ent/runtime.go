@@ -73,6 +73,10 @@ func init() {
 	coininfo.DefaultID = coininfoDescID.Default.(func() uuid.UUID)
 	descriptionFields := schema.Description{}.Fields()
 	_ = descriptionFields
+	// descriptionDescMessage is the schema descriptor for message field.
+	descriptionDescMessage := descriptionFields[3].Descriptor()
+	// description.MessageValidator is a validator for the "message" field. It is called by the builders before save.
+	description.MessageValidator = descriptionDescMessage.Validators[0].(func(string) error)
 	// descriptionDescCreatedAt is the schema descriptor for created_at field.
 	descriptionDescCreatedAt := descriptionFields[5].Descriptor()
 	// description.DefaultCreatedAt holds the default value on creation for the created_at field.

@@ -120,12 +120,18 @@ func (du *DescriptionUpdate) Save(ctx context.Context) (int, error) {
 	)
 	du.defaults()
 	if len(du.hooks) == 0 {
+		if err = du.check(); err != nil {
+			return 0, err
+		}
 		affected, err = du.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*DescriptionMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = du.check(); err != nil {
+				return 0, err
 			}
 			du.mutation = mutation
 			affected, err = du.sqlSave(ctx)
@@ -173,6 +179,16 @@ func (du *DescriptionUpdate) defaults() {
 		v := description.UpdateDefaultUpdatedAt()
 		du.mutation.SetUpdatedAt(v)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (du *DescriptionUpdate) check() error {
+	if v, ok := du.mutation.Message(); ok {
+		if err := description.MessageValidator(v); err != nil {
+			return &ValidationError{Name: "message", err: fmt.Errorf(`ent: validator failed for field "Description.message": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (du *DescriptionUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -381,12 +397,18 @@ func (duo *DescriptionUpdateOne) Save(ctx context.Context) (*Description, error)
 	)
 	duo.defaults()
 	if len(duo.hooks) == 0 {
+		if err = duo.check(); err != nil {
+			return nil, err
+		}
 		node, err = duo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*DescriptionMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = duo.check(); err != nil {
+				return nil, err
 			}
 			duo.mutation = mutation
 			node, err = duo.sqlSave(ctx)
@@ -434,6 +456,16 @@ func (duo *DescriptionUpdateOne) defaults() {
 		v := description.UpdateDefaultUpdatedAt()
 		duo.mutation.SetUpdatedAt(v)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (duo *DescriptionUpdateOne) check() error {
+	if v, ok := duo.mutation.Message(); ok {
+		if err := description.MessageValidator(v); err != nil {
+			return &ValidationError{Name: "message", err: fmt.Errorf(`ent: validator failed for field "Description.message": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (duo *DescriptionUpdateOne) sqlSave(ctx context.Context) (_node *Description, err error) {

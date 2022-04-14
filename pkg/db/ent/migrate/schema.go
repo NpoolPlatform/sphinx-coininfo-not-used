@@ -42,7 +42,7 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "coin_type_id", Type: field.TypeUUID},
 		{Name: "title", Type: field.TypeString},
-		{Name: "message", Type: field.TypeString},
+		{Name: "message", Type: field.TypeString, Size: 2048},
 		{Name: "used_for", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},

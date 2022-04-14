@@ -32,6 +32,16 @@ func GetCoinInfoByName(ctx context.Context, coinName string) (coinInfo *ent.Coin
 	return
 }
 
+func ExistCoinInfoByID(ctx context.Context, coinID uuid.UUID) (bool, error) {
+	client, err := db.Client()
+	if err != nil {
+		return false, err
+	}
+	return client.CoinInfo.Query().
+		Where(coininfo.IDEQ(coinID)).
+		Exist(ctx)
+}
+
 type GetAllCoinInfosParams struct {
 	PreSale       bool
 	Name          string
