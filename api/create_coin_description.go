@@ -9,12 +9,16 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/description"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 // CreateCoinDescription ..
 func (s *Server) CreateCoinDescription(ctx context.Context, in *npool.CreateCoinDescriptionRequest) (*npool.CreateCoinDescriptionResponse, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "CreateCoinInfo")
+	defer span.End()
+
 	if in.GetTitle() == "" {
 		logger.Sugar().Error("CreateCoinDescription check Title is empty")
 		return nil, status.Error(codes.InvalidArgument, "Title empty")

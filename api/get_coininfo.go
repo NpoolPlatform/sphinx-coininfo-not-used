@@ -10,12 +10,16 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 // GetCoinInfo get coininfo by id or name, id high prio
 func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (*npool.GetCoinInfoResponse, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfo")
+	defer span.End()
+
 	if in.GetID() == "" && in.GetName() == "" {
 		logger.Sugar().Errorf("GetCoinInfo check ID or Name is empty")
 		return nil, status.Error(codes.InvalidArgument, "not allow ID or Name both empty")

@@ -9,11 +9,15 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (s *Server) UpdateCoinDescription(ctx context.Context, in *npool.UpdateCoinDescriptionRequest) (*npool.UpdateCoinDescriptionResponse, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "CreateCoinInfo")
+	defer span.End()
+
 	if in.GetTitle() == "" {
 		logger.Sugar().Error("UpdateCoinDescription check Title is empty")
 		return nil, status.Error(codes.InvalidArgument, "Title empty")
