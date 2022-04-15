@@ -5,7 +5,7 @@ go 1.17
 require (
 	entgo.io/ent v0.10.1
 	github.com/NpoolPlatform/api-manager v0.0.0-20220328101926-8907b2f76c6d
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20220415050056-c7563c825533
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20220415051941-91f083284495
 	github.com/NpoolPlatform/message v0.0.0-20220414043951-017300b4fc17
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
