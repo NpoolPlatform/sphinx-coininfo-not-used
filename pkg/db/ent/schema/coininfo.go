@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
@@ -11,6 +9,12 @@ import (
 
 type CoinInfo struct {
 	ent.Schema
+}
+
+func (CoinInfo) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
+	}
 }
 
 func (CoinInfo) Fields() []ent.Field {
@@ -28,21 +32,6 @@ func (CoinInfo) Fields() []ent.Field {
 		field.Bool("for_pay").Default(false),
 		field.String("home_page").Default(""),
 		field.String("specs").Default(""),
-		field.Uint32("created_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("updated_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}).
-			UpdateDefault(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("deleted_at").
-			DefaultFunc(func() uint32 {
-				return 0
-			}),
 	}
 }
 

@@ -28,30 +28,6 @@ func (du *DescriptionUpdate) Where(ps ...predicate.Description) *DescriptionUpda
 	return du
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (du *DescriptionUpdate) SetCoinTypeID(u uuid.UUID) *DescriptionUpdate {
-	du.mutation.SetCoinTypeID(u)
-	return du
-}
-
-// SetTitle sets the "title" field.
-func (du *DescriptionUpdate) SetTitle(s string) *DescriptionUpdate {
-	du.mutation.SetTitle(s)
-	return du
-}
-
-// SetMessage sets the "message" field.
-func (du *DescriptionUpdate) SetMessage(s string) *DescriptionUpdate {
-	du.mutation.SetMessage(s)
-	return du
-}
-
-// SetUsedFor sets the "used_for" field.
-func (du *DescriptionUpdate) SetUsedFor(s string) *DescriptionUpdate {
-	du.mutation.SetUsedFor(s)
-	return du
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (du *DescriptionUpdate) SetCreatedAt(u uint32) *DescriptionUpdate {
 	du.mutation.ResetCreatedAt()
@@ -107,6 +83,30 @@ func (du *DescriptionUpdate) AddDeletedAt(u int32) *DescriptionUpdate {
 	return du
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (du *DescriptionUpdate) SetCoinTypeID(u uuid.UUID) *DescriptionUpdate {
+	du.mutation.SetCoinTypeID(u)
+	return du
+}
+
+// SetTitle sets the "title" field.
+func (du *DescriptionUpdate) SetTitle(s string) *DescriptionUpdate {
+	du.mutation.SetTitle(s)
+	return du
+}
+
+// SetMessage sets the "message" field.
+func (du *DescriptionUpdate) SetMessage(s string) *DescriptionUpdate {
+	du.mutation.SetMessage(s)
+	return du
+}
+
+// SetUsedFor sets the "used_for" field.
+func (du *DescriptionUpdate) SetUsedFor(s string) *DescriptionUpdate {
+	du.mutation.SetUsedFor(s)
+	return du
+}
+
 // Mutation returns the DescriptionMutation object of the builder.
 func (du *DescriptionUpdate) Mutation() *DescriptionMutation {
 	return du.mutation
@@ -118,7 +118,9 @@ func (du *DescriptionUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	du.defaults()
+	if err := du.defaults(); err != nil {
+		return 0, err
+	}
 	if len(du.hooks) == 0 {
 		if err = du.check(); err != nil {
 			return 0, err
@@ -174,11 +176,15 @@ func (du *DescriptionUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (du *DescriptionUpdate) defaults() {
+func (du *DescriptionUpdate) defaults() error {
 	if _, ok := du.mutation.UpdatedAt(); !ok {
+		if description.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized description.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
 		v := description.UpdateDefaultUpdatedAt()
 		du.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -208,34 +214,6 @@ func (du *DescriptionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := du.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: description.FieldCoinTypeID,
-		})
-	}
-	if value, ok := du.mutation.Title(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: description.FieldTitle,
-		})
-	}
-	if value, ok := du.mutation.Message(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: description.FieldMessage,
-		})
-	}
-	if value, ok := du.mutation.UsedFor(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: description.FieldUsedFor,
-		})
 	}
 	if value, ok := du.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -279,6 +257,34 @@ func (du *DescriptionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: description.FieldDeletedAt,
 		})
 	}
+	if value, ok := du.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: description.FieldCoinTypeID,
+		})
+	}
+	if value, ok := du.mutation.Title(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: description.FieldTitle,
+		})
+	}
+	if value, ok := du.mutation.Message(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: description.FieldMessage,
+		})
+	}
+	if value, ok := du.mutation.UsedFor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: description.FieldUsedFor,
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{description.Label}
@@ -296,30 +302,6 @@ type DescriptionUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *DescriptionMutation
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (duo *DescriptionUpdateOne) SetCoinTypeID(u uuid.UUID) *DescriptionUpdateOne {
-	duo.mutation.SetCoinTypeID(u)
-	return duo
-}
-
-// SetTitle sets the "title" field.
-func (duo *DescriptionUpdateOne) SetTitle(s string) *DescriptionUpdateOne {
-	duo.mutation.SetTitle(s)
-	return duo
-}
-
-// SetMessage sets the "message" field.
-func (duo *DescriptionUpdateOne) SetMessage(s string) *DescriptionUpdateOne {
-	duo.mutation.SetMessage(s)
-	return duo
-}
-
-// SetUsedFor sets the "used_for" field.
-func (duo *DescriptionUpdateOne) SetUsedFor(s string) *DescriptionUpdateOne {
-	duo.mutation.SetUsedFor(s)
-	return duo
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -377,6 +359,30 @@ func (duo *DescriptionUpdateOne) AddDeletedAt(u int32) *DescriptionUpdateOne {
 	return duo
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (duo *DescriptionUpdateOne) SetCoinTypeID(u uuid.UUID) *DescriptionUpdateOne {
+	duo.mutation.SetCoinTypeID(u)
+	return duo
+}
+
+// SetTitle sets the "title" field.
+func (duo *DescriptionUpdateOne) SetTitle(s string) *DescriptionUpdateOne {
+	duo.mutation.SetTitle(s)
+	return duo
+}
+
+// SetMessage sets the "message" field.
+func (duo *DescriptionUpdateOne) SetMessage(s string) *DescriptionUpdateOne {
+	duo.mutation.SetMessage(s)
+	return duo
+}
+
+// SetUsedFor sets the "used_for" field.
+func (duo *DescriptionUpdateOne) SetUsedFor(s string) *DescriptionUpdateOne {
+	duo.mutation.SetUsedFor(s)
+	return duo
+}
+
 // Mutation returns the DescriptionMutation object of the builder.
 func (duo *DescriptionUpdateOne) Mutation() *DescriptionMutation {
 	return duo.mutation
@@ -395,7 +401,9 @@ func (duo *DescriptionUpdateOne) Save(ctx context.Context) (*Description, error)
 		err  error
 		node *Description
 	)
-	duo.defaults()
+	if err := duo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(duo.hooks) == 0 {
 		if err = duo.check(); err != nil {
 			return nil, err
@@ -451,11 +459,15 @@ func (duo *DescriptionUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (duo *DescriptionUpdateOne) defaults() {
+func (duo *DescriptionUpdateOne) defaults() error {
 	if _, ok := duo.mutation.UpdatedAt(); !ok {
+		if description.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized description.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
 		v := description.UpdateDefaultUpdatedAt()
 		duo.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -503,34 +515,6 @@ func (duo *DescriptionUpdateOne) sqlSave(ctx context.Context) (_node *Descriptio
 			}
 		}
 	}
-	if value, ok := duo.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: description.FieldCoinTypeID,
-		})
-	}
-	if value, ok := duo.mutation.Title(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: description.FieldTitle,
-		})
-	}
-	if value, ok := duo.mutation.Message(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: description.FieldMessage,
-		})
-	}
-	if value, ok := duo.mutation.UsedFor(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: description.FieldUsedFor,
-		})
-	}
 	if value, ok := duo.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -571,6 +555,34 @@ func (duo *DescriptionUpdateOne) sqlSave(ctx context.Context) (_node *Descriptio
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: description.FieldDeletedAt,
+		})
+	}
+	if value, ok := duo.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: description.FieldCoinTypeID,
+		})
+	}
+	if value, ok := duo.mutation.Title(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: description.FieldTitle,
+		})
+	}
+	if value, ok := duo.mutation.Message(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: description.FieldMessage,
+		})
+	}
+	if value, ok := duo.mutation.UsedFor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: description.FieldUsedFor,
 		})
 	}
 	_node = &Description{config: duo.config}

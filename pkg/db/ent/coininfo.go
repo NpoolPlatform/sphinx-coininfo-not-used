@@ -16,6 +16,12 @@ type CoinInfo struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Unit holds the value of the "unit" field.
@@ -34,12 +40,6 @@ type CoinInfo struct {
 	HomePage string `json:"home_page,omitempty"`
 	// Specs holds the value of the "specs" field.
 	Specs string `json:"specs,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt uint32 `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt uint32 `json:"updated_at,omitempty"`
-	// DeletedAt holds the value of the "deleted_at" field.
-	DeletedAt uint32 `json:"deleted_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -49,7 +49,7 @@ func (*CoinInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case coininfo.FieldPreSale, coininfo.FieldForPay:
 			values[i] = new(sql.NullBool)
-		case coininfo.FieldReservedAmount, coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt:
+		case coininfo.FieldCreatedAt, coininfo.FieldUpdatedAt, coininfo.FieldDeletedAt, coininfo.FieldReservedAmount:
 			values[i] = new(sql.NullInt64)
 		case coininfo.FieldName, coininfo.FieldUnit, coininfo.FieldLogo, coininfo.FieldEnv, coininfo.FieldHomePage, coininfo.FieldSpecs:
 			values[i] = new(sql.NullString)
@@ -75,6 +75,24 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				ci.ID = *value
+			}
+		case coininfo.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				ci.CreatedAt = uint32(value.Int64)
+			}
+		case coininfo.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				ci.UpdatedAt = uint32(value.Int64)
+			}
+		case coininfo.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				ci.DeletedAt = uint32(value.Int64)
 			}
 		case coininfo.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -130,24 +148,6 @@ func (ci *CoinInfo) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ci.Specs = value.String
 			}
-		case coininfo.FieldCreatedAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field created_at", values[i])
-			} else if value.Valid {
-				ci.CreatedAt = uint32(value.Int64)
-			}
-		case coininfo.FieldUpdatedAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
-			} else if value.Valid {
-				ci.UpdatedAt = uint32(value.Int64)
-			}
-		case coininfo.FieldDeletedAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
-			} else if value.Valid {
-				ci.DeletedAt = uint32(value.Int64)
-			}
 		}
 	}
 	return nil
@@ -176,6 +176,12 @@ func (ci *CoinInfo) String() string {
 	var builder strings.Builder
 	builder.WriteString("CoinInfo(")
 	builder.WriteString(fmt.Sprintf("id=%v", ci.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", ci.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", ci.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", ci.DeletedAt))
 	builder.WriteString(", name=")
 	builder.WriteString(ci.Name)
 	builder.WriteString(", unit=")
@@ -194,12 +200,6 @@ func (ci *CoinInfo) String() string {
 	builder.WriteString(ci.HomePage)
 	builder.WriteString(", specs=")
 	builder.WriteString(ci.Specs)
-	builder.WriteString(", created_at=")
-	builder.WriteString(fmt.Sprintf("%v", ci.CreatedAt))
-	builder.WriteString(", updated_at=")
-	builder.WriteString(fmt.Sprintf("%v", ci.UpdatedAt))
-	builder.WriteString(", deleted_at=")
-	builder.WriteString(fmt.Sprintf("%v", ci.DeletedAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

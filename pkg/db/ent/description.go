@@ -16,6 +16,12 @@ type Description struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// CoinTypeID holds the value of the "coin_type_id" field.
 	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// Title holds the value of the "title" field.
@@ -24,12 +30,6 @@ type Description struct {
 	Message string `json:"message,omitempty"`
 	// UsedFor holds the value of the "used_for" field.
 	UsedFor string `json:"used_for,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt uint32 `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt uint32 `json:"updated_at,omitempty"`
-	// DeletedAt holds the value of the "deleted_at" field.
-	DeletedAt uint32 `json:"deleted_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -64,6 +64,24 @@ func (d *Description) assignValues(columns []string, values []interface{}) error
 			} else if value != nil {
 				d.ID = *value
 			}
+		case description.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				d.CreatedAt = uint32(value.Int64)
+			}
+		case description.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				d.UpdatedAt = uint32(value.Int64)
+			}
+		case description.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				d.DeletedAt = uint32(value.Int64)
+			}
 		case description.FieldCoinTypeID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
@@ -87,24 +105,6 @@ func (d *Description) assignValues(columns []string, values []interface{}) error
 				return fmt.Errorf("unexpected type %T for field used_for", values[i])
 			} else if value.Valid {
 				d.UsedFor = value.String
-			}
-		case description.FieldCreatedAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field created_at", values[i])
-			} else if value.Valid {
-				d.CreatedAt = uint32(value.Int64)
-			}
-		case description.FieldUpdatedAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
-			} else if value.Valid {
-				d.UpdatedAt = uint32(value.Int64)
-			}
-		case description.FieldDeletedAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
-			} else if value.Valid {
-				d.DeletedAt = uint32(value.Int64)
 			}
 		}
 	}
@@ -134,6 +134,12 @@ func (d *Description) String() string {
 	var builder strings.Builder
 	builder.WriteString("Description(")
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", d.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", d.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", d.DeletedAt))
 	builder.WriteString(", coin_type_id=")
 	builder.WriteString(fmt.Sprintf("%v", d.CoinTypeID))
 	builder.WriteString(", title=")
@@ -142,12 +148,6 @@ func (d *Description) String() string {
 	builder.WriteString(d.Message)
 	builder.WriteString(", used_for=")
 	builder.WriteString(d.UsedFor)
-	builder.WriteString(", created_at=")
-	builder.WriteString(fmt.Sprintf("%v", d.CreatedAt))
-	builder.WriteString(", updated_at=")
-	builder.WriteString(fmt.Sprintf("%v", d.UpdatedAt))
-	builder.WriteString(", deleted_at=")
-	builder.WriteString(fmt.Sprintf("%v", d.DeletedAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

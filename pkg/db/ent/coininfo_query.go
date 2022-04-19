@@ -255,12 +255,12 @@ func (ciq *CoinInfoQuery) Clone() *CoinInfoQuery {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.CoinInfo.Query().
-//		GroupBy(coininfo.FieldName).
+//		GroupBy(coininfo.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +282,11 @@ func (ciq *CoinInfoQuery) GroupBy(field string, fields ...string) *CoinInfoGroup
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.CoinInfo.Query().
-//		Select(coininfo.FieldName).
+//		Select(coininfo.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (ciq *CoinInfoQuery) Select(fields ...string) *CoinInfoSelect {
@@ -306,6 +306,12 @@ func (ciq *CoinInfoQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		ciq.sql = prev
+	}
+	if coininfo.Policy == nil {
+		return errors.New("ent: uninitialized coininfo.Policy (forgotten import ent/runtime?)")
+	}
+	if err := coininfo.Policy.EvalQuery(ctx, ciq); err != nil {
+		return err
 	}
 	return nil
 }

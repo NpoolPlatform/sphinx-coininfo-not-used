@@ -27,6 +27,61 @@ func (ciu *CoinInfoUpdate) Where(ps ...predicate.CoinInfo) *CoinInfoUpdate {
 	return ciu
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (ciu *CoinInfoUpdate) SetCreatedAt(u uint32) *CoinInfoUpdate {
+	ciu.mutation.ResetCreatedAt()
+	ciu.mutation.SetCreatedAt(u)
+	return ciu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableCreatedAt(u *uint32) *CoinInfoUpdate {
+	if u != nil {
+		ciu.SetCreatedAt(*u)
+	}
+	return ciu
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (ciu *CoinInfoUpdate) AddCreatedAt(u int32) *CoinInfoUpdate {
+	ciu.mutation.AddCreatedAt(u)
+	return ciu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (ciu *CoinInfoUpdate) SetUpdatedAt(u uint32) *CoinInfoUpdate {
+	ciu.mutation.ResetUpdatedAt()
+	ciu.mutation.SetUpdatedAt(u)
+	return ciu
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (ciu *CoinInfoUpdate) AddUpdatedAt(u int32) *CoinInfoUpdate {
+	ciu.mutation.AddUpdatedAt(u)
+	return ciu
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (ciu *CoinInfoUpdate) SetDeletedAt(u uint32) *CoinInfoUpdate {
+	ciu.mutation.ResetDeletedAt()
+	ciu.mutation.SetDeletedAt(u)
+	return ciu
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (ciu *CoinInfoUpdate) SetNillableDeletedAt(u *uint32) *CoinInfoUpdate {
+	if u != nil {
+		ciu.SetDeletedAt(*u)
+	}
+	return ciu
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (ciu *CoinInfoUpdate) AddDeletedAt(u int32) *CoinInfoUpdate {
+	ciu.mutation.AddDeletedAt(u)
+	return ciu
+}
+
 // SetName sets the "name" field.
 func (ciu *CoinInfoUpdate) SetName(s string) *CoinInfoUpdate {
 	ciu.mutation.SetName(s)
@@ -152,61 +207,6 @@ func (ciu *CoinInfoUpdate) SetNillableSpecs(s *string) *CoinInfoUpdate {
 	return ciu
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (ciu *CoinInfoUpdate) SetCreatedAt(u uint32) *CoinInfoUpdate {
-	ciu.mutation.ResetCreatedAt()
-	ciu.mutation.SetCreatedAt(u)
-	return ciu
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (ciu *CoinInfoUpdate) SetNillableCreatedAt(u *uint32) *CoinInfoUpdate {
-	if u != nil {
-		ciu.SetCreatedAt(*u)
-	}
-	return ciu
-}
-
-// AddCreatedAt adds u to the "created_at" field.
-func (ciu *CoinInfoUpdate) AddCreatedAt(u int32) *CoinInfoUpdate {
-	ciu.mutation.AddCreatedAt(u)
-	return ciu
-}
-
-// SetUpdatedAt sets the "updated_at" field.
-func (ciu *CoinInfoUpdate) SetUpdatedAt(u uint32) *CoinInfoUpdate {
-	ciu.mutation.ResetUpdatedAt()
-	ciu.mutation.SetUpdatedAt(u)
-	return ciu
-}
-
-// AddUpdatedAt adds u to the "updated_at" field.
-func (ciu *CoinInfoUpdate) AddUpdatedAt(u int32) *CoinInfoUpdate {
-	ciu.mutation.AddUpdatedAt(u)
-	return ciu
-}
-
-// SetDeletedAt sets the "deleted_at" field.
-func (ciu *CoinInfoUpdate) SetDeletedAt(u uint32) *CoinInfoUpdate {
-	ciu.mutation.ResetDeletedAt()
-	ciu.mutation.SetDeletedAt(u)
-	return ciu
-}
-
-// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (ciu *CoinInfoUpdate) SetNillableDeletedAt(u *uint32) *CoinInfoUpdate {
-	if u != nil {
-		ciu.SetDeletedAt(*u)
-	}
-	return ciu
-}
-
-// AddDeletedAt adds u to the "deleted_at" field.
-func (ciu *CoinInfoUpdate) AddDeletedAt(u int32) *CoinInfoUpdate {
-	ciu.mutation.AddDeletedAt(u)
-	return ciu
-}
-
 // Mutation returns the CoinInfoMutation object of the builder.
 func (ciu *CoinInfoUpdate) Mutation() *CoinInfoMutation {
 	return ciu.mutation
@@ -218,7 +218,9 @@ func (ciu *CoinInfoUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	ciu.defaults()
+	if err := ciu.defaults(); err != nil {
+		return 0, err
+	}
 	if len(ciu.hooks) == 0 {
 		if err = ciu.check(); err != nil {
 			return 0, err
@@ -274,11 +276,15 @@ func (ciu *CoinInfoUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (ciu *CoinInfoUpdate) defaults() {
+func (ciu *CoinInfoUpdate) defaults() error {
 	if _, ok := ciu.mutation.UpdatedAt(); !ok {
+		if coininfo.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized coininfo.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
 		v := coininfo.UpdateDefaultUpdatedAt()
 		ciu.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -313,6 +319,48 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ciu.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldCreatedAt,
+		})
+	}
+	if value, ok := ciu.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldCreatedAt,
+		})
+	}
+	if value, ok := ciu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldUpdatedAt,
+		})
+	}
+	if value, ok := ciu.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldUpdatedAt,
+		})
+	}
+	if value, ok := ciu.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldDeletedAt,
+		})
+	}
+	if value, ok := ciu.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldDeletedAt,
+		})
 	}
 	if value, ok := ciu.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -384,48 +432,6 @@ func (ciu *CoinInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: coininfo.FieldSpecs,
 		})
 	}
-	if value, ok := ciu.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldCreatedAt,
-		})
-	}
-	if value, ok := ciu.mutation.AddedCreatedAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldCreatedAt,
-		})
-	}
-	if value, ok := ciu.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldUpdatedAt,
-		})
-	}
-	if value, ok := ciu.mutation.AddedUpdatedAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldUpdatedAt,
-		})
-	}
-	if value, ok := ciu.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldDeletedAt,
-		})
-	}
-	if value, ok := ciu.mutation.AddedDeletedAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldDeletedAt,
-		})
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ciu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{coininfo.Label}
@@ -443,6 +449,61 @@ type CoinInfoUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *CoinInfoMutation
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (ciuo *CoinInfoUpdateOne) SetCreatedAt(u uint32) *CoinInfoUpdateOne {
+	ciuo.mutation.ResetCreatedAt()
+	ciuo.mutation.SetCreatedAt(u)
+	return ciuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableCreatedAt(u *uint32) *CoinInfoUpdateOne {
+	if u != nil {
+		ciuo.SetCreatedAt(*u)
+	}
+	return ciuo
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (ciuo *CoinInfoUpdateOne) AddCreatedAt(u int32) *CoinInfoUpdateOne {
+	ciuo.mutation.AddCreatedAt(u)
+	return ciuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (ciuo *CoinInfoUpdateOne) SetUpdatedAt(u uint32) *CoinInfoUpdateOne {
+	ciuo.mutation.ResetUpdatedAt()
+	ciuo.mutation.SetUpdatedAt(u)
+	return ciuo
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (ciuo *CoinInfoUpdateOne) AddUpdatedAt(u int32) *CoinInfoUpdateOne {
+	ciuo.mutation.AddUpdatedAt(u)
+	return ciuo
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (ciuo *CoinInfoUpdateOne) SetDeletedAt(u uint32) *CoinInfoUpdateOne {
+	ciuo.mutation.ResetDeletedAt()
+	ciuo.mutation.SetDeletedAt(u)
+	return ciuo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (ciuo *CoinInfoUpdateOne) SetNillableDeletedAt(u *uint32) *CoinInfoUpdateOne {
+	if u != nil {
+		ciuo.SetDeletedAt(*u)
+	}
+	return ciuo
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (ciuo *CoinInfoUpdateOne) AddDeletedAt(u int32) *CoinInfoUpdateOne {
+	ciuo.mutation.AddDeletedAt(u)
+	return ciuo
 }
 
 // SetName sets the "name" field.
@@ -570,61 +631,6 @@ func (ciuo *CoinInfoUpdateOne) SetNillableSpecs(s *string) *CoinInfoUpdateOne {
 	return ciuo
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (ciuo *CoinInfoUpdateOne) SetCreatedAt(u uint32) *CoinInfoUpdateOne {
-	ciuo.mutation.ResetCreatedAt()
-	ciuo.mutation.SetCreatedAt(u)
-	return ciuo
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (ciuo *CoinInfoUpdateOne) SetNillableCreatedAt(u *uint32) *CoinInfoUpdateOne {
-	if u != nil {
-		ciuo.SetCreatedAt(*u)
-	}
-	return ciuo
-}
-
-// AddCreatedAt adds u to the "created_at" field.
-func (ciuo *CoinInfoUpdateOne) AddCreatedAt(u int32) *CoinInfoUpdateOne {
-	ciuo.mutation.AddCreatedAt(u)
-	return ciuo
-}
-
-// SetUpdatedAt sets the "updated_at" field.
-func (ciuo *CoinInfoUpdateOne) SetUpdatedAt(u uint32) *CoinInfoUpdateOne {
-	ciuo.mutation.ResetUpdatedAt()
-	ciuo.mutation.SetUpdatedAt(u)
-	return ciuo
-}
-
-// AddUpdatedAt adds u to the "updated_at" field.
-func (ciuo *CoinInfoUpdateOne) AddUpdatedAt(u int32) *CoinInfoUpdateOne {
-	ciuo.mutation.AddUpdatedAt(u)
-	return ciuo
-}
-
-// SetDeletedAt sets the "deleted_at" field.
-func (ciuo *CoinInfoUpdateOne) SetDeletedAt(u uint32) *CoinInfoUpdateOne {
-	ciuo.mutation.ResetDeletedAt()
-	ciuo.mutation.SetDeletedAt(u)
-	return ciuo
-}
-
-// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (ciuo *CoinInfoUpdateOne) SetNillableDeletedAt(u *uint32) *CoinInfoUpdateOne {
-	if u != nil {
-		ciuo.SetDeletedAt(*u)
-	}
-	return ciuo
-}
-
-// AddDeletedAt adds u to the "deleted_at" field.
-func (ciuo *CoinInfoUpdateOne) AddDeletedAt(u int32) *CoinInfoUpdateOne {
-	ciuo.mutation.AddDeletedAt(u)
-	return ciuo
-}
-
 // Mutation returns the CoinInfoMutation object of the builder.
 func (ciuo *CoinInfoUpdateOne) Mutation() *CoinInfoMutation {
 	return ciuo.mutation
@@ -643,7 +649,9 @@ func (ciuo *CoinInfoUpdateOne) Save(ctx context.Context) (*CoinInfo, error) {
 		err  error
 		node *CoinInfo
 	)
-	ciuo.defaults()
+	if err := ciuo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(ciuo.hooks) == 0 {
 		if err = ciuo.check(); err != nil {
 			return nil, err
@@ -699,11 +707,15 @@ func (ciuo *CoinInfoUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (ciuo *CoinInfoUpdateOne) defaults() {
+func (ciuo *CoinInfoUpdateOne) defaults() error {
 	if _, ok := ciuo.mutation.UpdatedAt(); !ok {
+		if coininfo.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized coininfo.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
 		v := coininfo.UpdateDefaultUpdatedAt()
 		ciuo.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -755,6 +767,48 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ciuo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldCreatedAt,
+		})
+	}
+	if value, ok := ciuo.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldCreatedAt,
+		})
+	}
+	if value, ok := ciuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldUpdatedAt,
+		})
+	}
+	if value, ok := ciuo.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldUpdatedAt,
+		})
+	}
+	if value, ok := ciuo.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldDeletedAt,
+		})
+	}
+	if value, ok := ciuo.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: coininfo.FieldDeletedAt,
+		})
 	}
 	if value, ok := ciuo.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -824,48 +878,6 @@ func (ciuo *CoinInfoUpdateOne) sqlSave(ctx context.Context) (_node *CoinInfo, er
 			Type:   field.TypeString,
 			Value:  value,
 			Column: coininfo.FieldSpecs,
-		})
-	}
-	if value, ok := ciuo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldCreatedAt,
-		})
-	}
-	if value, ok := ciuo.mutation.AddedCreatedAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldCreatedAt,
-		})
-	}
-	if value, ok := ciuo.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldUpdatedAt,
-		})
-	}
-	if value, ok := ciuo.mutation.AddedUpdatedAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldUpdatedAt,
-		})
-	}
-	if value, ok := ciuo.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldDeletedAt,
-		})
-	}
-	if value, ok := ciuo.mutation.AddedDeletedAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: coininfo.FieldDeletedAt,
 		})
 	}
 	_node = &CoinInfo{config: ciuo.config}

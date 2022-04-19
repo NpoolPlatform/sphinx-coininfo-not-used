@@ -217,7 +217,8 @@ func (c *CoinInfoClient) GetX(ctx context.Context, id uuid.UUID) *CoinInfo {
 
 // Hooks returns the client hooks.
 func (c *CoinInfoClient) Hooks() []Hook {
-	return c.hooks.CoinInfo
+	hooks := c.hooks.CoinInfo
+	return append(hooks[:len(hooks):len(hooks)], coininfo.Hooks[:]...)
 }
 
 // DescriptionClient is a client for the Description schema.
@@ -307,5 +308,6 @@ func (c *DescriptionClient) GetX(ctx context.Context, id uuid.UUID) *Description
 
 // Hooks returns the client hooks.
 func (c *DescriptionClient) Hooks() []Hook {
-	return c.hooks.Description
+	hooks := c.hooks.Description
+	return append(hooks[:len(hooks):len(hooks)], description.Hooks[:]...)
 }

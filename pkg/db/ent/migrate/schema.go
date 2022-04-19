@@ -11,6 +11,9 @@ var (
 	// CoinInfosColumns holds the columns for the "coin_infos" table.
 	CoinInfosColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "unit", Type: field.TypeString, Default: ""},
 		{Name: "reserved_amount", Type: field.TypeUint64, Default: 0},
@@ -20,9 +23,6 @@ var (
 		{Name: "for_pay", Type: field.TypeBool, Default: false},
 		{Name: "home_page", Type: field.TypeString, Default: ""},
 		{Name: "specs", Type: field.TypeString, Default: ""},
-		{Name: "created_at", Type: field.TypeUint32},
-		{Name: "updated_at", Type: field.TypeUint32},
-		{Name: "deleted_at", Type: field.TypeUint32},
 	}
 	// CoinInfosTable holds the schema information for the "coin_infos" table.
 	CoinInfosTable = &schema.Table{
@@ -33,20 +33,20 @@ var (
 			{
 				Name:    "coininfo_name",
 				Unique:  true,
-				Columns: []*schema.Column{CoinInfosColumns[1]},
+				Columns: []*schema.Column{CoinInfosColumns[4]},
 			},
 		},
 	}
 	// DescriptionsColumns holds the columns for the "descriptions" table.
 	DescriptionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "coin_type_id", Type: field.TypeUUID},
 		{Name: "title", Type: field.TypeString},
 		{Name: "message", Type: field.TypeString, Size: 2048},
 		{Name: "used_for", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeUint32},
-		{Name: "updated_at", Type: field.TypeUint32},
-		{Name: "deleted_at", Type: field.TypeUint32},
 	}
 	// DescriptionsTable holds the schema information for the "descriptions" table.
 	DescriptionsTable = &schema.Table{
@@ -57,7 +57,7 @@ var (
 			{
 				Name:    "description_coin_type_id_used_for",
 				Unique:  true,
-				Columns: []*schema.Column{DescriptionsColumns[1], DescriptionsColumns[4]},
+				Columns: []*schema.Column{DescriptionsColumns[4], DescriptionsColumns[7]},
 			},
 		},
 	}
