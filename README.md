@@ -138,7 +138,7 @@ func (CoinInfo) Mixin() []ent.Mixin {
 4. make gen-ent
 
 
-测试代码
+测试代码(也可以打开 debug 模式,查看生成的 SQL)
 
 ```sql
 package main
