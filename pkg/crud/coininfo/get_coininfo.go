@@ -50,7 +50,7 @@ type GetAllCoinInfosParams struct {
 
 func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.CoinInfo, int, error) {
 	if params.Limit == 0 {
-		params.Limit = constant.PageSize
+		params.Limit = int(constant.DefaultPageSize)
 	}
 
 	client, err := db.Client()
@@ -78,7 +78,7 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.
 
 	// infos
 	coinInfos, err := stm.
-		Order(ent.Desc(coininfo.FieldCreatedAt)).
+		Order(ent.Desc(coininfo.FieldUpdatedAt)).
 		Offset(params.Offset).
 		Limit(params.Limit).
 		All(ctx)

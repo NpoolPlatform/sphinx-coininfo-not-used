@@ -6,7 +6,6 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/description"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -29,6 +28,17 @@ func (s *Server) UpdateCoinDescription(ctx context.Context, in *npool.UpdateCoin
 		return nil, status.Error(codes.InvalidArgument, "UseFor empty")
 	}
 
+	if in.GetID() == "" {
+		logger.Sugar().Error("UpdateCoinDescription check ID is empty")
+		return nil, status.Error(codes.InvalidArgument, "ID empty")
+	}
+
+	id, err := uuid.Parse(in.GetID())
+	if err != nil {
+		logger.Sugar().Errorf("UpdateCoinDescription parse ID: %s invalid", in.GetID())
+		return nil, status.Error(codes.InvalidArgument, "ID invalid")
+	}
+
 	if in.GetCoinTypeID() == "" {
 		logger.Sugar().Error("UpdateCoinDescription check CoinTypeID is empty")
 		return nil, status.Error(codes.InvalidArgument, "CoinTypeID empty")
@@ -43,18 +53,18 @@ func (s *Server) UpdateCoinDescription(ctx context.Context, in *npool.UpdateCoin
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
-	oldCoinDesc, err := description.GetCoinDescriptionByCoinID(ctx, coinID)
+	exist, err := description.ExistCoinDescriptionByID(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("UpdateCoinDescription call ExistCoinDescriptionByCoinID error %v", err)
+		logger.Sugar().Errorf("UpdateCoinDescription call ExistCoinDescriptionByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	if ent.IsNotFound(err) {
-		logger.Sugar().Errorf("UpdateCoinDescription call ExistCoinDescriptionByCoinID ID: %v not found", in.GetCoinTypeID())
-		return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetCoinTypeID())
+	if exist {
+		logger.Sugar().Errorf("UpdateCoinDescription call ExistCoinDescriptionByID ID: %v not found", in.GetID())
+		return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
 	}
 
-	coinDesc, err := description.UpdateCoinDescriptionByID(ctx, in.GetTitle(), in.GetMessage(), in.GetUsedFor(), oldCoinDesc.ID)
+	coinDesc, err := description.UpdateCoinDescriptionByID(ctx, id, coinID, in.GetUsedFor(), in.GetTitle(), in.GetMessage())
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinDescription call UpdateCoinDescriptionByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")

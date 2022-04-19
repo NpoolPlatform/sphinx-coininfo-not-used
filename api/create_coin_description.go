@@ -54,9 +54,9 @@ func (s *Server) CreateCoinDescription(ctx context.Context, in *npool.CreateCoin
 		return nil, status.Errorf(codes.NotFound, "CoinTypeID: %v not found", in.GetCoinTypeID())
 	}
 
-	existCoinDesc, err := description.ExistCoinDescriptionByCoinID(ctx, coinID)
+	existCoinDesc, err := description.ExistCoinDescriptionByCoinIDAndUsedFor(ctx, coinID, in.GetUsedFor())
 	if err != nil {
-		logger.Sugar().Errorf("CreateCoinDescription call ExistCoinDescriptionByCoinID error %v", err)
+		logger.Sugar().Errorf("CreateCoinDescription call ExistCoinDescriptionByCoinIDAndUsedFor error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 

@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func UpdateCoinDescriptionByID(ctx context.Context, title, message, usedFor string, id uuid.UUID) (*ent.Description, error) {
+func UpdateCoinDescriptionByID(ctx context.Context, id, coinID uuid.UUID, usedFor, title, message string) (*ent.Description, error) {
 	client, err := db.Client()
 	if err != nil {
 		return nil, err
@@ -17,8 +17,9 @@ func UpdateCoinDescriptionByID(ctx context.Context, title, message, usedFor stri
 	return client.
 		Description.
 		UpdateOneID(id).
+		SetCoinTypeID(coinID).
+		SetUsedFor(usedFor).
 		SetTitle(title).
 		SetMessage(message).
-		SetUsedFor(usedFor).
 		Save(ctx)
 }

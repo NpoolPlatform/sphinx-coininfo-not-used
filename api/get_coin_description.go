@@ -6,7 +6,6 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/coininfo"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/description"
-	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -29,25 +28,27 @@ func (s *Server) GetCoinDescription(ctx context.Context, in *npool.GetCoinDescri
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
-	coinDesc, err := description.GetCoinDescriptionByCoinID(ctx, coinID)
-	if ent.IsNotFound(err) {
-		logger.Sugar().Errorf("GetCoinDescription call GetCoinDescriptionByCoinID CoinTypeID: %v not found", in.GetCoinTypeID())
-		return nil, status.Errorf(codes.NotFound, "CoinTypeID: %v not found", in.GetCoinTypeID())
-	}
+	coinDescs, total, err := description.GetCoinDescriptionByCoinID(ctx, coinID, in.GetLimit(), in.GetOffset())
 	if err != nil {
 		logger.Sugar().Errorf("GetCoinDescription call GetCoinDescriptionByCoinID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
+	descInfos := make([]*npool.CoinDescriptionInfo, total)
+	for _, info := range coinDescs {
+		descInfos = append(descInfos, &npool.CoinDescriptionInfo{
+			ID:         info.ID.String(),
+			CoinTypeID: info.CoinTypeID.String(),
+			Title:      info.Title,
+			Message:    info.Message,
+			UsedFor:    info.UsedFor,
+			CreatedAt:  info.CreatedAt,
+			UpdatedAt:  info.UpdatedAt,
+		})
+	}
+
 	return &npool.GetCoinDescriptionResponse{
-		Info: &npool.CoinDescriptionInfo{
-			ID:         coinDesc.ID.String(),
-			CoinTypeID: coinDesc.CoinTypeID.String(),
-			Title:      coinDesc.Title,
-			Message:    coinDesc.Message,
-			UsedFor:    coinDesc.UsedFor,
-			CreatedAt:  coinDesc.CreatedAt,
-			UpdatedAt:  coinDesc.UpdatedAt,
-		},
+		Infos: descInfos,
+		Total: int32(total),
 	}, nil
 }
