@@ -13,6 +13,7 @@ func CreateCoinInfo(ctx context.Context, info *coininfo.CoinInfo) error {
 	if err != nil {
 		return err
 	}
+
 	return client.CoinInfo.Create().
 		SetName(info.GetName()).
 		SetUnit(info.GetUnit()).

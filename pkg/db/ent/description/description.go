@@ -3,6 +3,7 @@
 package description
 
 import (
+	"entgo.io/ent"
 	"github.com/google/uuid"
 )
 
@@ -11,6 +12,12 @@ const (
 	Label = "description"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
 	FieldCoinTypeID = "coin_type_id"
 	// FieldTitle holds the string denoting the title field in the database.
@@ -19,12 +26,6 @@ const (
 	FieldMessage = "message"
 	// FieldUsedFor holds the string denoting the used_for field in the database.
 	FieldUsedFor = "used_for"
-	// FieldCreatedAt holds the string denoting the created_at field in the database.
-	FieldCreatedAt = "created_at"
-	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
-	FieldUpdatedAt = "updated_at"
-	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
-	FieldDeletedAt = "deleted_at"
 	// Table holds the table name of the description in the database.
 	Table = "descriptions"
 )
@@ -32,13 +33,13 @@ const (
 // Columns holds all SQL columns for description fields.
 var Columns = []string{
 	FieldID,
+	FieldCreatedAt,
+	FieldUpdatedAt,
+	FieldDeletedAt,
 	FieldCoinTypeID,
 	FieldTitle,
 	FieldMessage,
 	FieldUsedFor,
-	FieldCreatedAt,
-	FieldUpdatedAt,
-	FieldDeletedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -51,9 +52,15 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/runtime"
+//
 var (
-	// MessageValidator is a validator for the "message" field. It is called by the builders before save.
-	MessageValidator func(string) error
+	Hooks  [1]ent.Hook
+	Policy ent.Policy
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() uint32
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -62,6 +69,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// MessageValidator is a validator for the "message" field. It is called by the builders before save.
+	MessageValidator func(string) error
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

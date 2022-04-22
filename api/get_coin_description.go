@@ -35,8 +35,8 @@ func (s *Server) GetCoinDescription(ctx context.Context, in *npool.GetCoinDescri
 	}
 
 	descInfos := make([]*npool.CoinDescriptionInfo, total)
-	for _, info := range coinDescs {
-		descInfos = append(descInfos, &npool.CoinDescriptionInfo{
+	for i, info := range coinDescs {
+		descInfos[i] = &npool.CoinDescriptionInfo{
 			ID:         info.ID.String(),
 			CoinTypeID: info.CoinTypeID.String(),
 			Title:      info.Title,
@@ -44,7 +44,7 @@ func (s *Server) GetCoinDescription(ctx context.Context, in *npool.GetCoinDescri
 			UsedFor:    info.UsedFor,
 			CreatedAt:  info.CreatedAt,
 			UpdatedAt:  info.UpdatedAt,
-		})
+		}
 	}
 
 	return &npool.GetCoinDescriptionResponse{

@@ -55,7 +55,7 @@ verify-spelling: ## Verifies spelling.
 gen-ent:
 	go get -d entgo.io/ent/cmd/ent@latest
 	go install entgo.io/ent/cmd/ent@latest
-	go run entgo.io/ent/cmd/ent generate --feature sql/upsert ./pkg/db/ent/schema
+	go run entgo.io/ent/cmd/ent generate --feature entql,sql/upsert,privacy,schema/snapshot ./pkg/db/ent/schema
 
 all: verify-build
 

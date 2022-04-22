@@ -255,12 +255,12 @@ func (dq *DescriptionQuery) Clone() *DescriptionQuery {
 // Example:
 //
 //	var v []struct {
-//		CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Description.Query().
-//		GroupBy(description.FieldCoinTypeID).
+//		GroupBy(description.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +282,11 @@ func (dq *DescriptionQuery) GroupBy(field string, fields ...string) *Description
 // Example:
 //
 //	var v []struct {
-//		CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.Description.Query().
-//		Select(description.FieldCoinTypeID).
+//		Select(description.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (dq *DescriptionQuery) Select(fields ...string) *DescriptionSelect {
@@ -306,6 +306,12 @@ func (dq *DescriptionQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		dq.sql = prev
+	}
+	if description.Policy == nil {
+		return errors.New("ent: uninitialized description.Policy (forgotten import ent/runtime?)")
+	}
+	if err := description.Policy.EvalQuery(ctx, dq); err != nil {
+		return err
 	}
 	return nil
 }
