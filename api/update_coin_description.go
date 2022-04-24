@@ -59,7 +59,7 @@ func (s *Server) UpdateCoinDescription(ctx context.Context, in *npool.UpdateCoin
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	if exist {
+	if !exist {
 		logger.Sugar().Errorf("UpdateCoinDescription call ExistCoinDescriptionByID ID: %v not found", in.GetID())
 		return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
 	}
