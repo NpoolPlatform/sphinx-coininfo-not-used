@@ -29,7 +29,10 @@ func do(ctx context.Context, fn func(_ctx context.Context, cli npool.SphinxCoinI
 func GetCoinInfos(ctx context.Context, conds cruder.FilterConds) ([]*npool.CoinInfo, error) {
 	// conds: NOT USED NOW, will be used after refactor code
 	infos, err := do(ctx, func(_ctx context.Context, cli npool.SphinxCoinInfoClient) (cruder.Any, error) {
-		resp, err := cli.GetCoinInfos(ctx, &npool.GetCoinInfosRequest{})
+		resp, err := cli.GetCoinInfos(ctx, &npool.GetCoinInfosRequest{
+			Offset: 0,
+			Limit:  100,
+		})
 		if err != nil {
 			return nil, fmt.Errorf("fail get coininfos: %v", err)
 		}
