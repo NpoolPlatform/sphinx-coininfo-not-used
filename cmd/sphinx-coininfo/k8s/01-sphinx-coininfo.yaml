@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: sphinx-coininfo
   namespace: kube-system
+  annotations:
+    "sidecar.jaegertracing.io/inject": "true"
 spec:
   replicas: 2
   selector:
@@ -14,29 +16,29 @@ spec:
         app: sphinx-coininfo
     spec:
       containers:
-      - name: sphinx-coininfo
-        image: uhub.service.ucloud.cn/entropypool/sphinx-coininfo:latest
-        imagePullPolicy: Always
-        env:
-        - name: ENV_ENVIRONMENT_TARGET
-          valueFrom:
-            configMapKeyRef:
-              name: system-environment
-              key: environment.target
-        - name: ENV_CONSUL_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: system-environment
-              key: environment.consul_host
-        - name: ENV_CONSUL_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: system-environment
-              key: environment.consul_port
-        - name: ENV_CLUSTER_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
+        - name: sphinx-coininfo
+          image: uhub.service.ucloud.cn/entropypool/sphinx-coininfo:latest
+          imagePullPolicy: Always
+          env:
+            - name: ENV_ENVIRONMENT_TARGET
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.target
+            - name: ENV_CONSUL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.consul_host
+            - name: ENV_CONSUL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.consul_port
+            - name: ENV_CLUSTER_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
 
 ---
 apiVersion: v1
@@ -46,14 +48,14 @@ metadata:
   namespace: kube-system
 spec:
   ports:
-  - name: api
-    port: 50150
-    targetPort: 50150
-  - name: grpc
-    port: 50151
-    targetPort: 50151
-  - name: prometheus
-    port: 50153
-    targetPort: 50153
+    - name: api
+      port: 50150
+      targetPort: 50150
+    - name: grpc
+      port: 50151
+      targetPort: 50151
+    - name: prometheus
+      port: 50153
+      targetPort: 50153
   selector:
     app: sphinx-coininfo
