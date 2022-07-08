@@ -10,7 +10,6 @@ import (
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	ocodes "go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -71,8 +70,6 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 	span.AddEvent("call db CreateCoinInfo done")
 	if err != nil {
 		logger.Sugar().Errorf("CreateCoinInfo call CreateCoinInfo error %v", err)
-		span.RecordError(err)
-		span.SetStatus(ocodes.Error, "")
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
