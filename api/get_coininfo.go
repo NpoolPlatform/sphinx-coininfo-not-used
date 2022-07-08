@@ -11,6 +11,8 @@ import (
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -19,6 +21,11 @@ import (
 func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) (*npool.GetCoinInfoResponse, error) {
 	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfo")
 	defer span.End()
+
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+		attribute.String("Name", in.GetName()),
+	)
 
 	if in.GetID() == "" && in.GetName() == "" {
 		logger.Sugar().Errorf("GetCoinInfo check ID or Name is empty")
@@ -40,7 +47,14 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			return nil, status.Errorf(codes.InvalidArgument, "ID: %v invalid", in.GetID())
 		}
 
+		span.AddEvent("call db GetCoinInfoByID",
+			trace.WithAttributes(
+				attribute.String("ID", in.GetID()),
+			),
+		)
 		coinInfo, err = coininfo.GetCoinInfoByID(ctx, id)
+		span.AddEvent("call db GetCoinInfoByID done")
+
 		if ent.IsNotFound(err) {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByID ID: %v not found", in.GetID())
 			return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
@@ -51,7 +65,14 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			return nil, status.Error(codes.Internal, "internal server error")
 		}
 	} else if in.GetName() != "" {
+		span.AddEvent("call db GetCoinInfoByName",
+			trace.WithAttributes(
+				attribute.String("Name", in.GetName()),
+			),
+		)
 		coinInfo, err = coininfo.GetCoinInfoByName(ctx, in.GetName())
+		span.AddEvent("call db GetCoinInfoByName done")
+
 		if ent.IsNotFound(err) {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByName Name: %v not found", in.GetName())
 			return nil, status.Errorf(codes.NotFound, "Name: %v not found", in.GetName())

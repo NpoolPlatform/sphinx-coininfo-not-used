@@ -6,13 +6,20 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/coininfo"
-	constant "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
+	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
 )
 
 func GetCoinInfoByID(ctx context.Context, id uuid.UUID) (coinInfo *ent.CoinInfo, err error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfoByID")
+	defer span.End()
+
 	client, err := db.Client()
 	if err != nil {
+		span.SetStatus(codes.Error, "get db client fail")
+		span.RecordError(err)
 		return nil, err
 	}
 	coinInfo, err = client.CoinInfo.Query().
@@ -22,8 +29,13 @@ func GetCoinInfoByID(ctx context.Context, id uuid.UUID) (coinInfo *ent.CoinInfo,
 }
 
 func GetCoinInfoByName(ctx context.Context, coinName string) (coinInfo *ent.CoinInfo, err error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfoByName")
+	defer span.End()
+
 	client, err := db.Client()
 	if err != nil {
+		span.SetStatus(codes.Error, "get db client fail")
+		span.RecordError(err)
 		return nil, err
 	}
 	coinInfo, err = client.CoinInfo.Query().
@@ -33,8 +45,13 @@ func GetCoinInfoByName(ctx context.Context, coinName string) (coinInfo *ent.Coin
 }
 
 func ExistCoinInfoByID(ctx context.Context, coinID uuid.UUID) (bool, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "ExistCoinInfoByID")
+	defer span.End()
+
 	client, err := db.Client()
 	if err != nil {
+		span.SetStatus(codes.Error, "get db client fail")
+		span.RecordError(err)
 		return false, err
 	}
 	return client.CoinInfo.Query().
@@ -49,12 +66,17 @@ type GetAllCoinInfosParams struct {
 }
 
 func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.CoinInfo, int, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetAllCoinInfos")
+	defer span.End()
+
 	if params.Limit == 0 {
-		params.Limit = constant.PageSize
+		params.Limit = ccoin.PageSize
 	}
 
 	client, err := db.Client()
 	if err != nil {
+		span.SetStatus(codes.Error, "get db client fail")
+		span.RecordError(err)
 		return nil, 0, err
 	}
 

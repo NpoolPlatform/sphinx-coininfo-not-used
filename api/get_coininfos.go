@@ -9,6 +9,8 @@ import (
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/crud/coininfo"
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -17,15 +19,31 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest
 	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfos")
 	defer span.End()
 
+	span.SetAttributes(
+		attribute.Bool("PreSale", in.GetPreSale()),
+		attribute.String("Name", in.GetName()),
+		attribute.Int64("Offset", int64(in.GetOffset())),
+		attribute.Int64("Limit", int64(in.GetLimit())),
+	)
+
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
+	span.AddEvent("call db GetCoinInfos",
+		trace.WithAttributes(
+			attribute.Bool("PreSale", in.GetPreSale()),
+			attribute.String("Name", in.GetName()),
+			attribute.Int64("Offset", int64(in.GetOffset())),
+			attribute.Int64("Limit", int64(in.GetLimit())),
+		),
+	)
 	resp, total, err := coininfo.GetAllCoinInfos(ctx, coininfo.GetAllCoinInfosParams{
 		PreSale: in.GetPreSale(),
 		Name:    in.GetName(),
 		Offset:  int(in.GetOffset()),
 		Limit:   int(in.GetLimit()),
 	})
+	span.AddEvent("call db GetCoinInfos done")
 	if err != nil {
 		logger.Sugar().Errorf("GetCoinInfos call GetAllCoinInfos error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")

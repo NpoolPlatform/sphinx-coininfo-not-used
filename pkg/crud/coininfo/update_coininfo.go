@@ -6,14 +6,23 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/price"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db"
 	"github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent"
+	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
 )
 
-func UpdateCoinInfoByID(ctx context.Context, preSale, forPay bool, logo, id, homePage, specs string, reservedAmount float64) (coinInfo *ent.CoinInfo, err error) {
+func UpdateCoinInfoByID(ctx context.Context, preSale, forPay bool, logo, id, homePage, specs string, reservedAmount float64) (*ent.CoinInfo, error) {
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "UpdateCoinInfoByID")
+	defer span.End()
+
 	client, err := db.Client()
 	if err != nil {
+		span.SetStatus(codes.Error, "get db client fail")
+		span.RecordError(err)
 		return nil, err
 	}
+
 	stmt := client.
 		CoinInfo.
 		UpdateOneID(uuid.MustParse(id))
@@ -32,7 +41,7 @@ func UpdateCoinInfoByID(ctx context.Context, preSale, forPay bool, logo, id, hom
 	if reservedAmount > 0 {
 		stmt.SetReservedAmount(price.VisualPriceToDBPrice(reservedAmount))
 	}
-	coinInfo, err = stmt.
+
+	return stmt.
 		Save(ctx)
-	return
 }

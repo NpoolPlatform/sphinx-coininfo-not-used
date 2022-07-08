@@ -16,7 +16,7 @@ import (
 
 // CreateCoinDescription ..
 func (s *Server) CreateCoinDescription(ctx context.Context, in *npool.CreateCoinDescriptionRequest) (*npool.CreateCoinDescriptionResponse, error) {
-	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "CreateCoinInfo")
+	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "CreateCoinDescription")
 	defer span.End()
 
 	if in.GetTitle() == "" {
