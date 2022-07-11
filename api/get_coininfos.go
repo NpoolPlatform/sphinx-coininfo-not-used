@@ -43,7 +43,6 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest
 		Offset:  int(in.GetOffset()),
 		Limit:   int(in.GetLimit()),
 	})
-	span.AddEvent("call db GetCoinInfos done")
 	if err != nil {
 		logger.Sugar().Errorf("GetCoinInfos call GetAllCoinInfos error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")

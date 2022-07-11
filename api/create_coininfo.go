@@ -67,7 +67,6 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		Logo:    in.GetLogo(),
 		ENV:     in.GetENV(),
 	})
-	span.AddEvent("call db CreateCoinInfo done")
 	if err != nil {
 		logger.Sugar().Errorf("CreateCoinInfo call CreateCoinInfo error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
@@ -77,7 +76,6 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		attribute.String("Name", in.GetName()),
 	))
 	coinInfo, err := coininfo.GetCoinInfoByName(ctx, in.GetName())
-	span.AddEvent("call db GetCoinInfoByName done")
 	if err != nil {
 		logger.Sugar().Errorf("CreateCoinInfo call GetCoinInfoByName error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")

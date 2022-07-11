@@ -50,7 +50,6 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		),
 	)
 	existCoin, err := coininfo.ExistCoinInfoByID(ctx, id)
-	span.AddEvent("call db ExistCoinInfoByID done")
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinInfo call GetCoinInfoByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")
@@ -73,7 +72,6 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		),
 	)
 	coinInfo, err := coininfo.UpdateCoinInfoByID(ctx, in.GetPreSale(), in.GetForPay(), in.GetLogo(), in.GetID(), in.GetHomePage(), in.GetSpecs(), in.GetReservedAmount())
-	span.AddEvent("call db UpdateCoinInfoByID done")
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinInfo call UpdateCoinInfoByID error %v", err)
 		return nil, status.Error(codes.Internal, "internal server error")

@@ -53,8 +53,6 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			),
 		)
 		coinInfo, err = coininfo.GetCoinInfoByID(ctx, id)
-		span.AddEvent("call db GetCoinInfoByID done")
-
 		if ent.IsNotFound(err) {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByID ID: %v not found", in.GetID())
 			return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
@@ -71,8 +69,6 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			),
 		)
 		coinInfo, err = coininfo.GetCoinInfoByName(ctx, in.GetName())
-		span.AddEvent("call db GetCoinInfoByName done")
-
 		if ent.IsNotFound(err) {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByName Name: %v not found", in.GetName())
 			return nil, status.Errorf(codes.NotFound, "Name: %v not found", in.GetName())
