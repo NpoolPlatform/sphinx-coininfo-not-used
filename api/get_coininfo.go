@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
+	ocodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -37,6 +37,13 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 		coinInfo *ent.CoinInfo
 	)
 
+	defer func() {
+		if err != nil {
+			span.SetStatus(ocodes.Error, "call GetCoinInfo")
+			span.RecordError(err)
+		}
+	}()
+
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
@@ -47,11 +54,7 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			return nil, status.Errorf(codes.InvalidArgument, "ID: %v invalid", in.GetID())
 		}
 
-		span.AddEvent("call db GetCoinInfoByID",
-			trace.WithAttributes(
-				attribute.String("ID", in.GetID()),
-			),
-		)
+		span.AddEvent("call db GetCoinInfoByID")
 		coinInfo, err = coininfo.GetCoinInfoByID(ctx, id)
 		if ent.IsNotFound(err) {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByID ID: %v not found", in.GetID())
@@ -63,11 +66,7 @@ func (s *Server) GetCoinInfo(ctx context.Context, in *npool.GetCoinInfoRequest) 
 			return nil, status.Error(codes.Internal, "internal server error")
 		}
 	} else if in.GetName() != "" {
-		span.AddEvent("call db GetCoinInfoByName",
-			trace.WithAttributes(
-				attribute.String("Name", in.GetName()),
-			),
-		)
+		span.AddEvent("call db GetCoinInfoByName")
 		coinInfo, err = coininfo.GetCoinInfoByName(ctx, in.GetName())
 		if ent.IsNotFound(err) {
 			logger.Sugar().Errorf("GetCoinInfo call GetCoinInfoByName Name: %v not found", in.GetName())

@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
+	ocodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -30,6 +30,14 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		attribute.String("Specs", in.GetSpecs()),
 	)
 
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(ocodes.Error, "call UpdateCoinInfo")
+			span.RecordError(err)
+		}
+	}()
+
 	if in.GetID() == "" {
 		logger.Sugar().Errorf("UpdateCoinInfo check ID is empty")
 		return nil, status.Error(codes.InvalidArgument, "ID empty")
@@ -44,11 +52,7 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
-	span.AddEvent("call db ExistCoinInfoByID",
-		trace.WithAttributes(
-			attribute.String("ID", in.GetID()),
-		),
-	)
+	span.AddEvent("call db ExistCoinInfoByID")
 	existCoin, err := coininfo.ExistCoinInfoByID(ctx, id)
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinInfo call GetCoinInfoByID error %v", err)
@@ -60,17 +64,7 @@ func (s *Server) UpdateCoinInfo(ctx context.Context, in *npool.UpdateCoinInfoReq
 		return nil, status.Errorf(codes.NotFound, "ID: %v not found", in.GetID())
 	}
 
-	span.AddEvent("call db UpdateCoinInfoByID",
-		trace.WithAttributes(
-			attribute.Bool("PreSale", in.GetPreSale()),
-			attribute.Bool("ForPay", in.GetForPay()),
-			attribute.String("Logo", in.GetLogo()),
-			attribute.String("ID", in.GetID()),
-			attribute.String("HomePage", in.GetHomePage()),
-			attribute.String("Specs", in.GetSpecs()),
-			attribute.Float64("ReservedAmount", in.GetReservedAmount()),
-		),
-	)
+	span.AddEvent("call db UpdateCoinInfoByID")
 	coinInfo, err := coininfo.UpdateCoinInfoByID(ctx, in.GetPreSale(), in.GetForPay(), in.GetLogo(), in.GetID(), in.GetHomePage(), in.GetSpecs(), in.GetReservedAmount())
 	if err != nil {
 		logger.Sugar().Errorf("UpdateCoinInfo call UpdateCoinInfoByID error %v", err)

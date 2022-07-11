@@ -10,7 +10,7 @@ import (
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
+	ocodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -26,17 +26,18 @@ func (s *Server) GetCoinInfos(ctx context.Context, in *npool.GetCoinInfosRequest
 		attribute.Int64("Limit", int64(in.GetLimit())),
 	)
 
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(ocodes.Error, "call GetCoinInfos")
+			span.RecordError(err)
+		}
+	}()
+
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
-	span.AddEvent("call db GetCoinInfos",
-		trace.WithAttributes(
-			attribute.Bool("PreSale", in.GetPreSale()),
-			attribute.String("Name", in.GetName()),
-			attribute.Int64("Offset", int64(in.GetOffset())),
-			attribute.Int64("Limit", int64(in.GetLimit())),
-		),
-	)
+	span.AddEvent("call db GetCoinInfos")
 	resp, total, err := coininfo.GetAllCoinInfos(ctx, coininfo.GetAllCoinInfosParams{
 		PreSale: in.GetPreSale(),
 		Name:    in.GetName(),

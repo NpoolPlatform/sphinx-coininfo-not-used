@@ -10,7 +10,7 @@ import (
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
+	ocodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -19,6 +19,14 @@ import (
 func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoRequest) (*npool.CreateCoinInfoResponse, error) {
 	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "CreateCoinInfo")
 	defer span.End()
+
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(ocodes.Error, "call CreateCoinInfo")
+			span.RecordError(err)
+		}
+	}()
 
 	span.SetAttributes(
 		attribute.Bool("PreSale", in.GetPreSale()),
@@ -51,16 +59,8 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 	ctx, cancel := context.WithTimeout(ctx, ccoin.GrpcTimeout)
 	defer cancel()
 
-	span.AddEvent("call db CreateCoinInfo",
-		trace.WithAttributes(
-			attribute.Bool("PreSale", in.GetPreSale()),
-			attribute.String("Name", in.GetName()),
-			attribute.String("Unit", in.GetUnit()),
-			attribute.String("Logo", in.GetLogo()),
-			attribute.String("ENV", in.GetENV()),
-		),
-	)
-	err := coininfo.CreateCoinInfo(ctx, &npool.CoinInfo{
+	span.AddEvent("call db CreateCoinInfo")
+	err = coininfo.CreateCoinInfo(ctx, &npool.CoinInfo{
 		PreSale: in.GetPreSale(),
 		Name:    in.GetName(),
 		Unit:    in.GetUnit(),
@@ -72,9 +72,7 @@ func (s *Server) CreateCoinInfo(ctx context.Context, in *npool.CreateCoinInfoReq
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	span.AddEvent("call db GetCoinInfoByName", trace.WithAttributes(
-		attribute.String("Name", in.GetName()),
-	))
+	span.AddEvent("call db GetCoinInfoByName")
 	coinInfo, err := coininfo.GetCoinInfoByName(ctx, in.GetName())
 	if err != nil {
 		logger.Sugar().Errorf("CreateCoinInfo call GetCoinInfoByName error %v", err)

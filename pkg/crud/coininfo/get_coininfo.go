@@ -9,6 +9,7 @@ import (
 	ccoin "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 )
 
@@ -16,12 +17,17 @@ func GetCoinInfoByID(ctx context.Context, id uuid.UUID) (coinInfo *ent.CoinInfo,
 	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfoByID")
 	defer span.End()
 
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
+
 	client, err := db.Client()
 	if err != nil {
 		span.SetStatus(codes.Error, "get db client fail")
 		span.RecordError(err)
 		return nil, err
 	}
+
 	coinInfo, err = client.CoinInfo.Query().
 		Where(coininfo.ID(id)).
 		Only(ctx)
@@ -32,12 +38,17 @@ func GetCoinInfoByName(ctx context.Context, coinName string) (coinInfo *ent.Coin
 	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetCoinInfoByName")
 	defer span.End()
 
+	span.SetAttributes(
+		attribute.String("CoinName", coinName),
+	)
+
 	client, err := db.Client()
 	if err != nil {
 		span.SetStatus(codes.Error, "get db client fail")
 		span.RecordError(err)
 		return nil, err
 	}
+
 	coinInfo, err = client.CoinInfo.Query().
 		Where(coininfo.Name(coinName)).
 		Only(ctx)
@@ -48,12 +59,17 @@ func ExistCoinInfoByID(ctx context.Context, coinID uuid.UUID) (bool, error) {
 	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "ExistCoinInfoByID")
 	defer span.End()
 
+	span.SetAttributes(
+		attribute.String("CoinID", coinID.String()),
+	)
+
 	client, err := db.Client()
 	if err != nil {
 		span.SetStatus(codes.Error, "get db client fail")
 		span.RecordError(err)
 		return false, err
 	}
+
 	return client.CoinInfo.Query().
 		Where(coininfo.IDEQ(coinID)).
 		Exist(ctx)
@@ -68,6 +84,13 @@ type GetAllCoinInfosParams struct {
 func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.CoinInfo, int, error) {
 	_, span := otel.Tracer(ccoin.ServiceName).Start(ctx, "GetAllCoinInfos")
 	defer span.End()
+
+	span.SetAttributes(
+		attribute.Bool("PreSale", params.PreSale),
+		attribute.String("Name", params.Name),
+		attribute.Int("Offset", params.Offset),
+		attribute.Int("Limit", params.Limit),
+	)
 
 	if params.Limit == 0 {
 		params.Limit = ccoin.PageSize
@@ -95,6 +118,8 @@ func GetAllCoinInfos(ctx context.Context, params GetAllCoinInfosParams) ([]*ent.
 	// total
 	total, err := stm.Count(ctx)
 	if err != nil {
+		span.SetStatus(codes.Error, "call count fail")
+		span.RecordError(err)
 		return nil, 0, err
 	}
 
