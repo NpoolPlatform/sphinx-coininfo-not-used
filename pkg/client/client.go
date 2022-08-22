@@ -44,6 +44,24 @@ func GetCoinInfos(ctx context.Context, conds cruder.FilterConds) ([]*npool.CoinI
 	return infos.([]*npool.CoinInfo), nil
 }
 
+func GetCoinInfosV2(ctx context.Context, offset, limit int32) ([]*npool.CoinInfo, error) {
+	// conds: NOT USED NOW, will be used after refactor code
+	infos, err := do(ctx, func(_ctx context.Context, cli npool.SphinxCoinInfoClient) (cruder.Any, error) {
+		resp, err := cli.GetCoinInfos(ctx, &npool.GetCoinInfosRequest{
+			Offset: offset,
+			Limit:  limit,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("fail get coininfos: %v", err)
+		}
+		return resp.Infos, nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail get coininfos: %v", err)
+	}
+	return infos.([]*npool.CoinInfo), nil
+}
+
 func GetCoinInfo(ctx context.Context, id string) (*npool.CoinInfo, error) {
 	// conds: NOT USED NOW, will be used after refactor code
 	info, err := do(ctx, func(_ctx context.Context, cli npool.SphinxCoinInfoClient) (cruder.Any, error) {
