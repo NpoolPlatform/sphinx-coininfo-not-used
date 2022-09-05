@@ -54,11 +54,11 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: sphinx-coininfo-traefik-user-ingress
+  name: sphinx-coininfo-traefik-app-user-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: sphinx-coininfo-traefik-app
-    k8s.kuboard.cn/workload: sphinx-coininfo-traefik-app
+    k8s.kuboard.cn/displayName: sphinx-coininfo-traefik-app-user
+    k8s.kuboard.cn/workload: sphinx-coininfo-traefik-app-user
     kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-sphinx-coininfo-prefix@kubernetescrd,
