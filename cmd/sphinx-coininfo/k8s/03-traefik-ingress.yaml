@@ -20,7 +20,7 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/sphinx-coininfo/get
+          - path: /api/sphinx-coininfo/v1/get
             backend:
               serviceName: sphinx-coininfo
               servicePort: 50150
@@ -73,11 +73,11 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/sphinx-coininfo/create
+          - path: /api/sphinx-coininfo/v1/create
             backend:
               serviceName: sphinx-coininfo
               servicePort: 50150
-          - path: /api/sphinx-coininfo/update
+          - path: /api/sphinx-coininfo/v1/update
             backend:
               serviceName: sphinx-coininfo
               servicePort: 50150
