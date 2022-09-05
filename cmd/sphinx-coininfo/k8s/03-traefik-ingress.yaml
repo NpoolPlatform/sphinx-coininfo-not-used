@@ -20,7 +20,11 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/sphinx-coininfo
+          - path: /api/sphinx-coininfo/get
+            backend:
+              serviceName: sphinx-coininfo
+              servicePort: 50150
+          - path: /api/sphinx-coininfo/version
             backend:
               serviceName: sphinx-coininfo
               servicePort: 50150
@@ -41,4 +45,58 @@ spec:
     - host: api.singapore-testing.npool.top
       http: *http_rules
     - host: api.procyon.xpool.top
+      http: *http_rules
+    - host: api.development.npool.top
+      http: *http_rules
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: sphinx-coininfo-traefik-user-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: sphinx-coininfo-traefik-app
+    k8s.kuboard.cn/workload: sphinx-coininfo-traefik-app
+    kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-sphinx-coininfo-prefix@kubernetescrd,
+                                                      kube-system-common-headers@kubernetescrd,
+                                                      kube-system-headers-appid-to-body@kubernetescrd,
+                                                      kube-system-headers-userid-to-body@kubernetescrd,
+                                                      kube-system-headers-app-login-token-to-body@kubernetescrd,
+                                                      kube-system-app-user-role-rbac-auth@kubernetescrd
+
+spec:
+  rules:
+    - host: api.npool.top
+      http: &http_rules
+        paths:
+          - path: /api/sphinx-coininfo/create
+            backend:
+              serviceName: sphinx-coininfo
+              servicePort: 50150
+        paths:
+          - path: /api/sphinx-coininfo/update
+            backend:
+              serviceName: sphinx-coininfo
+              servicePort: 50150
+    - host: api.procyon.vip
+      http: *http_rules
+    - host: api.xpool.top
+      http: *http_rules
+    - host: api.ohhash.com
+      http: *http_rules
+    - host: api.ohhash-production.npool.top
+      http: *http_rules
+    - host: api.japan-procyon-production.npool.top
+      http: *http_rules
+    - host: api.jh-testing.npool.top
+      http: *http_rules
+    - host: api.jh-development.npool.top
+      http: *http_rules
+    - host: api.singapore-testing.npool.top
+      http: *http_rules
+    - host: api.procyon.xpool.top
+      http: *http_rules
+    - host: api.development.npool.top
       http: *http_rules
